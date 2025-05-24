@@ -1,11 +1,11 @@
 "use client"
 import React from 'react';
-import TwoFactorSignup from '../pages/two-factor-signup';
+import TwoFactorLogin from '../pages/two-factor-login';
 
 export default function SignUpPage() {
   return (
     <main>
-      <TwoFactorSignup />
+      <TwoFactorLogin />
     </main>
   );
-}
+} 

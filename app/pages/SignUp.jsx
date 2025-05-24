@@ -11,23 +11,25 @@ export default function SignUpComponent() {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [privacy, setprivacy] = useState(false);
 
   const handleUserTypeChange = (type) => {
     setUserType(type);
   };
 
   const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     setError("");
     setLoading(true);
+    console.log("going on");
 
     try {
       const response = await fetch("/api/signup", {
@@ -42,6 +44,7 @@ export default function SignUpComponent() {
       });
 
       const data = await response.json();
+      console.log(data);
 
       if (data.success) {
         // Redirect to login page on success
@@ -54,6 +57,13 @@ export default function SignUpComponent() {
       console.error("Signup failed:", error);
     } finally {
       setLoading(false);
+      setFormData({
+        email: "",
+        password: "",
+        name: "",
+        phone: "",
+      });
+      setprivacy(false);
     }
   };
 
@@ -65,14 +75,11 @@ export default function SignUpComponent() {
         </h1>
 
         <div className="relative top-[50px] flex justify-start items-center min-h-screen py-8 pl-0 md:pl-4">
-          <form
-            onSubmit={handleSubmit}
-            className="w-[90%] sm:w-[500px] md:w-[600px] bg-[#f0ddff91] rounded-[20px] p-4 md:p-6 z-10 relative ml-0"
-          >
+          <form className="w-[90%] sm:w-[500px] md:w-[600px] bg-[#f0ddff91] rounded-[20px] p-4 md:p-6 z-10 relative ml-0">
             <button
               type="submit"
               disabled={loading}
-              className="w-[200px] md:w-[256px] h-[45px] md:h-[55px] bg-[#001e32] rounded-[50px] mt-2.5 ml-2.5 hover:bg-[#001e32] disabled:opacity-50"
+              className="w-[200px] md:w-[256px] h-[45px] md:h-[55px] bg-[#001e32] rounded-[50px] mt-2.5 ml-2.5 hover:bg-[#001e32]"
             >
               <h2 className="font-semibold text-white text-[22px] md:text-[28px]">
                 {loading ? "Signing Up..." : "Sign Up"}
@@ -158,8 +165,7 @@ export default function SignUpComponent() {
                   type="checkbox"
                   id="privacy"
                   name="privacyPolicy"
-                  checked={formData.privacyPolicy}
-                  onChange={handleInputChange}
+                  onChange={() => setprivacy(!privacy)}
                   className="w-[25px] h-[25px] rounded accent-[#5e2f7c]"
                   required
                 />
@@ -174,24 +180,32 @@ export default function SignUpComponent() {
               <div className="flex flex-col sm:flex-row gap-4 mt-4 justify-center w-full cursor">
                 <button
                   type="button"
+                  disabled={!privacy}
                   className={`w-full cursor-pointer sm:w-[200px] h-[55px] rounded-[30px] border ${
                     userType === "student"
                       ? "bg-[#5e2f7c] text-white border-none"
                       : "bg-white text-[#001e32] border-[#2f2f68] shadow-[0px_0px_4px_#00000040]"
                   }`}
-                  onClick={() => handleUserTypeChange("student")}
+                  onClick={(e) => {
+                    handleUserTypeChange("student");
+                    handleSubmit(e);
+                  }}
                 >
                   <h2 className="font-semibold">Student</h2>
                 </button>
 
                 <button
                   type="button"
+                  disabled={!privacy}
                   className={`w-full cursor-pointer sm:w-[200px] h-[55px] rounded-[30px] border ${
                     userType === "mentor"
                       ? "bg-[#5e2f7c] text-white border-none"
                       : "bg-white text-[#001e32] border-[#2f2f68] shadow-[0px_0px_4px_#00000040]"
                   }`}
-                  onClick={() => handleUserTypeChange("mentor")}
+                  onClick={(e) => {
+                    handleUserTypeChange("mentor");
+                    handleSubmit(e);
+                  }}
                 >
                   <h2 className="font-semibold">Mentor</h2>
                 </button>

@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { email, password, name, phone, userType, privacyPolicy } = body;
+    const { email, password, name, phone, userType } = body;
 
     // Here you would typically:
     // 1. Validate the input

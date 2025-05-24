@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 
-export default function TwoFactorSignup() {
+export default function TwoFactorLogin() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const handleSubmit = async (e) => {
@@ -21,7 +21,7 @@ export default function TwoFactorSignup() {
       const data = await response.json();
 
       if (data.success) {
-        window.location.href = "/login";
+        window.location.href = "/login"; // missing for now, /login to be replaced
       } else {
         setError(data.message || "Registration failed");
       }
@@ -31,7 +31,6 @@ export default function TwoFactorSignup() {
     } finally {
       setLoading(false);
     }
-    e.target.reset();
   };
 
   return (
@@ -45,7 +44,7 @@ export default function TwoFactorSignup() {
           <div className="w-[90%] sm:w-[500px] md:w-[600px] bg-[#f0ddff91] rounded-[20px] p-4 md:p-6 z-10 relative ml-0">
             <button className="w-[200px] md:w-[256px] h-[45px] md:h-[55px] bg-[#001e32] rounded-[50px] mt-2.5 ml-2.5 hover:bg-[#001e32]">
               <h2 className="font-semibold text-white text-[22px] md:text-[28px]">
-                Signup
+                Login
               </h2>
             </button>
 

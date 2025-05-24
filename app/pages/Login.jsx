@@ -16,15 +16,15 @@ export default function Login() {
   };
 
   const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     setError("");
     setLoading(true);
 
@@ -44,7 +44,7 @@ export default function Login() {
 
       if (data.success) {
         // Redirect to login page on success
-        window.location.href = "/two-factor";
+        window.location.href = "/two-factor-login";
       } else {
         setError(data.message || "Registration failed");
       }
@@ -53,6 +53,12 @@ export default function Login() {
       console.error("Signup failed:", error);
     } finally {
       setLoading(false);
+      // Reset form data manually
+      setFormData({
+        email: "",
+        password: "",
+        phone: "",
+      });
     }
   };
 
@@ -64,12 +70,25 @@ export default function Login() {
         </h1>
 
         <div className="relative top-[50px] flex justify-start items-center min-h-screen py-8 pl-0 md:pl-4">
-          <div className="w-[90%] sm:w-[500px] md:w-[600px] bg-[#f0ddff91] rounded-[20px] p-4 md:p-6 z-10 relative ml-0">
-            <button className="w-[200px] md:w-[256px] h-[45px] md:h-[55px] bg-[#001e32] rounded-[50px] mt-2.5 ml-2.5 hover:bg-[#001e32]">
+          <form
+            onSubmit={handleSubmit}
+            className="w-[90%] sm:w-[500px] md:w-[600px] bg-[#f0ddff91] rounded-[20px] p-4 md:p-6 z-10 relative ml-0"
+          >
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-[200px] md:w-[256px] h-[45px] md:h-[55px] bg-[#001e32] rounded-[50px] mt-2.5 ml-2.5 hover:bg-[#001e32] disabled:opacity-50"
+            >
               <h2 className="font-semibold text-white text-[22px] md:text-[28px]">
-                Login
+                {loading ? "Logging in..." : "Login"}
               </h2>
             </button>
+
+            {error && (
+              <div className="mt-4 p-3 bg-red-100 text-red-700 rounded">
+                {error}
+              </div>
+            )}
 
             <div className="mt-6 flex flex-col gap-4">
               <div className="w-full">
@@ -78,8 +97,12 @@ export default function Login() {
                 </h3>
                 <input
                   type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
                   className="w-full h-[42px] bg-white border border-gray-300 rounded px-4 text-base placeholder:text-gray-600"
                   placeholder="Write here"
+                  required
                 />
               </div>
 
@@ -88,9 +111,13 @@ export default function Login() {
                   Password*
                 </h3>
                 <input
-                  type="text"
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
                   className="w-full h-[42px] bg-white border border-gray-300 rounded px-4 text-base placeholder:text-gray-600"
                   placeholder="Write here"
+                  required
                 />
               </div>
 
@@ -106,8 +133,12 @@ export default function Login() {
                   />
                   <input
                     type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
                     className="flex-1 h-[42px] border-none px-4 text-base placeholder:text-gray-600"
                     placeholder="Write here"
+                    required
                   />
                 </div>
               </div>
@@ -116,6 +147,7 @@ export default function Login() {
                 <input
                   type="checkbox"
                   id="remember"
+                  name="remember"
                   className="w-[25px] h-[25px] rounded accent-[#5e2f7c]"
                 />
                 <label
@@ -126,25 +158,33 @@ export default function Login() {
                 </label>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 mt-4 justify-center w-full">
+              <div className="flex flex-col sm:flex-row gap-4 mt-4 justify-center w-full cursor">
                 <button
-                  className={`w-full sm:w-[200px] h-[55px] rounded-[30px] border ${
+                  type="button"
+                  className={`w-full cursor-pointer sm:w-[200px] h-[55px] rounded-[30px] border ${
                     userType === "student"
                       ? "bg-[#5e2f7c] text-white border-none"
                       : "bg-white text-[#001e32] border-[#2f2f68] shadow-[0px_0px_4px_#00000040]"
                   }`}
-                  onClick={() => handleUserTypeChange("student")}
+                  onClick={(e) => {
+                    handleUserTypeChange("student");
+                    handleSubmit(e);
+                  }}
                 >
                   <h2 className="font-semibold">Student</h2>
                 </button>
 
                 <button
-                  className={`w-full sm:w-[200px] h-[55px] rounded-[30px] border ${
+                  type="button"
+                  className={`w-full cursor-pointer sm:w-[200px] h-[55px] rounded-[30px] border ${
                     userType === "mentor"
                       ? "bg-[#5e2f7c] text-white border-none"
                       : "bg-white text-[#001e32] border-[#2f2f68] shadow-[0px_0px_4px_#00000040]"
                   }`}
-                  onClick={() => handleUserTypeChange("mentor")}
+                  onClick={(e) => {
+                    handleUserTypeChange("mentor");
+                    handleSubmit(e);
+                  }}
                 >
                   <h2 className="font-semibold">Mentor</h2>
                 </button>
@@ -171,7 +211,7 @@ export default function Login() {
                 </a>
               </div>
             </div>
-          </div>
+          </form>
 
           <img
             src="https://c.animaapp.com/mayx5w53ABHDjN/img/smiling-young-woman-with-books-backpack-standing-white-backgroun.png"
