@@ -1,3 +1,8 @@
+#NOTE:
+ignore api folder in app(that was to check if it is working)
+
+change the url for posting data to the right end-point in signup.jsx and login.jsx
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
