@@ -21,7 +21,7 @@ export default function TwoFactorLogin() {
       const data = await response.json();
 
       if (data.success) {
-        window.location.href = "/login"; // missing for now, /login to be replaced
+        window.location.href = "/dashboard"; // missing for now, /login to be replaced
       } else {
         setError(data.message || "Registration failed");
       }
