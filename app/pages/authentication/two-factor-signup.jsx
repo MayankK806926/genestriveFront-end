@@ -52,22 +52,22 @@ export default function TwoFactorSignup() {
             <div className="mt-6 flex flex-col gap-4">
               <div className="w-full">
                 <h3 className="font-medium text-[#000000c4] mb-1 text-xl">
-                  Enter OTP on phone*
+                  Enter OTP sent on phone*
                 </h3>
                 <input
                   type="password"
-                  className="w-full h-[42px] bg-white border border-gray-300 rounded px-4 text-base placeholder:text-gray-600"
+                  className="w-full h-[42px] bg-white border border-gray-300 rounded px-4 text-base text-gray-600 placeholder:text-gray-400"
                   placeholder="Write here"
                 />
               </div>
               
               <div className="w-full">
                 <h3 className="font-medium text-[#000000c4] mb-1 text-xl">
-                  Enter OTP on email*
+                  Enter OTP sent on email*
                 </h3>
                 <input
                   type="password"
-                  className="w-full h-[42px] bg-white border border-gray-300 rounded px-4 text-base placeholder:text-gray-600"
+                  className="w-full h-[42px] bg-white border border-gray-300 rounded px-4 text-base text-gray-600 placeholder:text-gray-400"
                   placeholder="Write here"
                 />
               </div>

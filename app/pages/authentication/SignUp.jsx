@@ -26,7 +26,6 @@ export default function SignUp() {
   };
 
   const handleSubmit = async (e) => {
-    if (e) e.preventDefault();
     setError("");
     setLoading(true);
     console.log("going on");
@@ -75,7 +74,7 @@ export default function SignUp() {
         </h1>
 
         <div className="relative top-[50px] flex justify-start items-center min-h-screen py-8 pl-0 md:pl-4">
-          <form className="w-[90%] sm:w-[500px] md:w-[600px] bg-[#f0ddff91] rounded-[20px] p-4 md:p-6 z-10 relative ml-0">
+          <form onSubmit={handleSubmit} className="w-[90%] sm:w-[500px] md:w-[600px] bg-[#f0ddff91] rounded-[20px] p-4 md:p-6 z-10 relative ml-0">
             <button
               type="submit"
               disabled={loading}
@@ -102,9 +101,8 @@ export default function SignUp() {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full h-[42px] bg-white border border-gray-300 rounded px-4 text-base placeholder:text-gray-600"
+                  className="w-full h-[42px] bg-white border border-gray-300 rounded px-4 text-base text-gray-600 placeholder:text-gray-400"
                   placeholder="Write here"
-                  required
                 />
               </div>
 
@@ -117,9 +115,8 @@ export default function SignUp() {
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  className="w-full h-[42px] bg-white border border-gray-300 rounded px-4 text-base placeholder:text-gray-600"
+                  className="w-full h-[42px] bg-white border border-gray-300 rounded px-4 text-base text-gray-600 placeholder:text-gray-400"
                   placeholder="Write here"
-                  required
                 />
               </div>
 
@@ -132,9 +129,8 @@ export default function SignUp() {
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="w-full h-[42px] bg-white border border-gray-300 rounded px-4 text-base placeholder:text-gray-600"
+                  className="w-full h-[42px] bg-white border border-gray-300 rounded px-4 text-base text-gray-600 placeholder:text-gray-400"
                   placeholder="Write here"
-                  required
                 />
               </div>
 
@@ -153,9 +149,8 @@ export default function SignUp() {
                     name="phone"
                     value={formData.phone}
                     onChange={handleInputChange}
-                    className="flex-1 h-[42px] border-none px-4 text-base placeholder:text-gray-600"
+                    className="flex-1 h-[42px] border-none px-4 text-base text-gray-600 placeholder:text-gray-400"
                     placeholder="Write here"
-                    required
                   />
                 </div>
               </div>
@@ -179,33 +174,25 @@ export default function SignUp() {
 
               <div className="flex flex-col sm:flex-row gap-4 mt-4 justify-center w-full cursor">
                 <button
-                  type="button"
+                  type="submit"
                   disabled={!privacy}
                   className={`w-full cursor-pointer sm:w-[200px] h-[55px] rounded-[30px] border ${
                     userType === "student"
                       ? "bg-[#5e2f7c] text-white border-none"
                       : "bg-white text-[#001e32] border-[#2f2f68] shadow-[0px_0px_4px_#00000040]"
                   }`}
-                  onClick={(e) => {
-                    handleUserTypeChange("student");
-                    handleSubmit(e);
-                  }}
                 >
                   <h2 className="font-semibold">Student</h2>
                 </button>
 
                 <button
-                  type="button"
+                  type="submit"
                   disabled={!privacy}
                   className={`w-full cursor-pointer sm:w-[200px] h-[55px] rounded-[30px] border ${
                     userType === "mentor"
                       ? "bg-[#5e2f7c] text-white border-none"
                       : "bg-white text-[#001e32] border-[#2f2f68] shadow-[0px_0px_4px_#00000040]"
                   }`}
-                  onClick={(e) => {
-                    handleUserTypeChange("mentor");
-                    handleSubmit(e);
-                  }}
                 >
                   <h2 className="font-semibold">Mentor</h2>
                 </button>

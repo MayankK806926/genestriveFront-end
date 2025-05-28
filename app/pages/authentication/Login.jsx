@@ -99,9 +99,8 @@ export default function Login() {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full h-[42px] bg-white border border-gray-300 rounded px-4 text-base placeholder:text-gray-600"
+                  className="w-full h-[42px] bg-white border border-gray-300 rounded px-4 text-base text-gray-600 placeholder:text-gray-400"
                   placeholder="Write here"
-                  required
                 />
               </div>
 
@@ -114,9 +113,8 @@ export default function Login() {
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  className="w-full h-[42px] bg-white border border-gray-300 rounded px-4 text-base placeholder:text-gray-600"
+                  className="w-full h-[42px] bg-white border border-gray-300 rounded px-4 text-base text-gray-600 placeholder:text-gray-400"
                   placeholder="Write here"
-                  required
                 />
               </div>
 
@@ -135,9 +133,8 @@ export default function Login() {
                     name="phone"
                     value={formData.phone}
                     onChange={handleInputChange}
-                    className="flex-1 h-[42px] border-none px-4 text-base placeholder:text-gray-600"
+                    className="flex-1 h-[42px] border-none px-4 text-base text-gray-600 placeholder:text-gray-400"
                     placeholder="Write here"
-                    required
                   />
                 </div>
               </div>

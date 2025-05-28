@@ -22,8 +22,8 @@ export default function ForgotPassword() {
       const data = await response.json();
 
       if (data.success) {
-        if(verifyType==="Phone"){
-        window.location.href = "/two-factor-forgot-password";
+        if(verifyType==="tel"){
+        window.location.href = "/forgot-password/two-factor";
       }else{
         window.location.href = "/two-factor-forgot-password"
         }
@@ -48,8 +48,8 @@ export default function ForgotPassword() {
         <div className="relative top-[50px] flex justify-start items-center min-h-screen py-8 pl-0 md:pl-4">
           <div className="w-[90%] sm:w-[500px] md:w-[600px] bg-[#f0ddff91] rounded-[20px] p-4 md:p-6 z-10 relative ml-0">
             <button className="w-[200px] md:w-[256px] h-[45px] md:h-[55px] bg-[#001e32] rounded-[50px] mt-2.5 ml-2.5 hover:bg-[#001e32]">
-              <h2 className="font-semibold text-white text-[22px] md:text-[28px]">
-                Login
+              <h2 className="font-semibold text-white text-[18px] md:text-[22px]">
+              Forgot Password
               </h2>
             </button>
 
@@ -76,7 +76,7 @@ export default function ForgotPassword() {
                 </div>
                 <input
                   type={verifyType}
-                  className="w-full h-[42px] mt-[20px] bg-white border border-gray-300 rounded px-4 text-base placeholder:text-gray-600"
+                  className="w-full h-[42px] mt-[20px] bg-white border border-gray-300 rounded px-4 text-base text-gray-600 placeholder:text-gray-400"
                   placeholder="Write Phone no or Email"
                 />
               </div>

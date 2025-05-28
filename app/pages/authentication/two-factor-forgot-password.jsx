@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 
-export default function TwoFactorForgotPassword() {
+export default function TwoFactorForgotPassword({verifyType}) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const handleSubmit = async (e) => {
@@ -21,7 +21,7 @@ export default function TwoFactorForgotPassword() {
       const data = await response.json();
 
       if (data.success) {
-        window.location.href = "/dashboard"; // missing for now, /login to be replaced
+        window.location.href = "/forgot-password/change-password";
       } else {
         setError(data.message || "Registration failed");
       }
@@ -43,11 +43,11 @@ export default function TwoFactorForgotPassword() {
         <div className="relative top-[50px] flex justify-start items-center min-h-screen py-8 pl-0 md:pl-4">
           <div className="w-[90%] sm:w-[500px] md:w-[600px] bg-[#f0ddff91] rounded-[20px] p-4 md:p-6 z-10 relative ml-0">
             <button className="w-[200px] md:w-[256px] h-[45px] md:h-[55px] bg-[#001e32] rounded-[50px] mt-2.5 ml-2.5 hover:bg-[#001e32]">
-              <h2 className="font-semibold text-white text-[22px] md:text-[28px]">
-                Login
+              <h2 className="font-semibold text-white text-[22px] md:text-[22px]">
+                Forgot Password
               </h2>
             </button>
-
+            {verifyType==="tel"? (
             <div className="mt-6 flex flex-col gap-4">
               <div className="w-full">
                 <h3 className="font-medium text-[#000000c4] mb-1 text-xl">
@@ -55,10 +55,14 @@ export default function TwoFactorForgotPassword() {
                 </h3>
                 <input
                   type="email"
-                  className="w-full h-[42px] bg-white border border-gray-300 rounded px-4 text-base placeholder:text-gray-600"
+                  className="w-full h-[42px] bg-white border border-gray-300 rounded px-4 text-base text-gray-600 placeholder:text-gray-400"
                   placeholder="Write here"
                 />
               </div>
+            </div>)
+              :(<h3 className="font-medium text-[#000000c4] mb-1 text-lg">
+                 Verification link has been sent to the corresponding email id.
+              </h3>)}
 
               <div className="flex flex-col sm:flex-row gap-4 mt-4 justify-center w-full">
                 <button
@@ -68,7 +72,6 @@ export default function TwoFactorForgotPassword() {
                   <h2 className="font-semibold">Submit</h2>
                 </button>
               </div>
-            </div>
           </div>
 
           <img
