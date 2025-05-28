@@ -4,6 +4,7 @@ import React, { useState } from "react";
 export default function ForgotPassword() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [verifyType, setVerifyType] = useState("tel");
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -15,13 +16,17 @@ export default function ForgotPassword() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ OTP: e.target.value }),
+        body: JSON.stringify({ verifyType:verifyType,content: e.target.value }),
       });
 
       const data = await response.json();
 
       if (data.success) {
+        if(verifyType==="Phone"){
         window.location.href = "/two-factor-forgot-password";
+      }else{
+        window.location.href = "/two-factor-forgot-password"
+        }
       } else {
         setError(data.message || "Registration failed");
       }
@@ -50,13 +55,29 @@ export default function ForgotPassword() {
 
             <div className="mt-6 flex flex-col gap-4">
               <div className="w-full">
+                <div className="flex items-center gap-2">
                 <h3 className="font-medium text-[#000000c4] mb-1 text-xl">
-                  Enter Email or Password*
+                  Verify on
                 </h3>
+                <div className="bg-[#f0ddff] mt-[-3px] rounded-[50px] px-4 py-1.5 flex gap-5">
+                <button
+                  className={`font-['Inter',_Helvetica] ${verifyType === 'tel' ? 'font-bold' : 'font-normal'} text-[#2f2f68] text-lg cursor-pointer hover:text-[#5e2f7c] transition-colors`}
+                  onClick={() => setVerifyType("tel")}
+                >
+                  Phone
+                </button>
+                <button
+                  className={`font-['Inter',_Helvetica] ${verifyType === 'email' ? 'font-bold' : 'font-normal'} text-[#2f2f68] text-lg cursor-pointer hover:text-[#5e2f7c] transition-colors`}
+                  onClick={() => setVerifyType("email")}
+                >
+                  Email
+                </button>
+                </div>
+                </div>
                 <input
-                  type="text"
-                  className="w-full h-[42px] bg-white border border-gray-300 rounded px-4 text-base placeholder:text-gray-600"
-                  placeholder="Write here"
+                  type={verifyType}
+                  className="w-full h-[42px] mt-[20px] bg-white border border-gray-300 rounded px-4 text-base placeholder:text-gray-600"
+                  placeholder="Write Phone no or Email"
                 />
               </div>
 
