@@ -82,7 +82,7 @@ export function Select({ children, value, onChange, className = "" }) {
 // Custom SelectTrigger and SelectValue are not needed for a basic select, the select element handles this.
 // The placeholder can be an initial <option value="">...</option>
 
-export const StudentDashboard = () => {
+function Dashboard(){
   // Data for recent activities
   const recentActivities = [
     {
@@ -164,20 +164,20 @@ export const StudentDashboard = () => {
 
         <div className="flex h-[2406px]">
           {/* Sidebar */}
-          <aside className="w-[430px] bg-[#001e32] text-white flex flex-col">
+          <aside className="w-[300px] bg-[#001e32] text-white flex flex-col">
             <div className="px-6 py-16">
-              <h2 className="[font-family:'Inter',Helvetica] font-bold text-white text-[32px] mb-4">
+              <h2 className="[font-family:'Inter',Helvetica] font-bold text-white text-[18px] mb-4">
                 GRADE
               </h2>
-              <select className="w-[187px] h-[43px] bg-white text-[#2f2f68] [font-family:'Inter',Helvetica] font-medium text-xl">
+              <select className="w-[150px] h-[35px] bg-white text-[#2f2f68] [font-family:'Inter',Helvetica] font-medium text-xl">
                 <option value="">select grade</option>
                 {/* Add other grade options here */}
               </select>
 
-              <h2 className="[font-family:'Inter',Helvetica] font-bold text-white text-2xl mt-16 mb-4">
+              <h2 className="[font-family:'Inter',Helvetica] font-bold text-white text-[18px] mt-16 mb-4">
                 Competetive exams
               </h2>
-              <select className="w-[187px] h-[43px] bg-white text-[#2f2f68] [font-family:'Inter',Helvetica] font-medium text-xl">
+              <select className="w-[150px] h-[35px] bg-white text-[#2f2f68] [font-family:'Inter',Helvetica] font-medium text-xl">
                 <option value="">Exams</option>
                 {/* Add other exam options here */}
               </select>
@@ -195,10 +195,10 @@ export const StudentDashboard = () => {
           {/* Main Content */}
           <main className="flex-1 bg-white border border-solid border-[#d9d9d9]">
             {/* Welcome Section */}
-            <section className="mx-[35px] mt-[39px]">
-              <div className="bg-[#f7ecff] rounded-[15px] p-8 flex">
+            <section className="mx-[35px] mt-[20px]">
+              <div className="bg-[#f7ecff] rounded-[15px] p-6 flex">
                 <div className="flex-1">
-                  <h2 className="[font-family:'Inter',Helvetica] font-bold text-[#2f2f68] text-[32px] mb-4">
+                  <h2 className="[font-family:'Inter',Helvetica] font-bold text-[#2f2f68] text-[28px] mb-2">
                     Hi, {"{name}"}
                   </h2>
                   <p className="[font-family:'Inter',Helvetica] font-medium text-[#2f2f68] text-xl leading-[30px]">
@@ -209,7 +209,7 @@ export const StudentDashboard = () => {
               </div>
 
               {/* Stats Cards */}
-              <div className="flex justify-between mt-[46px]">
+              <div className="flex justify-between mt-[20px]">
                 {[
                   { title: "Total Tests Taken", value: "25" },
                   { title: "Average Accuracy", value: "25" },
@@ -217,12 +217,12 @@ export const StudentDashboard = () => {
                 ].map((stat, index) => (
                   <div
                     key={index}
-                    className="w-[247px] h-[154px] bg-[#5e2f7c] rounded-[15px] text-white flex flex-col items-center justify-center p-4"
+                    className="w-[200px] h-[120px] bg-[#5e2f7c] rounded-[15px] text-white flex flex-col items-center justify-center p-4"
                   >
                     <h3 className="[font-family:'Inter',Helvetica] font-semibold text-white text-xl mb-2">
                       {stat.title}
                     </h3>
-                    <p className="[font-family:'Inter',Helvetica] font-semibold text-white text-[64px]">
+                    <p className="[font-family:'Inter',Helvetica] font-semibold text-white text-[40px]">
                       {stat.value}
                     </p>
                   </div>
@@ -230,8 +230,8 @@ export const StudentDashboard = () => {
               </div>
 
               {/* AI Test Generator */}
-              <div className="bg-[#f7ecff] rounded-[15px] mt-[66px] p-8 flex justify-between items-center">
-                <h2 className="[font-family:'Inter',Helvetica] font-bold text-[#2f2f68] text-[32px]">
+              <div className="bg-[#f7ecff] rounded-[15px] mt-[30px] p-6 flex justify-between items-center">
+                <h2 className="[font-family:'Inter',Helvetica] font-bold text-[#2f2f68] text-[28px]">
                   AI Test Generator
                 </h2>
                 <button className="bg-[#001e32] h-[72px] w-[302px] rounded-none [font-family:'Inter',Helvetica] font-semibold text-white text-[32px]">
@@ -240,7 +240,7 @@ export const StudentDashboard = () => {
               </div>
 
               {/* Recent Activities and Progress */}
-              <div className="flex gap-[62px] mt-[46px]">
+              <div className="flex gap-[40px] mt-[20px]">
                 {/* Recent Activities */}
                 <div className="flex-1 bg-[#f7ecff] rounded-[15px]">
                   <div className="border-b px-4 py-2">
@@ -248,17 +248,17 @@ export const StudentDashboard = () => {
                       Recent Activities
                     </h3>
                   </div>
-                  <div className="p-4 space-y-4">
+                  <div className="p-3 space-y-3">
                     {recentActivities.map((activity) => (
                       <div
                         key={activity.id}
-                        className="bg-white border-[0.75px] border-solid border-[#5e2f7c] h-[70px] p-2 flex justify-between items-center"
+                        className="bg-white border-[0.75px] border-solid border-[#5e2f7c] h-[60px] p-2 flex justify-between items-center"
                       >
                         <div>
                           <p className="[font-family:'Inter',Helvetica] font-normal text-[#2f2f68] text-sm">
                             {activity.title}
                           </p>
-                          <span className="inline-block px-2 py-1 rounded text-xs font-semibold bg-[#05ff6f82] text-[#2f2f68] font-normal text-[10px] rounded-none">
+                          <span className="inline-block px-2 py-1 text-xs font-semibold bg-[#05ff6f82] text-[#2f2f68] text-[10px] rounded-none">
                             Score - {activity.score}
                           </span>
                         </div>
@@ -276,7 +276,7 @@ export const StudentDashboard = () => {
                     ))}
                     <div className="flex justify-center">
                       <button
-                        className="px-4 py-2 rounded font-semibold transition-colors bg-[#001e32] text-white text-sm h-[29px] w-[68px] rounded-none hover:bg-blue-800"
+                        className="px-4 py-2 rounded font-semibold transition-colors bg-[#001e32] text-white text-sm h-[29px] w-[68px] hover:bg-blue-800"
                       >
                         More
                       </button>
@@ -300,29 +300,29 @@ export const StudentDashboard = () => {
               </div>
 
               {/* Topics to Focus on */}
-              <div className="bg-[#f7ecff] rounded-[15px] mt-[34px]">
+              <div className="bg-[#f7ecff] rounded-[15px] mt-[20px]">
                 <div className="border-b px-4 py-2 flex justify-center">
                   <h3 className="[font-family:'Inter',Helvetica] font-bold text-[#2f2f68] text-[32px]">
                     Topics to Focus on
                   </h3>
                 </div>
-                <div className="p-6 space-y-4">
+                <div className="p-5 space-y-3">
                   {topicsToFocus.map((topic, index) => (
                     <div
                       key={index}
-                      className="bg-white border-[0.75px] border-solid border-[#5e2f7c] h-[78px] p-4"
+                      className="bg-white border-[0.75px] border-solid border-[#5e2f7c] h-[70px] p-4"
                     >
                       <div className="flex justify-between items-start">
                         <p className="[font-family:'Inter',Helvetica] font-normal text-[#2f2f68] text-sm">
                           {topic.title}
                         </p>
-                        <span className="inline-block px-2 py-1 rounded text-xs font-semibold bg-[#5e2f7c] text-white font-normal rounded-none">
+                        <span className="inline-block px-2 py-1 text-xs font-normal bg-[#5e2f7c] text-white rounded-none">
                           {topic.subject}
                         </span>
                       </div>
                       <div className="flex items-center mt-4">
                         <div className="flex-1 mr-4">
-                          <div className="w-full bg-gray-200 rounded h-2 h-[7px] bg-[#d9d9d9] rounded-[15px]">
+                          <div className="w-full h-[7px] bg-[#d9d9d9] rounded-[15px]">
                             <div className="bg-purple-700 h-2 rounded" style={{ width: `${topic.progress}%` }}></div>
                           </div>
                         </div>
@@ -336,17 +336,17 @@ export const StudentDashboard = () => {
               </div>
 
               {/* Resources */}
-              <div className="bg-[#f7ecff] rounded-[15px] mt-[45px]">
+              <div className="bg-[#f7ecff] rounded-[15px] mt-[20px]">
                 <div className="border-b px-4 py-2 flex justify-center">
                   <h3 className="[font-family:'Inter',Helvetica] font-bold text-[#2f2f68] text-[32px]">
                     Resources
                   </h3>
                 </div>
-                <div className="p-6 space-y-4">
+                <div className="p-5 space-y-3">
                   {resources.map((resource) => (
                     <div
                       key={resource}
-                      className="bg-white border-[0.75px] border-solid border-[#5e2f7c] h-[43px]"
+                      className="bg-white border-[0.75px] border-solid border-[#5e2f7c] h-[35px]"
                     ></div>
                   ))}
                 </div>
@@ -367,3 +367,5 @@ export const StudentDashboard = () => {
     </div>
   );
 };
+
+export default Dashboard;

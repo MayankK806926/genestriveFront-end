@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 
-export default function TwoFactorLogin() {
+export default function ForgotPassword() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const handleSubmit = async (e) => {
@@ -21,7 +21,7 @@ export default function TwoFactorLogin() {
       const data = await response.json();
 
       if (data.success) {
-        window.location.href = "/dashboard"; // missing for now, /login to be replaced
+        window.location.href = "/two-factor-forgot-password";
       } else {
         setError(data.message || "Registration failed");
       }
@@ -51,10 +51,10 @@ export default function TwoFactorLogin() {
             <div className="mt-6 flex flex-col gap-4">
               <div className="w-full">
                 <h3 className="font-medium text-[#000000c4] mb-1 text-xl">
-                  Enter OTP*
+                  Enter Email or Password*
                 </h3>
                 <input
-                  type="email"
+                  type="text"
                   className="w-full h-[42px] bg-white border border-gray-300 rounded px-4 text-base placeholder:text-gray-600"
                   placeholder="Write here"
                 />

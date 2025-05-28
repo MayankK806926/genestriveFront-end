@@ -43,8 +43,7 @@ export default function Login() {
       const data = await response.json();
 
       if (data.success) {
-        // Redirect to login page on success
-        window.location.href = "/two-factor-login";
+        window.location.href = "/dashboard";
       } else {
         setError(data.message || "Registration failed");
       }
@@ -204,7 +203,7 @@ export default function Login() {
 
               <div className="text-center">
                 <a
-                  href="#"
+                  href="/forgot-password"
                   className="text-black font-light text-xl hover:underline"
                 >
                   Forgot Password?
