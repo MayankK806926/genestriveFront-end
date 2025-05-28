@@ -7,6 +7,16 @@ import MainContent from '../components/MainContent';
 
 function Dashboard(){
   const [name, setName] = useState("John Doe"); // Initialize with default name
+  const [grade, setGrade] = useState("John Doe"); // Initialize with default name
+  const [examtype, setExamType] = useState("John Doe"); // Initialize with default name
+
+  const handleGradeChange = (event) => {
+    setGrade(event.target.value);
+  };
+
+  const handleExamTypeChange = (event) => {
+    setExamType(event.target.value);
+  };
 
   // Sample data for recent activities
   const recentActivities = [
@@ -66,8 +76,8 @@ function Dashboard(){
     <div className="bg-white flex flex-col min-h-screen">
       <Navbar2 />
       <div className="flex flex-col md:flex-row flex-grow">
-        <Sidebar />
-        <MainContent name={name} recentActivities={recentActivities} topicsToFocus={topicsToFocus} resources={resources} />
+        <Sidebar grade={grade} examtype={examtype} handleGradeChange={handleGradeChange} handleExamTypeChange={handleExamTypeChange} />
+        <MainContent grade={grade} examtype={examtype} name={name} recentActivities={recentActivities} topicsToFocus={topicsToFocus} resources={resources} />
       </div>
       <Footer />
     </div>

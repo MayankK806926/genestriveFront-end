@@ -1,11 +1,11 @@
 "use client"
 import React from 'react';
-import GeneratingTest from '@/app/pages/TestGeneration/GenerateTest';
+import TestPreview from '@/app/pages/TestGeneration/TestPreview';
 
 export default function LoginPage() {
   return (
     <main>
-      <GeneratingTest />
+      <TestPreview />
     </main>
   );
 } 

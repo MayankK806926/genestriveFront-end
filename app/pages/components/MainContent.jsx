@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
 
-const MainContent = ({ name, recentActivities, topicsToFocus, resources }) => {
+const MainContent = ({ grade, examtype, name, recentActivities, topicsToFocus, resources }) => {
 
   return (
     <section className="mt-8 flex-grow p-4 md:p-8 overflow-y-auto">
