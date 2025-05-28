@@ -1,11 +1,11 @@
 "use client"
 import React from 'react';
-import TestPreview from '@/app/pages/TestAtoZ/TestPreview';
+import TestResult from '@/app/pages/TestAtoZ/TestResult';
 
 export default function LoginPage() {
   return (
     <main>
-    <TestPreview />
+      <TestResult />
     </main>
   );
 } 

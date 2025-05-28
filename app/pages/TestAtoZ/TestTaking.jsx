@@ -2,35 +2,9 @@ import React, { useState } from "react";
 import { ChevronLeftNormal } from "../icons/ChevronLeftNormal";
 import Navbar2 from "../components/Navbar2";
 
-export default function TestPreview(){
-  // Placeholder test data structure
-  const testData = [
-    {
-      question: "What is the value of pi ?",
-      topic: "Mathematics",
-      options: [
-        { text: "3.14", isCorrect: true },
-        { text: "3.14", isCorrect: false },
-        { text: "3.14", isCorrect: false },
-        { text: "3.14", isCorrect: false },
-      ],
-    },
-    {
-      question: "Another question?",
-      topic: "Science",
-      options: [
-        { text: "Option 1", isCorrect: false },
-        { text: "Option 2", isCorrect: true },
-        { text: "Option 3", isCorrect: false },
-        { text: "Option 4", isCorrect: false },
-      ],
-    },
-    // Add more questions here
-  ];
+export default function TestTaking({ setSubmitted, selectedAnswers, setSelectedAnswers, testData, processTestResults }) {
 
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState(Array(testData.length).fill(null)); // To store the index of the selected option for each question
-
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(1);
   const currentQuestion = testData[currentQuestionIndex];
 
   // Handler for option selection
@@ -56,9 +30,8 @@ export default function TestPreview(){
 
   // Handler for submitting the test
   const handleSubmitTest = () => {
-    console.log("Submitting Test with Answers:", selectedAnswers);
-    // Implement test submission logic here
-    alert("Test Submitted! Check console for answers.");
+    processTestResults();
+    setSubmitted(true);
   };
 
   // Calculate progress percentage
@@ -66,10 +39,9 @@ export default function TestPreview(){
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-[#f6effe]">
-
-<div className="w-full mt-[-20px] h-[40px] mb-[100px] bg-white shadow-sm">
-          <Navbar2 />
-        </div>
+      <div className="w-full mt-[-20px] h-[40px] mb-[100px] bg-white shadow-sm">
+        <Navbar2 />
+      </div>
 
       <div className="flex-grow w-full bg-[#f0ddff91] border-t border-solid border-[#d9d9d9] py-8">
         <div className="max-w-[1440px] mx-auto px-4">
@@ -94,13 +66,13 @@ export default function TestPreview(){
                 let borderColor = 'border-[#d9d9d9]';
 
                 if (isSelected) {
-                   if (option.isCorrect) {
-                     bgColor = 'bg-[#05ff6f82]';
-                     borderColor = 'border-[#007e35]';
-                   } else {
-                     bgColor = 'bg-[#ec303094]';
-                     borderColor = 'border-[#850000]';
-                   }
+                  if (option.isCorrect) {
+                    bgColor = 'bg-[#05ff6f82]';
+                    borderColor = 'border-[#007e35]';
+                  } else {
+                    bgColor = 'bg-[#ec303094]';
+                    borderColor = 'border-[#850000]';
+                  }
                 }
 
                 return (
@@ -124,8 +96,8 @@ export default function TestPreview(){
           onClick={handlePreviousQuestion}
           disabled={currentQuestionIndex === 0}
         >
-           <ChevronLeftNormal className="w-5 h-5 mr-1" />
-           Previous
+          <ChevronLeftNormal className="w-5 h-5 mr-1" />
+          Previous
         </button>
         {currentQuestionIndex < testData.length - 1 ? (
           <button 
@@ -143,7 +115,6 @@ export default function TestPreview(){
           </button>
         )}
       </div>
-
     </div>
   );
-};
+}
