@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import SideBar from "./common/Sidebar";
+import Footer from "../common/Footer";
 
 // Custom Badge Component
 export function Badge({ className = "", children }) {
@@ -144,9 +146,9 @@ function Dashboard(){
       <div className="bg-white overflow-hidden w-[1440px] relative">
         {/* Header */}
         <header className="flex justify-between items-center px-[60px] py-[55px]">
-          <div className="[font-family:'Inter',Helvetica] font-bold text-[#15609e] text-[40px]">
-            TESTWALE.AI
-          </div>
+        <div className="text-3xl font-bold text-[#15609e] font-['Inter',_Helvetica]">
+        TESTWALE.AI
+      </div>
           <nav className="bg-[#f0ddff] rounded-[50px] h-[52px] flex items-center px-8">
             <ul className="flex space-x-10">
               <li className="[font-family:'Inter',Helvetica] font-semibold text-[#2f2f68] text-lg">
@@ -163,34 +165,7 @@ function Dashboard(){
         </header>
 
         <div className="flex h-[2406px]">
-          {/* Sidebar */}
-          <aside className="w-[300px] bg-[#001e32] text-white flex flex-col">
-            <div className="px-6 py-16">
-              <h2 className="[font-family:'Inter',Helvetica] font-bold text-white text-[18px] mb-4">
-                GRADE
-              </h2>
-              <select className="w-[150px] h-[35px] bg-white text-[#2f2f68] [font-family:'Inter',Helvetica] font-medium text-xl">
-                <option value="">select grade</option>
-                {/* Add other grade options here */}
-              </select>
-
-              <h2 className="[font-family:'Inter',Helvetica] font-bold text-white text-[18px] mt-16 mb-4">
-                Competetive exams
-              </h2>
-              <select className="w-[150px] h-[35px] bg-white text-[#2f2f68] [font-family:'Inter',Helvetica] font-medium text-xl">
-                <option value="">Exams</option>
-                {/* Add other exam options here */}
-              </select>
-            </div>
-
-            <div className="mt-auto border-t border-white p-4 flex justify-center">
-              <img
-                className="w-[259px] h-[174px] object-cover"
-                alt="Image"
-                src="https://c.animaapp.com/mb5dlfq96PJ4GF/img/image-52.png"
-              />
-            </div>
-          </aside>
+          <SideBar />
 
           {/* Main Content */}
           <main className="flex-1 bg-white border border-solid border-[#d9d9d9]">
@@ -198,18 +173,18 @@ function Dashboard(){
             <section className="mx-[35px] mt-[20px]">
               <div className="bg-[#f7ecff] rounded-[15px] p-6 flex">
                 <div className="flex-1">
-                  <h2 className="[font-family:'Inter',Helvetica] font-bold text-[#2f2f68] text-[28px] mb-2">
+                  <h2 className="[font-family:'Inter',Helvetica] font-bold text-[#2f2f68] text-[20px] mb-2">
                     Hi, {"{name}"}
                   </h2>
                   <p className="[font-family:'Inter',Helvetica] font-medium text-[#2f2f68] text-xl leading-[30px]">
                     Generate personalized tests and improve your weak points
                   </p>
                 </div>
-                <Avatar className="w-[170px] h-[170px] rounded-[85px]" />
+                <Avatar className="w-[100px] h-[100px] rounded-[85px]" />
               </div>
 
               {/* Stats Cards */}
-              <div className="flex justify-between mt-[20px]">
+              <div className="flex justify-center mt-[20px] gap-[150px]">
                 {[
                   { title: "Total Tests Taken", value: "25" },
                   { title: "Average Accuracy", value: "25" },
@@ -217,12 +192,12 @@ function Dashboard(){
                 ].map((stat, index) => (
                   <div
                     key={index}
-                    className="w-[200px] h-[120px] bg-[#5e2f7c] rounded-[15px] text-white flex flex-col items-center justify-center p-4"
+                    className="w-[190px] h-[80px] bg-[#5e2f7c] rounded-[15px] text-white flex flex-col items-center justify-center p-4"
                   >
-                    <h3 className="[font-family:'Inter',Helvetica] font-semibold text-white text-xl mb-2">
+                    <h3 className="[font-family:'Inter',Helvetica] font-semibold text-white text-[18px] mb-2">
                       {stat.title}
                     </h3>
-                    <p className="[font-family:'Inter',Helvetica] font-semibold text-white text-[40px]">
+                    <p className="[font-family:'Inter',Helvetica] font-semibold text-white text-[22px]">
                       {stat.value}
                     </p>
                   </div>
@@ -231,10 +206,10 @@ function Dashboard(){
 
               {/* AI Test Generator */}
               <div className="bg-[#f7ecff] rounded-[15px] mt-[30px] p-6 flex justify-between items-center">
-                <h2 className="[font-family:'Inter',Helvetica] font-bold text-[#2f2f68] text-[28px]">
+                <h2 className="[font-family:'Inter',Helvetica] font-bold text-[#2f2f68] text-[20px]">
                   AI Test Generator
                 </h2>
-                <button className="bg-[#001e32] h-[72px] w-[302px] rounded-none [font-family:'Inter',Helvetica] font-semibold text-white text-[32px]">
+                <button className="bg-[#001e32] h-[50px] w-[230px] rounded-none [font-family:'Inter',Helvetica] font-semibold text-white text-[22px]">
                   Generate Test
                 </button>
               </div>
@@ -355,14 +330,7 @@ function Dashboard(){
           </main>
         </div>
 
-        {/* Footer */}
-        <footer className="mt-8">
-          <img
-            className="w-full h-[758px] object-cover"
-            alt="Footer"
-            src="https://c.animaapp.com/mb5dlfq96PJ4GF/img/footer.png"
-          />
-        </footer>
+        <Footer />
       </div>
     </div>
   );
