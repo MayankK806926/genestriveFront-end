@@ -1,4 +1,6 @@
+"use client"
 import React, { useState } from "react";
+import Link from 'next/link';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,12 +22,12 @@ const Navbar = () => {
 
         {/* Desktop Buttons */}
         <div className="hidden lg:flex gap-4">
-          <button className="bg-[#001e32] text-white px-10 py-4 rounded-full font-semibold text-sm">
+          <Link href='/login' className="bg-[#001e32] text-white px-10 py-4 rounded-full font-semibold text-sm">
             Login
-          </button>
-          <button className="bg-[#001e32] text-white px-8 py-4 rounded-full font-semibold text-sm">
+          </Link>
+          <Link href='/signup' className="bg-[#001e32] text-white px-8 py-4 rounded-full font-semibold text-sm">
             Sign Up
-          </button>
+          </Link>
         </div>
 
         {/* Tablet Navigation */}
@@ -39,12 +41,12 @@ const Navbar = () => {
 
         {/* Tablet Buttons */}
         <div className="hidden md:flex lg:hidden gap-2">
-          <button className="bg-[#001e32] text-white px-4 py-2 rounded-full font-semibold text-sm">
+          <Link href='/login' className="bg-[#001e32] text-white px-4 py-2 rounded-full font-semibold text-sm">
             Login
-          </button>
-          <button className="bg-[#001e32] text-white px-3 py-2 rounded-full font-semibold text-sm">
+          </Link>
+          <Link href='/signup' className="bg-[#001e32] text-white px-3 py-2 rounded-full font-semibold text-sm">
             Sign Up
-          </button>
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}

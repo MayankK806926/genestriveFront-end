@@ -1,0 +1,1 @@
+export { ChevronLeftNormal } from "./ChevronLeftNormal";

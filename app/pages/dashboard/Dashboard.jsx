@@ -1,91 +1,14 @@
-import React, { useState } from "react";
-import SideBar from "./common/Sidebar";
-import Footer from "../common/Footer";
+import React, { useState } from 'react'
+import Footer from '../components/Footer';
+import Navbar2 from '../components/Navbar2';
+import Sidebar from '../components/Sidebar';
+import MainContent from '../components/MainContent';
 
-// Custom Badge Component
-export function Badge({ className = "", children }) {
-  return (
-    <span className={`inline-block px-2 py-1 rounded text-xs font-semibold ${className}`}>
-      {children}
-    </span>
-  );
-}
-
-// Custom Card Components
-export function Card({ className = "", children }) {
-  return (
-    <div className={`bg-white rounded shadow ${className}`}>
-      {children}
-    </div>
-  );
-}
-
-export function CardHeader({ className = "", children }) {
-  return (
-    <div className={`border-b px-4 py-2 ${className}`}>
-      {children}
-    </div>
-  );
-}
-
-export function CardTitle({ className = "", children }) {
-  return (
-    <h3 className={`font-bold text-lg ${className}`}>{children}</h3>
-  );
-}
-
-export function CardContent({ className = "", children }) {
-  return (
-    <div className={`p-4 ${className}`}>{children}</div>
-  );
-}
-
-// Custom Button Component
-export function Button({ className = "", children, ...props }) {
-  return (
-    <button
-      className={`px-4 py-2 rounded font-semibold transition-colors bg-blue-700 text-white hover:bg-blue-800 ${className}`}
-      {...props}
-    >
-      {children}
-    </button>
-  );
-}
-
-// Custom Avatar Component
-export function Avatar({ className = "" }) {
-  return (
-    <div className={`rounded-full bg-gray-300 ${className}`}></div>
-  );
-}
-
-// Custom Progress Component
-export function Progress({ value, className = "" }) {
-  return (
-    <div className={`w-full bg-gray-200 rounded h-2 ${className}`}>
-      <div className="bg-purple-700 h-2 rounded" style={{ width: `${value}%` }}></div>
-    </div>
-  );
-}
-
-// Custom Select Component
-export function Select({ children, value, onChange, className = "" }) {
-  return (
-    <select
-      className={`px-2 py-1 rounded bg-white text-[#2f2f68] [font-family:'Inter',Helvetica] font-medium text-xl ${className}`}
-      value={value}
-      onChange={onChange}
-    >
-      {children}
-    </select>
-  );
-}
-
-// Custom SelectTrigger and SelectValue are not needed for a basic select, the select element handles this.
-// The placeholder can be an initial <option value="">...</option>
 
 function Dashboard(){
-  // Data for recent activities
+  const [name, setName] = useState("John Doe"); // Initialize with default name
+
+  // Sample data for recent activities
   const recentActivities = [
     {
       id: 1,
@@ -95,25 +18,18 @@ function Dashboard(){
     },
     {
       id: 2,
-      title: "Complete Mathematics",
-      score: "20/20",
-      date: "12 May, 12:00",
+      title: "Complete Science",
+      score: "18/20",
+      date: "12 May, 11:00",
     },
     {
       id: 3,
-      title: "Complete Mathematics",
-      score: "20/20",
-      date: "12 May, 12:00",
-    },
-    {
-      id: 4,
-      title: "Complete Mathematics",
-      score: "20/20",
-      date: "12 May, 12:00",
+      title: "Complete History",
+      score: "19/20",
+      date: "12 May, 10:00",
     },
   ];
 
-  // Data for topics to focus on
   const topicsToFocus = [
     {
       id: 1,
@@ -124,214 +40,36 @@ function Dashboard(){
     },
     {
       id: 2,
-      title: "Quadratic Equation",
-      accuracy: "50%",
-      progress: 50,
+      title: "Linear Algebra",
+      accuracy: "65%",
+      progress: 65,
       subject: "Mathematics",
     },
     {
       id: 3,
-      title: "Quadratic Equation",
-      accuracy: "50%",
-      progress: 50,
-      subject: "Mathematics",
+      title: "Thermodynamics",
+      accuracy: "40%",
+      progress: 40,
+      subject: "Physics",
     },
   ];
-
-  // Data for resources
-  const resources = [1, 2, 3, 4, 5, 6];
+  const resources = [
+    { id: 1, title: "Resource 1" },
+    { id: 2, title: "Resource 2" },
+    { id: 3, title: "Resource 3" },
+    { id: 4, title: "Resource 4" },
+    { id: 5, title: "Resource 5" },
+    { id: 6, title: "Resource 6" },
+  ];
 
   return (
-    <div className="bg-white flex flex-row justify-center w-full">
-      <div className="bg-white overflow-hidden w-[1440px] relative">
-        {/* Header */}
-        <header className="flex justify-between items-center px-[60px] py-[55px]">
-        <div className="text-3xl font-bold text-[#15609e] font-['Inter',_Helvetica]">
-        TESTWALE.AI
+    <div className="bg-white flex flex-col min-h-screen">
+      <Navbar2 />
+      <div className="flex flex-col md:flex-row flex-grow">
+        <Sidebar />
+        <MainContent name={name} recentActivities={recentActivities} topicsToFocus={topicsToFocus} resources={resources} />
       </div>
-          <nav className="bg-[#f0ddff] rounded-[50px] h-[52px] flex items-center px-8">
-            <ul className="flex space-x-10">
-              <li className="[font-family:'Inter',Helvetica] font-semibold text-[#2f2f68] text-lg">
-                Home
-              </li>
-              <li className="[font-family:'Inter',Helvetica] font-semibold text-[#2f2f68] text-lg">
-                DashBoard
-              </li>
-              <li className="[font-family:'Inter',Helvetica] font-semibold text-[#2f2f68] text-lg">
-                About Us
-              </li>
-            </ul>
-          </nav>
-        </header>
-
-        <div className="flex h-[2406px]">
-          <SideBar />
-
-          {/* Main Content */}
-          <main className="flex-1 bg-white border border-solid border-[#d9d9d9]">
-            {/* Welcome Section */}
-            <section className="mx-[35px] mt-[20px]">
-              <div className="bg-[#f7ecff] rounded-[15px] p-6 flex">
-                <div className="flex-1">
-                  <h2 className="[font-family:'Inter',Helvetica] font-bold text-[#2f2f68] text-[20px] mb-2">
-                    Hi, {"{name}"}
-                  </h2>
-                  <p className="[font-family:'Inter',Helvetica] font-medium text-[#2f2f68] text-xl leading-[30px]">
-                    Generate personalized tests and improve your weak points
-                  </p>
-                </div>
-                <Avatar className="w-[100px] h-[100px] rounded-[85px]" />
-              </div>
-
-              {/* Stats Cards */}
-              <div className="flex justify-center mt-[20px] gap-[150px]">
-                {[
-                  { title: "Total Tests Taken", value: "25" },
-                  { title: "Average Accuracy", value: "25" },
-                  { title: "Weak Topics", value: "25" },
-                ].map((stat, index) => (
-                  <div
-                    key={index}
-                    className="w-[190px] h-[80px] bg-[#5e2f7c] rounded-[15px] text-white flex flex-col items-center justify-center p-4"
-                  >
-                    <h3 className="[font-family:'Inter',Helvetica] font-semibold text-white text-[18px] mb-2">
-                      {stat.title}
-                    </h3>
-                    <p className="[font-family:'Inter',Helvetica] font-semibold text-white text-[22px]">
-                      {stat.value}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              {/* AI Test Generator */}
-              <div className="bg-[#f7ecff] rounded-[15px] mt-[30px] p-6 flex justify-between items-center">
-                <h2 className="[font-family:'Inter',Helvetica] font-bold text-[#2f2f68] text-[20px]">
-                  AI Test Generator
-                </h2>
-                <button className="bg-[#001e32] h-[50px] w-[230px] rounded-none [font-family:'Inter',Helvetica] font-semibold text-white text-[22px]">
-                  Generate Test
-                </button>
-              </div>
-
-              {/* Recent Activities and Progress */}
-              <div className="flex gap-[40px] mt-[20px]">
-                {/* Recent Activities */}
-                <div className="flex-1 bg-[#f7ecff] rounded-[15px]">
-                  <div className="border-b px-4 py-2">
-                    <h3 className="[font-family:'Inter',Helvetica] font-bold text-[#2f2f68] text-[32px]">
-                      Recent Activities
-                    </h3>
-                  </div>
-                  <div className="p-3 space-y-3">
-                    {recentActivities.map((activity) => (
-                      <div
-                        key={activity.id}
-                        className="bg-white border-[0.75px] border-solid border-[#5e2f7c] h-[60px] p-2 flex justify-between items-center"
-                      >
-                        <div>
-                          <p className="[font-family:'Inter',Helvetica] font-normal text-[#2f2f68] text-sm">
-                            {activity.title}
-                          </p>
-                          <span className="inline-block px-2 py-1 text-xs font-semibold bg-[#05ff6f82] text-[#2f2f68] text-[10px] rounded-none">
-                            Score - {activity.score}
-                          </span>
-                        </div>
-                        <div className="flex flex-col items-end">
-                          <img
-                            className="w-[57px] h-[45px] object-cover"
-                            alt="Image"
-                            src="https://c.animaapp.com/mb5dlfq96PJ4GF/img/image-55.png"
-                          />
-                          <p className="[font-family:'Inter',Helvetica] font-normal text-[#2f2f68] text-[10px]">
-                            {activity.date}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                    <div className="flex justify-center">
-                      <button
-                        className="px-4 py-2 rounded font-semibold transition-colors bg-[#001e32] text-white text-sm h-[29px] w-[68px] hover:bg-blue-800"
-                      >
-                        More
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Your Progress */}
-                <div className="flex-1 bg-[#f7ecff] rounded-[15px]">
-                  <div className="border-b px-4 py-2">
-                    <h3 className="[font-family:'Inter',Helvetica] font-bold text-[#2f2f68] text-[32px]">
-                      Your Progress
-                    </h3>
-                  </div>
-                  <div className="p-4">
-                    <div className="bg-white border-[0.75px] border-solid border-[#5e2f7c] h-[336px]">
-                      {/* Progress chart would go here */}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Topics to Focus on */}
-              <div className="bg-[#f7ecff] rounded-[15px] mt-[20px]">
-                <div className="border-b px-4 py-2 flex justify-center">
-                  <h3 className="[font-family:'Inter',Helvetica] font-bold text-[#2f2f68] text-[32px]">
-                    Topics to Focus on
-                  </h3>
-                </div>
-                <div className="p-5 space-y-3">
-                  {topicsToFocus.map((topic, index) => (
-                    <div
-                      key={index}
-                      className="bg-white border-[0.75px] border-solid border-[#5e2f7c] h-[70px] p-4"
-                    >
-                      <div className="flex justify-between items-start">
-                        <p className="[font-family:'Inter',Helvetica] font-normal text-[#2f2f68] text-sm">
-                          {topic.title}
-                        </p>
-                        <span className="inline-block px-2 py-1 text-xs font-normal bg-[#5e2f7c] text-white rounded-none">
-                          {topic.subject}
-                        </span>
-                      </div>
-                      <div className="flex items-center mt-4">
-                        <div className="flex-1 mr-4">
-                          <div className="w-full h-[7px] bg-[#d9d9d9] rounded-[15px]">
-                            <div className="bg-purple-700 h-2 rounded" style={{ width: `${topic.progress}%` }}></div>
-                          </div>
-                        </div>
-                        <span className="[font-family:'Inter',Helvetica] font-normal text-[#2f2f68] text-xs">
-                          {topic.accuracy} Accuracy
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Resources */}
-              <div className="bg-[#f7ecff] rounded-[15px] mt-[20px]">
-                <div className="border-b px-4 py-2 flex justify-center">
-                  <h3 className="[font-family:'Inter',Helvetica] font-bold text-[#2f2f68] text-[32px]">
-                    Resources
-                  </h3>
-                </div>
-                <div className="p-5 space-y-3">
-                  {resources.map((resource) => (
-                    <div
-                      key={resource}
-                      className="bg-white border-[0.75px] border-solid border-[#5e2f7c] h-[35px]"
-                    ></div>
-                  ))}
-                </div>
-              </div>
-            </section>
-          </main>
-        </div>
-
-        <Footer />
-      </div>
+      <Footer />
     </div>
   );
 };

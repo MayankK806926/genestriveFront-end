@@ -1,8 +1,6 @@
 "use client"
 import React from 'react';
-import LandingPage from './pages/LandingPage';
-import { Login } from './pages/authentication/Login';
-import { SignUp } from './pages/authentication/SignUp';
+import LandingPage from './pages/LandingPage/LandingPage';
 
 export default function Home() {
   return (
