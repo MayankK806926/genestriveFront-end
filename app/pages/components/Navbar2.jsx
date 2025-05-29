@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { ChevronBottomNormal } from "../icons/ChevronBottomNormal";
 import Link from "next/link";
+import { auth } from '../authentication/firebase-config';
+import { destroyCookie } from "nookies";
 
 const Navbar2 = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,7 +25,7 @@ const Navbar2 = () => {
         {/* Profile Pic */}
         <div className="hidden lg:flex  ml-40">
           <div className="bg-[#D9D9D9] rounded-full w-20 h-20 ">
-          </div>  
+          </div>
         </div>
 
         {/* Tablet Navigation */}
@@ -58,7 +60,17 @@ const Navbar2 = () => {
             <a href="/dashboard" className="text-[#2f2f68] font-semibold text-lg">DashBoard</a>
             <a href="/AboutUs" className="text-[#2f2f68] font-semibold text-lg">About Us</a>
           </div>
-          <button className="w-4/5 bg-[#001e32] text-white py-2 rounded-full font-semibold text-sm">
+          <button className="w-4/5 bg-[#001e32] text-white py-2 rounded-full font-semibold text-sm"
+            onClick={async () => {
+              try {
+                await auth.signOut(); // Firebase logout
+                destroyCookie(null, "__session", { path: "/" }); // Remove the cookie manually
+                window.location.href = "/login"; // Or router.push("/login")
+              } catch (err) {
+                console.error("Logout error:", err);
+              }
+            }}
+          >
             Log Out
           </button>
           <button className="w-4/5 bg-[#001e32] text-white py-2 rounded-full font-semibold text-sm">

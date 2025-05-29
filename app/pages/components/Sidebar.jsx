@@ -2,8 +2,10 @@ import React from 'react';
 import { ChevronBottomNormal } from "../icons/ChevronBottomNormal";
 import { FaQuestionCircle } from 'react-icons/fa';
 import { IoLogOutOutline } from 'react-icons/io5';
+import { auth } from '../authentication/firebase-config';
+import { destroyCookie } from "nookies";
 
-const Sidebar = ({grade,examtype,handleGradeChange,handleExamTypeChange}) => {
+const Sidebar = ({ grade, examtype, handleGradeChange, handleExamTypeChange }) => {
   return (
     <aside className="w-full md:w-[430px] bg-[#001e32] text-white flex flex-col">
       {/* Content with padding */}
@@ -38,18 +40,30 @@ const Sidebar = ({grade,examtype,handleGradeChange,handleExamTypeChange}) => {
 
       {/* Bottom content with padding */}
       <div className='p-4 md:p-8 text-center space-y-4 pb-6 pt-4'>
-          <div>
-            <button className="flex items-center justify-center gap-2 hover:text-gray-300 transition-colors w-full py-2">
-              <FaQuestionCircle className="text-xl flex items-center" />
-              <span className="flex items-center">Help Center</span>
-            </button>
-          </div>
-          <div>
-            <button className="flex items-center justify-center gap-2 hover:text-gray-300 transition-colors w-full py-2">
-              <IoLogOutOutline className="text-xl flex items-center" />
-              <span className="flex items-center">Log Out</span>
-            </button>
-          </div>
+        <div>
+          <button className="flex items-center justify-center gap-2 hover:text-gray-300 transition-colors w-full py-2">
+            <FaQuestionCircle className="text-xl flex items-center" />
+            <span className="flex items-center">Help Center</span>
+          </button>
+        </div>
+        <div>
+          <button className="flex items-center justify-center gap-2 hover:text-gray-300 transition-colors w-full py-2"
+            onClick={async () => {
+              try {
+                await auth.signOut(); // Firebase logout
+                destroyCookie(null, "__session", { path: "/" }); // Remove the cookie manually
+                window.location.href = "/login"; // Or router.push("/login")
+              } catch (err) {
+                console.error("Logout error:", err);
+              }
+            }}
+          >
+            <IoLogOutOutline className="text-xl flex items-center" />
+            <span className="flex items-center"
+
+            >Log Out</span>
+          </button>
+        </div>
       </div>
     </aside>
   );

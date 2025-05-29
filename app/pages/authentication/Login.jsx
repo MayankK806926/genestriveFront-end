@@ -51,7 +51,7 @@ export default function Login() {
         sameSite: "lax",
       });
       console.log("Cookie set successfully");
-      router.push("/support"); // Redirect to dashboard
+      router.push("/dashboard"); // Redirect to dashboard
       router.refresh(); // Refresh the page to apply changes
       console.log("Redirecting to dashboard");
     } catch (error) {
