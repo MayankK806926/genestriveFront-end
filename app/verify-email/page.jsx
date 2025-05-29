@@ -1,39 +1,85 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { auth } from "./firebase-config";
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
+import nookies from "nookies";
+
 
 export default function VerifyEmail() {
   const router = useRouter();
+  const timeoutRef = useRef(null);
+  const intervalRef = useRef(null);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    timeoutRef.current = setTimeout(async () => {
+      // If not verified in 30s, delete user and redirect
+      if (auth.currentUser && !auth.currentUser.emailVerified) {
+        try {
+          await auth.currentUser.delete();
+        } catch (e) {
+          // ignore
+        }
+      }
+      router.replace("/signup");
+    }, 60000);
+
+    // Poll for email verification every 3s
+    intervalRef.current = setInterval(() => {
       onAuthStateChanged(auth, async (user) => {
-        await user?.reload();  // force check
+        await user?.reload();
         if (user && user.emailVerified) {
-          await sendEmailVerification(user);
+          clearTimeout(timeoutRef.current);
+          clearInterval(intervalRef.current);
+
+          // Set session cookie
+          const token = await user.getIdToken();
           nookies.set(null, "__session", token, {
-            path: "/", // required
-            maxAge: 60 * 60, // 1 hour
-            httpOnly: false, // true = inaccessible from JS (SSR only)
-            secure: process.env.NODE_ENV === "production", // true in production
+            path: "/",
+            maxAge: 60 * 60,
+            httpOnly: false,
+            secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
           });
-          router.push("/dashboard"); // Redirect to dashboard if email is verified
+          // After successful signup and before router.push("/verify-email")
+          const name = localStorage.getItem("signup_name") || "";
+          const phone = localStorage.getItem("signup_phone") || "";
+          console.log("1")
+          // Store user details in backend
+          await fetch("http://localhost:8000/register_user", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              uid: user.uid,
+              email: user.email,
+              username: name,
+              phone: phone
+            }),
+          });
+          console.log("2")
+          localStorage.removeItem("signup_name");
+          localStorage.removeItem("signup_phone");
+          router.push("/dashboard");
         }
       });
-    }, 3000); // Poll every 3 seconds
+    }, 3000);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearTimeout(timeoutRef.current);
+      clearInterval(intervalRef.current);
+    };
   }, [router]);
 
   return (
     <div>
       <h2>Check your email</h2>
-      <p>We sent you a verification link. This page will redirect after verification.</p>
+      <p>
+        We sent you a verification link. This page will redirect after verification.<br />
+        <span style={{ color: "red" }}>You have 30 seconds to verify your email.</span>
+      </p>
     </div>
   );
 }
-

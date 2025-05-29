@@ -34,48 +34,24 @@ export default function SignUp() {
     e.preventDefault();
     setError("");
     setLoading(true);
-    console.log("going on");
 
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
-      console.log("User created successfully:", userCredential);
       const user = userCredential.user;
-      // const response = await fetch("http://0.0.0.0:8000/register_user", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     ...formData,
-      //     userType,
-      //   }),
-      // });
-
-      const response = await fetch("http://localhost:8000/register_user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          uid:user.uid,
-          email:user.email,
-          username: formData.name,
-          phone: formData.phone,
-        }),
-      });
-      const data = await response.json();
-      console.log(data);
-
-      if (data) {
-        // Redirect to login page on success
-        
-        // navigate to "/verify-email"
-        router.push("/verify-email");
-
-      } else {
-        setError(data.message || "Registration failed");
-      }
+      await sendEmailVerification(user);
+      localStorage.setItem("signup_name", formData.name);
+      localStorage.setItem("signup_phone", formData.phone);
+      console.log("oye")
+      router.push("/verify-email");
+      console.log("ha")
     } catch (error) {
+      if (auth.currentUser) {
+        try {
+          await auth.currentUser.delete();
+        } catch (e) {
+          console.error("Failed to delete Firebase user after error:", e);
+        }
+      }
       setError("An error occurred during registration");
       console.error("Signup failed:", error);
     } finally {
@@ -200,11 +176,10 @@ export default function SignUp() {
                 <button
                   type="submit"
                   disabled={!privacy}
-                  className={`w-full cursor-pointer sm:w-[200px] h-[55px] rounded-[30px] border ${
-                    userType === "student"
-                      ? "bg-[#5e2f7c] text-white border-none"
-                      : "bg-white text-[#001e32] border-[#2f2f68] shadow-[0px_0px_4px_#00000040]"
-                  }`}
+                  className={`w-full cursor-pointer sm:w-[200px] h-[55px] rounded-[30px] border ${userType === "student"
+                    ? "bg-[#5e2f7c] text-white border-none"
+                    : "bg-white text-[#001e32] border-[#2f2f68] shadow-[0px_0px_4px_#00000040]"
+                    }`}
                   onSubmit={handleSubmit}
                 >
                   <h2 className="font-semibold">Student</h2>
@@ -213,11 +188,10 @@ export default function SignUp() {
                 <button
                   type="submit"
                   disabled={!privacy}
-                  className={`w-full cursor-pointer sm:w-[200px] h-[55px] rounded-[30px] border ${
-                    userType === "mentor"
-                      ? "bg-[#5e2f7c] text-white border-none"
-                      : "bg-white text-[#001e32] border-[#2f2f68] shadow-[0px_0px_4px_#00000040]"
-                  }`}
+                  className={`w-full cursor-pointer sm:w-[200px] h-[55px] rounded-[30px] border ${userType === "mentor"
+                    ? "bg-[#5e2f7c] text-white border-none"
+                    : "bg-white text-[#001e32] border-[#2f2f68] shadow-[0px_0px_4px_#00000040]"
+                    }`}
                 >
                   <h2 className="font-semibold">Mentor</h2>
                 </button>
