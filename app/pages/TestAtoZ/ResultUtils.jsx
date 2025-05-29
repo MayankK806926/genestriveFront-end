@@ -32,7 +32,7 @@ export const CircularProgress = ({ value, label, subLabel, percentage = 75 }) =>
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <span className="text-2xl font-bold">{value}</span>
-            {subLabel && <span className="text-sm text-gray-500">{subLabel}</span>}
+            {subLabel && <span className="text-sm text-gray-800">{subLabel}</span>}
           </div>
         </div>
         <span className="mt-2 text-gray-600 font-medium">{label}</span>
