@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { auth } from "./firebase-config";
 import { useRouter } from "next/navigation";
-
+import nookies from "nookies";
 
 export default function SignUp() {
   const [userType, setUserType] = useState("student");
@@ -58,7 +58,9 @@ export default function SignUp() {
         },
         body: JSON.stringify({
           uid:user.uid,
-          email:user.email
+          email:user.email,
+          username: formData.name,
+          phone: formData.phone,
         }),
       });
       const data = await response.json();
@@ -66,8 +68,7 @@ export default function SignUp() {
 
       if (data) {
         // Redirect to login page on success
-        await sendEmailVerification(user);
-        console.log("hdsfds")
+        
         // navigate to "/verify-email"
         router.push("/verify-email");
 

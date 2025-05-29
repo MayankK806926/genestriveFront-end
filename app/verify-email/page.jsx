@@ -13,6 +13,14 @@ export default function VerifyEmail() {
       onAuthStateChanged(auth, async (user) => {
         await user?.reload();  // force check
         if (user && user.emailVerified) {
+          await sendEmailVerification(user);
+          nookies.set(null, "__session", token, {
+            path: "/", // required
+            maxAge: 60 * 60, // 1 hour
+            httpOnly: false, // true = inaccessible from JS (SSR only)
+            secure: process.env.NODE_ENV === "production", // true in production
+            sameSite: "lax",
+          });
           router.push("/dashboard"); // Redirect to dashboard if email is verified
         }
       });
