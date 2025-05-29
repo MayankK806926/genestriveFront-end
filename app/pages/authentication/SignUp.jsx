@@ -1,5 +1,9 @@
 "use client";
 import React, { useState } from "react";
+import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { auth } from "./firebase-config";
+import { useRouter } from "next/navigation";
+
 
 export default function SignUp() {
   const [userType, setUserType] = useState("student");
@@ -12,6 +16,7 @@ export default function SignUp() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [privacy, setprivacy] = useState(false);
+  const router = useRouter();
 
   const handleUserTypeChange = (type) => {
     setUserType(type);
@@ -26,28 +31,46 @@ export default function SignUp() {
   };
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
     setError("");
     setLoading(true);
     console.log("going on");
 
     try {
-      const response = await fetch("/api/signup", {
+      const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+      console.log("User created successfully:", userCredential);
+      const user = userCredential.user;
+      // const response = await fetch("http://0.0.0.0:8000/register_user", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     ...formData,
+      //     userType,
+      //   }),
+      // });
+
+      const response = await fetch("http://localhost:8000/register_user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          ...formData,
-          userType,
+          uid:user.uid,
+          email:user.email
         }),
       });
-
       const data = await response.json();
       console.log(data);
 
-      if (data.success) {
+      if (data) {
         // Redirect to login page on success
-        window.location.href = "/two-factor-signup";
+        await sendEmailVerification(user);
+        console.log("hdsfds")
+        // navigate to "/verify-email"
+        router.push("/verify-email");
+
       } else {
         setError(data.message || "Registration failed");
       }
@@ -181,6 +204,7 @@ export default function SignUp() {
                       ? "bg-[#5e2f7c] text-white border-none"
                       : "bg-white text-[#001e32] border-[#2f2f68] shadow-[0px_0px_4px_#00000040]"
                   }`}
+                  onSubmit={handleSubmit}
                 >
                   <h2 className="font-semibold">Student</h2>
                 </button>

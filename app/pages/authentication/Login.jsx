@@ -1,7 +1,12 @@
 "use client";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import nookies from "nookies";
+import { auth } from "./firebase-config";
 
 export default function Login() {
+  const router = useRouter()
   const [userType, setUserType] = useState("student");
   const [formData, setFormData] = useState({
     email: "",
@@ -29,27 +34,29 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const response = await fetch("/api/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...formData,
-          userType,
-        }),
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+      console.log("User logged in successfully:", userCredential);
+      const token = await userCredential.user.getIdToken();
+      console.log("Token:", token);
+
+      nookies.set(null, "__session", token, {
+        path: "/", // required
+        maxAge: 60 * 60, // 1 hour
+        httpOnly: false, // true = inaccessible from JS (SSR only)
+        secure: process.env.NODE_ENV === "production", // true in production
+        sameSite: "lax",
       });
-
-      const data = await response.json();
-
-      if (data.success) {
-        window.location.href = "/dashboard";
-      } else {
-        setError(data.message || "Registration failed");
-      }
+      console.log("Cookie set successfully");
+      router.push("/support"); // Redirect to dashboard
+      router.refresh(); // Refresh the page to apply changes
+      console.log("Redirecting to dashboard");
     } catch (error) {
       setError("An error occurred during registration");
-      console.error("Signup failed:", error);
+      console.error("Login failed:", error);
     } finally {
       setLoading(false);
       // Reset form data manually
@@ -157,11 +164,10 @@ export default function Login() {
               <div className="flex flex-col sm:flex-row gap-4 mt-4 justify-center w-full cursor">
                 <button
                   type="button"
-                  className={`w-full cursor-pointer sm:w-[200px] h-[55px] rounded-[30px] border ${
-                    userType === "student"
+                  className={`w-full cursor-pointer sm:w-[200px] h-[55px] rounded-[30px] border ${userType === "student"
                       ? "bg-[#5e2f7c] text-white border-none"
                       : "bg-white text-[#001e32] border-[#2f2f68] shadow-[0px_0px_4px_#00000040]"
-                  }`}
+                    }`}
                   onClick={(e) => {
                     handleUserTypeChange("student");
                     handleSubmit(e);
@@ -172,11 +178,10 @@ export default function Login() {
 
                 <button
                   type="button"
-                  className={`w-full cursor-pointer sm:w-[200px] h-[55px] rounded-[30px] border ${
-                    userType === "mentor"
+                  className={`w-full cursor-pointer sm:w-[200px] h-[55px] rounded-[30px] border ${userType === "mentor"
                       ? "bg-[#5e2f7c] text-white border-none"
                       : "bg-white text-[#001e32] border-[#2f2f68] shadow-[0px_0px_4px_#00000040]"
-                  }`}
+                    }`}
                   onClick={(e) => {
                     handleUserTypeChange("mentor");
                     handleSubmit(e);
