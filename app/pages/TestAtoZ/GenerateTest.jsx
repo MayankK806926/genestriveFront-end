@@ -49,17 +49,34 @@ export default function GenerateTest(){
   // Handle form submission
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Log or process the form data here
-    console.log("Form Data:", {
+    
+    // Prepare the request data
+    const requestData = {
       subject,
       selectedTopics,
       difficulty,
       numQuestions,
       time,
       selectedQuestionTypes,
+    };
+
+    // Make API call to generate test
+    fetch('https://api.example.com/generate-test', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestData),
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Test generated successfully:', data);
+      // Handle successful response
+    })
+    .catch(error => {
+      console.error('Error generating test:', error);
+      // Handle error
     });
-    // Example: Call an API to generate the test
-    // generateTestApiCall({ subject, selectedTopics, difficulty, numQuestions, time, selectedQuestionTypes });
   };
 
   return (

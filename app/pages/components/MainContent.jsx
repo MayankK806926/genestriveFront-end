@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
 
-const MainContent = ({ grade, examtype, name, recentActivities, topicsToFocus, resources }) => {
+const MainContent = ({name,totalTestsTaken,AverageAccuracy,WeakTopics, Progress, recentActivities, topicsToFocus, resources }) => {
 
   return (
     <section className="mt-8 flex-grow p-4 md:p-8 overflow-y-auto">
@@ -20,9 +20,9 @@ const MainContent = ({ grade, examtype, name, recentActivities, topicsToFocus, r
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-8 mb-4 md:mb-8">
         {[
-          { title: "Total Tests Taken", value: "25" },
-          { title: "Average Accuracy", value: "75%" },
-          { title: "Weak Topics", value: "3" },
+          { title: "Total Tests Taken", value: totalTestsTaken || 0 },
+          { title: "Average Accuracy", value: AverageAccuracy || "0%" },
+          { title: "Weak Topics", value: WeakTopics || 0 },
         ].map((item, index) => (
           <div
             key={index}
@@ -58,13 +58,15 @@ const MainContent = ({ grade, examtype, name, recentActivities, topicsToFocus, r
         </div>
         <div className="bg-[#f7ecff] rounded-[15px] p-4 md:p-6">
           <h2 className="text-2xl md:text-[32px] font-bold text-[#2f2f68] mb-2 md:mb-4 text-center">Your Progress</h2>
-          <div className="mb-2 md:mb-4">
-            <h3 className="font-semibold text-[#2f2f68] mb-1 md:mb-2">Mathematics</h3>
-            <div className="w-full bg-[#d9d9d9] rounded-full h-2.5">
-              <div className="bg-[#5e2f7c] h-2.5 rounded-full" style={{width: '45%'}}></div>
+          {Progress && typeof Progress === 'object' && Object.keys(Progress).map((topic, index) => (
+            <div key={index} className="mb-2 md:mb-4">
+              <h3 className="font-semibold text-[#2f2f68] mb-1 md:mb-2">{topic}</h3>
+              <div className="w-full bg-[#d9d9d9] rounded-full h-2.5">
+                <div className="bg-[#5e2f7c] h-2.5 rounded-full" style={{width: `${Progress[topic]}%`}}></div>
+              </div>
+              <div className="text-right text-xs text-[#2f2f68]">{Progress[topic]}% Accuracy</div>
             </div>
-            <div className="text-right text-xs text-[#2f2f68]">45% Accuracy</div>
-          </div>
+          ))}
         </div>
       </div>
 
