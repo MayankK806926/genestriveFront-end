@@ -35,6 +35,8 @@ export default function TestPreview() {
 
   useEffect(() => {
     if (!submitted) {
+      setSelectedAnswers(Array(testData.length).fill(null))
+      setTestResults(null)
       setStartTime(Date.now());
     } else {
       setStartTime(null);
@@ -44,16 +46,32 @@ export default function TestPreview() {
     };
   }, [submitted]);
 
+  function topicwisedata({topic}){
+    let attemptedQuestions = 0;
+    let correctAnswers = 0;
+    let noofquestions=0
+    selectedAnswers.forEach((selectedOptionIndex, questionIndex) => {
+      if(testData[questionIndex].topic===topic){
+        noofquestions++
+      if (selectedOptionIndex) {
+        attemptedQuestions++;
+        const question = testData[questionIndex];
+        if (question.options[selectedOptionIndex]?.isCorrect) {
+          correctAnswers++;
+        }
+      }}
+    return {attemptedQuestions,correctAnswers}
+    });
+  }
+
   const processTestResults = () => {
     const endTime = Date.now();
     const duration = startTime ? endTime - startTime : 0;
-
-    const totalQuestions = testData.length;
     let attemptedQuestions = 0;
     let correctAnswers = 0;
 
     selectedAnswers.forEach((selectedOptionIndex, questionIndex) => {
-      if (selectedOptionIndex !== null) {
+      if (selectedOptionIndex) {
         attemptedQuestions++;
         const question = testData[questionIndex];
         if (question.options[selectedOptionIndex]?.isCorrect) {
@@ -63,6 +81,8 @@ export default function TestPreview() {
     });
 
     const overallAccuracy = attemptedQuestions > 0 ? (correctAnswers / attemptedQuestions) * 100 : 0;
+
+    
 
     const minutes = Math.floor(duration / 60000);
     const seconds = Math.floor((duration % 60000) / 1000);
@@ -88,7 +108,7 @@ export default function TestPreview() {
           processTestResults={processTestResults}
         />
       ) : (
-        <TestResult results={testResults} />
+        <TestResult results={testResults} setSubmitted={setSubmitted} />
       )}
     </>
   );

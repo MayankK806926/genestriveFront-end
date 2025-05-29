@@ -1,11 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ChevronLeftNormal } from "../icons/ChevronLeftNormal";
 import Navbar2 from "../components/Navbar2";
 
 export default function TestTaking({ setSubmitted, selectedAnswers, setSelectedAnswers, testData, processTestResults }) {
 
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(1);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const currentQuestion = testData[currentQuestionIndex];
+
+  // Reset currentQuestionIndex when test is retried
+  useEffect(() => {
+    // Only reset if all answers are null (indicating a test retry)
+    if (selectedAnswers.every(answer => answer === null)) {
+      setCurrentQuestionIndex(0);
+    }
+  }, [selectedAnswers]);
 
   // Handler for option selection
   const handleOptionSelect = (optionIndex) => {

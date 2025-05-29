@@ -1,8 +1,9 @@
 import React from 'react';
 import Navbar2 from '../components/Navbar2';
 import { CircularProgress,PerformanceCard, BarChart,TopicProgressBar } from './ResultUtils';
+import Link from 'next/link';
 
-export default function TestResult({ results }){
+export default function TestResult({ results,setSubmitted }){
   const { totalQuestions, attemptedQuestions, correctAnswers, overallAccuracy, timeTaken } = results || {};
 
   const overallAccuracyPercentage = parseFloat(overallAccuracy);
@@ -83,12 +84,12 @@ export default function TestResult({ results }){
           </div>
 
           <div className="space-y-4">
-            <button className="w-full bg-[#001529] text-white py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors">
+            <button className="w-full bg-[#001529] text-white py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors" onClick={()=>setSubmitted(false)}>
               Retry Test
             </button>
-            <button className="w-full bg-[#5E2F7C] text-white py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors">
+            <Link href='/dashboard' className="w-full bg-[#5E2F7C] text-white py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors">
               Back to Dashboard
-            </button>
+            </Link>
           </div>
         </div>
       </div>
