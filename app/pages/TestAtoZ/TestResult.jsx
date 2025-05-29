@@ -4,10 +4,25 @@ import { CircularProgress,PerformanceCard, BarChart,TopicProgressBar } from './R
 import Link from 'next/link';
 
 export default function TestResult({ results,setSubmitted }){
-  const { totalQuestions, attemptedQuestions, correctAnswers, overallAccuracy, timeTaken } = results || {};
+  const { totalQuestions, attemptedQuestions, correctAnswers, overallAccuracy, timeTaken, topicResults } = results || {};
 
   const overallAccuracyPercentage = parseFloat(overallAccuracy);
   const attemptedQuestionsPercentage = totalQuestions > 0 ? (attemptedQuestions / totalQuestions) * 100 : 0;
+
+  // Prepare data for BarChart and TopicProgressBar
+  const barChartData = topicResults ? Object.keys(topicResults).map(topic => ({
+    topic: topic,
+    accuracy: topicResults[topic].totalQuestions > 0 
+              ? (topicResults[topic].correctAnswers / topicResults[topic].attemptedQuestions) * 100 
+              : 0,
+  })) : [];
+
+  const topicProgressData = topicResults ? Object.keys(topicResults).map(topic => ({
+    topic: topic,
+    completed: topicResults[topic].totalQuestions > 0 
+               ? (topicResults[topic].attemptedQuestions / topicResults[topic].totalQuestions) * 100 
+               : 0,
+  })) : [];
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-[#f6effe]">
@@ -53,19 +68,13 @@ export default function TestResult({ results,setSubmitted }){
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
         <div className="bg-white rounded-lg shadow-sm p-8">
           <h2 className="text-xl font-semibold text-gray-800 mb-6">Topicwise Accuracy</h2>
-          <BarChart data={[
-            { topic: 'topic 1', accuracy: 60 },
-            { topic: 'topic 2', accuracy: 80 },
-            { topic: 'topic 3', accuracy: 40 },
-            { topic: 'topic 4', accuracy: 70 },
-            { topic: 'topic 5', accuracy: 65 }
-          ]} />
+          <BarChart data={barChartData} />
           <div className="mt-8 space-y-4">
-            {[1, 2, 3, 4, 5].map((num) => (
-              <TopicProgressBar 
-                key={num}
-                topic={`topic ${num}`}
-                completed={50}
+            {topicProgressData.map((topicData, index) => (
+              <TopicProgressBar
+                key={index}
+                topic={topicData.topic}
+                completed={topicData.completed}
               />
             ))}
           </div>
@@ -75,7 +84,7 @@ export default function TestResult({ results,setSubmitted }){
           <div className="flex-1">
             <h2 className="text-xl font-semibold text-gray-800 mb-6">Topics to Focus on</h2>
             <div className="space-y-4">
-              {['Topic 1', 'Topic 2', 'Topic 3', 'Topic 4'].map((topic, index) => (
+              {topicResults && Object.keys(topicResults).map((topic, index) => (
                 <div key={index} className="text-gray-600">
                   {topic}
                 </div>

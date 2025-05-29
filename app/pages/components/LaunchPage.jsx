@@ -21,9 +21,9 @@ const LaunchPage = () => {
 
         {/* Buttons */}
         <div className="mt-24 flex flex-col md:flex-row gap-14 justify-center items-center">
-          <button className="bg-[#5e2f7c] text-white text-2xl font-semibold px-12 py-4 rounded-full">
+          <Link href='/GetStarted' className="bg-[#5e2f7c] text-white text-2xl font-semibold px-12 py-4 rounded-full">
             Start Learning Today
-          </button>
+          </Link>
           <button className="bg-white border border-[#2f2f68] text-[#001e32] text-2xl font-semibold px-12 py-4 rounded-full shadow-md">
             Competitive Exams
           </button>
