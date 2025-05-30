@@ -54,11 +54,11 @@ export default function VerifyEmail() {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              uid: user.uid,
-              email: user.email,
-              username: name,
-              phone: phone,
-              userRole: userType,
+              Password_hash: user.uid,
+              EMAIL: user.email,
+              User_name: name,
+              Phone_number: phone,
+              Role: userType,
             }),
           });
           console.log("Response:", response);
