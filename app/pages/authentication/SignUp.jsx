@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
-import { auth } from "./firebase-config";
+import { auth } from "../authentication/firebase-config"; 
 import { useRouter } from "next/navigation";
 import nookies from "nookies";
 
@@ -36,13 +36,6 @@ export default function SignUp() {
     setLoading(true);
 
     try {
-      //check if email already exists
-      const existingUser = await auth.fetchSignInMethodsForEmail(formData.email);
-      if (existingUser.length > 0) {
-        setError("Email already exists. Please use a different email.");
-        setLoading(false);
-        return;
-      }
       const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
       const user = userCredential.user;
       await sendEmailVerification(user);
