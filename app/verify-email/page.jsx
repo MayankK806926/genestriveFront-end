@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { auth } from "./firebase-config";
+import { auth } from "../pages/authentication/firebase-config";
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import nookies from "nookies";
