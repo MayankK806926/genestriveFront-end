@@ -1,7 +1,14 @@
 import { NextResponse } from 'next/server';
 
-export async function GET(request) {
+export async function POST(request) {
   try {
+    // Read the request body to get parameters from the frontend
+    const {requestData,grade,examtype} = await request.json();
+    console.log('Received test generation request with data:', requestData,grade,examtype);
+
+    // TODO: Implement actual test generation logic here
+    // Use requestData (e.g., requestData.subject, requestData.selectedTopics) to generate the test.
+    // For now, returning the hardcoded sample data.
 
     const sampleData = [
         {
@@ -26,10 +33,12 @@ export async function GET(request) {
         },
       ];
 
+    // Return the generated test data in the expected format
     return NextResponse.json({sampleData});
   } catch (error) {
+    console.error('Error in test generation API route:', error);
     return NextResponse.json(
-      { success: false, message: 'Registration failed', error: error.message },
+      { success: false, message: 'Failed to generate test', error: error.message },
       { status: 500 }
     );
   }

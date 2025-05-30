@@ -2,9 +2,13 @@
 import React, { useState, useEffect } from "react";
 import TestTaking from "./TestTaking";
 import TestResult from "./TestResult";
-import axios from 'axios';
+// import axios from 'axios'; // axios is no longer used for initial fetch
+// import { useRouter } from 'next/navigation'; // useRouter is no longer needed for query params
+import { useSearchParams } from 'next/navigation'; // Import useSearchParams
 
 export default function TestPreview() {
+  // const router = useRouter(); // useRouter is no longer needed for query params
+  const searchParams = useSearchParams(); // Initialize useSearchParams
   // Initialize testData as null initially
           // Optional: Fallback to sample data on error
 
@@ -41,36 +45,42 @@ export default function TestPreview() {
 
   //uncomment during API integration
   useEffect(() => {
-    // Fetch test data when the component mounts
-    const fetchTestData = async () => {
+    // Read test data from URL search parameters
+    const testDataString = searchParams.get('testData');
+
+    if (testDataString) {
       try {
-        console.log('Fetching test data...');
-        const response = await axios.get('/api/generate-test'); // Replace with your actual API endpoint
-        console.log('API Response:', response);
-        
-        if (response.data?.sampleData && Array.isArray(response.data.sampleData)) {
-          console.log('Valid test data received:', response.data.sampleData);
-          setTestData(response.data.sampleData);
-          setSelectedAnswers(Array(response.data.sampleData.length).fill(null));
+        const dataFromQuery = JSON.parse(testDataString);
+        if (dataFromQuery && Array.isArray(dataFromQuery)) {
+          console.log('Valid test data received from URL search params:', dataFromQuery);
+          setTestData(dataFromQuery);
+          setSelectedAnswers(Array(dataFromQuery.length).fill(null));
+          console.log('Setting loading to false after receiving valid data.');
+          setLoading(false);
         } else {
-          console.error('Invalid test data format:', response.data);
-          setError(new Error('Invalid test data received'));
+          console.error('Invalid test data format from URL search params:', dataFromQuery);
+          console.log('Setting loading to false after invalid data format.');
+          setError(new Error('Invalid test data received from generator.'));
+          setLoading(false);
         }
-        setLoading(false);
       } catch (err) {
-        console.error("Error fetching test data:", err);
-        console.error("Error details:", {
-          message: err.message,
-          status: err.response?.status,
-          data: err.response?.data
-        });
-        setError(err);
+        console.error("Error parsing test data from URL search params:", err);
+        console.log('Setting loading to false after parsing error.');
+        setError(new Error('Failed to load test data.'));
         setLoading(false);
       }
-    };
-
-    fetchTestData();
-  }, []); // Empty dependency array means this runs once on mount
+    } else {
+      // Handle case where no testData is in query (e.g., direct access or generation failed)
+      console.warn('No test data found in URL search params.');
+      console.log('Setting loading to false - no test data in query.');
+      setError(new Error('No test data provided or generation failed.'));
+      setLoading(false);
+      // Optionally, redirect to generate page (requires useRouter)
+      // const router = useRouter();
+      // router.push('/dashboard/generate-test');
+    }
+    // useSearchParams is a static hook, no dependencies needed for initial read
+  }, []); 
   
   const [selectedAnswers, setSelectedAnswers] = useState([]);
 
