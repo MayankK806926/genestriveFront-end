@@ -4,8 +4,10 @@ import Navbar2 from '../components/Navbar2';
 import Sidebar from '../components/Sidebar';
 import MainContent from '../components/MainContent';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 function Dashboard(){
+  const router = useRouter();
   const [name, setName] = useState("John Doe"); // Initialize with default name
   const [grade, setGrade] = useState("John Doe"); // Initialize with default name
   const [examtype, setExamType] = useState("John Doe"); // Initialize with default name
@@ -17,7 +19,6 @@ function Dashboard(){
   const [Progress, setProgress] = useState({});
   const [recentActivities, setRecentActivities] = useState([]);
   const [topicsToFocus, setTopicsToFocus] = useState([]); // Corrected variable name for clarity
-  const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true); // Add loading state
   const [error, setError] = useState(null); // Add error state
 
@@ -29,33 +30,66 @@ function Dashboard(){
     setExamType(event.target.value);
   };
 
-  useEffect(()=>{
-    const fetchDasboardData = async () => { // fetchDasboardData needs to be async to use await
-      try{
-        const res = await axios.get('https://api.example.com/dashboard-data', {
-          params: {
-            grade: grade,
-            examtype:examtype
-          }
-        }); // Assuming a different endpoint for dashboard data
-        const {totalTestsTaken, AverageAccuracy ,WeakTopics ,Progress, recentActivities, TopicstoFocus, resources } = res.data; // Access data from res.data
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const res = await axios.post('/api/dashboard-data', {
+          grade: grade,
+          examtype: examtype
+        });
         
-        // Update state with fetched data
-        settotalTestsTaken(totalTestsTaken)
-        setAverageAccuracy(AverageAccuracy)
-        setWeakTopics(WeakTopics)//Number
-        setRecentActivities(recentActivities);
-        setTopicsToFocus(TopicstoFocus); 
-        setResources(resources);
+        if (res.data) {
+          const { totalTestsTaken, AverageAccuracy, Progress, recentActivities, topicsToFocus } = res.data;
+          
+          // Update state with fetched data
+          settotalTestsTaken(totalTestsTaken || 0);
+          setAverageAccuracy(AverageAccuracy || 0);
+          setProgress(Progress || {});
+          setWeakTopics(topicsToFocus?.length || 0);
+          setRecentActivities(recentActivities || []);
+          setTopicsToFocus(topicsToFocus || []);
+        }
         setLoading(false);
-      }catch(err){
-        console.log(err)
-        setError(err); // Set error state
+      } catch (err) {
+        console.error('Error fetching dashboard data:', err);
+        setError(err);
         setLoading(false);
       }
+    };
+    
+    fetchDashboardData();
+  }, [grade, examtype]);
+
+  const resources = [
+    {
+      id: 1,
+      title: "Mathematics Formula Sheet",
+      description: "Comprehensive collection of important formulas",
+      type: "PDF",
+      subject: "Mathematics"
+    },
+    {
+      id: 2,
+      title: "Science Lab Manual",
+      description: "Step-by-step guide for common experiments",
+      type: "PDF",
+      subject: "Science"
+    },
+    {
+      id: 3,
+      title: "History Timeline",
+      description: "Chronological overview of important events",
+      type: "PDF",
+      subject: "History"
+    },
+    {
+      id: 4,
+      title: "Geography Maps",
+      description: "Collection of important geographical maps",
+      type: "PDF",
+      subject: "Geography"
     }
-    fetchDasboardData();
-  },[])
+  ];
 
 
   if(loading){
@@ -63,75 +97,20 @@ function Dashboard(){
     <div>Loading...</div>
   )}
 
-  
-
-  // Sample data for recent activities
-  // const exampleProgress = {
-  //   "Mathematics": 75,
-  //   "Science": 60,
-  //   "History": 90,
-  //   "Geography": 45
-  // };
-  // const recentActivities = [
-  //   {
-  //     id: 1,
-  //     title: "Complete Mathematics",
-  //     score: "20/20",
-  //     date: "12 May, 12:00",
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "Complete Science",
-  //     score: "18/20",
-  //     date: "12 May, 11:00",
-  //   },
-  //   {
-  //     id: 3,
-  //     title: "Complete History",
-  //     score: "19/20",
-  //     date: "12 May, 10:00",
-  //   },
-  // ];
-
-  // const topicsToFocus = [
-  //   {
-  //     id: 1,
-  //     title: "Quadratic Equation",
-  //     accuracy: "50%",
-  //     progress: 50,
-  //     subject: "Mathematics",
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "Linear Algebra",
-  //     accuracy: "65%",
-  //     progress: 65,
-  //     subject: "Mathematics",
-  //   },
-  //   {
-  //     id: 3,
-  //     title: "Thermodynamics",
-  //     accuracy: "40%",
-  //     progress: 40,
-  //     subject: "Physics",
-  //   },
-  // ];
-  // const resources = [
-  //   { id: 1, title: "Resource 1" },
-  //   { id: 2, title: "Resource 2" },
-  //   { id: 3, title: "Resource 3" },
-  //   { id: 4, title: "Resource 4" },
-  //   { id: 5, title: "Resource 5" },
-  //   { id: 6, title: "Resource 6" },
-  // ];
 
   return (
     <div className="bg-white flex flex-col min-h-screen">
       <Navbar2 />
       <div className="flex flex-col md:flex-row flex-grow">
         <Sidebar grade={grade} examtype={examtype} handleGradeChange={handleGradeChange} handleExamTypeChange={handleExamTypeChange} />
-        <MainContent totalTestsTaken={totalTestsTaken} AverageAccuracy={AverageAccuracy} WeakTopics={WeakTopics} name={name} recentActivities={recentActivities} topicsToFocus={topicsToFocus} resources={resources} />
+        <MainContent totalTestsTaken={totalTestsTaken} AverageAccuracy={AverageAccuracy} WeakTopics={WeakTopics} name={name} Progress={Progress} recentActivities={recentActivities} topicsToFocus={topicsToFocus} resources={resources} />
       </div>
+      <button
+        onClick={() => router.push(`/dashboard/generate-test?grade=${encodeURIComponent(grade)}&examtype=${encodeURIComponent(examtype)}`)}
+        className="bg-blue-500 text-white p-2 m-4 rounded"
+      >
+        Go to Generate Test
+      </button>
       <Footer />
     </div>
   );

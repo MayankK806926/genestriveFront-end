@@ -4,7 +4,9 @@ export const CircularProgress = ({ value, label, subLabel, percentage = 75 }) =>
     const radius = 60;
     const strokeWidth = 12;
     const circumference = 2 * Math.PI * radius;
-    const strokeDashoffset = circumference - (percentage / 100) * circumference;
+    // Ensure percentage is a valid number between 0 and 100
+    const validPercentage = Math.min(Math.max(Number(percentage) || 0, 0), 100);
+    const strokeDashoffset = circumference - (validPercentage / 100) * circumference;
   
     return (
       <div className="flex flex-col items-center justify-center p-4">
@@ -26,13 +28,13 @@ export const CircularProgress = ({ value, label, subLabel, percentage = 75 }) =>
               strokeWidth={strokeWidth}
               fill="none"
               strokeDasharray={circumference}
-              strokeDashoffset={strokeDashoffset}
+              strokeDashoffset={String(strokeDashoffset)}
               strokeLinecap="round"
             />
           </svg>
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-2xl font-bold">{value}</span>
-            {subLabel && <span className="text-sm text-gray-800">{subLabel}</span>}
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 flex flex-col items-center justify-center text-center">
+            <span className="text-2xl text-gray-700 font-bold block">{value}</span>
+            {subLabel && <span className="text-sm text-gray-800 block">{subLabel}</span>}
           </div>
         </div>
         <span className="mt-2 text-gray-600 font-medium">{label}</span>

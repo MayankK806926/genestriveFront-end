@@ -2,77 +2,99 @@
 import React, { useState, useEffect } from "react";
 import TestTaking from "./TestTaking";
 import TestResult from "./TestResult";
-import axios from 'axios';
+// import axios from 'axios'; // axios is no longer used for initial fetch
+// import { useRouter } from 'next/navigation'; // useRouter is no longer needed for query params
+import { useSearchParams } from 'next/navigation'; // Import useSearchParams
 
 export default function TestPreview() {
+  // const router = useRouter(); // useRouter is no longer needed for query params
+  const searchParams = useSearchParams(); // Initialize useSearchParams
   // Initialize testData as null initially
           // Optional: Fallback to sample data on error
-        // const sampleData = [
-        //   {
-        //     question: "What is the value of pi ?",
-        //     topic: "Mathematics",
-        //     options: [
-        //       { text: "3.14", isCorrect: true },
-        //       { text: "3.14", isCorrect: false },
-        //       { text: "3.14", isCorrect: false },
-        //       { text: "3.14", isCorrect: false },
-        //     ],
-        //   },
-        //   {
-        //     question: "Another question?",
-        //     topic: "Science",
-        //     options: [
-        //       { text: "Option 1", isCorrect: false },
-        //       { text: "Option 2", isCorrect: true },
-        //       { text: "Option 3", isCorrect: false },
-        //       { text: "Option 4", isCorrect: false },
-        //     ],
-        //   },
-        // ];
-        // setTestData(sampleData);
-        // setSelectedAnswers(Array(sampleData.length).fill(null));
-  const [testData, setTestData] = useState(null);
-  const [loading, setLoading] = useState(true); // Add loading state
-  const [error, setError] = useState(null); // Add error state
 
-  const [submitted, setSubmitted] = useState(false);
-  const [selectedAnswers, setSelectedAnswers] = useState(Array(testData.length).fill(null));
-  const [testResults, setTestResults] = useState(null);
-  const [startTime, setStartTime] = useState(null);
+    const [testData, setTestData] = useState(null);
+    const [loading, setLoading] = useState(true); // Add loading state
+    const [error, setError] = useState(null); // Add error state 
+    const [submitted, setSubmitted] = useState(false);
+    const [testResults, setTestResults] = useState(null);
+    const [startTime, setStartTime] = useState(null);
+    const [totalTime, setTotalTime] = useState(null);
+    // const sampleData = [
+    //   {
+    //     question: "What is the value of pi ?",
+    //     topic: "Mathematics",
+    //     options: [
+    //       { text: "3.14", isCorrect: true },
+    //       { text: "3.14", isCorrect: false },
+    //       { text: "3.14", isCorrect: false },
+    //       { text: "3.14", isCorrect: false },
+    //     ],
+    //   },
+    //   {
+    //     question: "Another question?",
+    //     topic: "Science",
+    //     options: [
+    //       { text: "Option 1", isCorrect: false },
+    //       { text: "Option 2", isCorrect: true },
+    //       { text: "Option 3", isCorrect: false },
+    //       { text: "Option 4", isCorrect: false },
+    //     ],
+    //   },
+    // ];
+    // setTestData(sampleData);
+    // setSelectedAnswers(Array(sampleData.length).fill(null));
 
-
+  //uncomment during API integration
   useEffect(() => {
-    // Fetch test data when the component mounts
-    const fetchTestData = async () => {
+    // Read test data from URL search parameters
+    const testDataString = searchParams.get('testData');
+    const itme= searchParams.get('time');
+    setTotalTime(itme)
+
+    if (testDataString) {
       try {
-        const response = await axios.get('https://api.example.com/generate-test'); // Replace with your actual API endpoint
-        setTestData(response.data); // Assuming the response data is the test array
-        setSelectedAnswers(Array(response.data.length).fill(null)); // Initialize selected answers based on fetched data length
-        setLoading(false);
+        const dataFromQuery = JSON.parse(testDataString);
+        if (dataFromQuery && Array.isArray(dataFromQuery)) {
+          console.log('Valid test data received from URL search params:', dataFromQuery);
+          setTestData(dataFromQuery);
+          setSelectedAnswers(Array(dataFromQuery.length).fill(null));
+          console.log('Setting loading to false after receiving valid data.');
+          setLoading(false);
+        } else {
+          console.error('Invalid test data format from URL search params:', dataFromQuery);
+          console.log('Setting loading to false after invalid data format.');
+          setError(new Error('Invalid test data received from generator.'));
+          setLoading(false);
+        }
       } catch (err) {
-        console.error("Error fetching test data:", err);
-        setError(err); // Set error state
+        console.error("Error parsing test data from URL search params:", err);
+        console.log('Setting loading to false after parsing error.');
+        setError(new Error('Failed to load test data.'));
         setLoading(false);
       }
-    };
-
-    fetchTestData();
-  }, []); // Empty dependency array means this runs once on mount
+    } else {
+      // Handle case where no testData is in query (e.g., direct access or generation failed)
+      console.warn('No test data found in URL search params.');
+      console.log('Setting loading to false - no test data in query.');
+      setError(new Error('No test data provided or generation failed.'));
+      setLoading(false);
+      // Optionally, redirect to generate page (requires useRouter)
+      // const router = useRouter();
+      // router.push('/dashboard/generate-test');
+    }
+    // useSearchParams is a static hook, no dependencies needed for initial read
+  }, []); 
+  
+  const [selectedAnswers, setSelectedAnswers] = useState([]);
 
   useEffect(() => {
     if (!submitted && testData) { // Also check if testData is available
-      setSelectedAnswers(Array(testData.length).fill(null))
-      setTestResults(null)
+      setSelectedAnswers(Array(testData.length).fill(null)); // Initialize with null
+      setTestResults(null);
       setStartTime(Date.now());
     } else {
       setStartTime(null);
     }
-    // Reset currentQuestionIndex when test is retried
-    // This part is handled in TestTaking.jsx via selectedAnswers change
-
-    return () => {
-      // Cleanup logic
-    };
   }, [submitted, testData]); // Add testData to dependency array
 
   // const processTestResults = () => {
@@ -132,20 +154,44 @@ export default function TestPreview() {
   //   });
   // };
 
+
+  //uncomment during API integration
   const processTestResults = async() => {
     try{
-    const res = await fetch('https://api.example.com/result', {
+    console.log('Submitting test results...');
+    const res = await fetch('/api/result', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({selectedAnswers,testData}),
-    })
+      body: JSON.stringify({selectedAnswers,testData,startTime}),
+    });
+
+    console.log('API Result Response object:', res);
+
+    if (!res.ok) {
+      console.error('API Error Response:', res);
+      const errorText = await res.text(); // Read as text in case it's not JSON
+      console.error("API Error Response Body:", errorText);
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+
     const resultsData = await res.json();
-    console.log("Test submission successful, results:", resultsData);
-    setTestResults(resultsData);
+    console.log("Test submission successful, results data:", resultsData);
+    
+    // Check if the expected data structure is present
+    if (resultsData?.testResults) {
+      setTestResults(resultsData.testResults); // Set the state with the nested results
+    } else {
+      console.error('API response did not contain testResults', resultsData);
+      // Handle this case, maybe set an error state or display a message
+      setError(new Error('Invalid results data from API'));
+    }
+
   }catch(err){
-    console.log(err)
+    console.error('Error processing test results:', err);
+    // Optionally, set an error state for the user
+    // setError(err);
   }
     };
     
@@ -153,11 +199,27 @@ export default function TestPreview() {
 
   // Show loading or error state while fetching data
   if (loading) {
-    return <div>Loading test data...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-[#f6effe]">
+        <div className="text-xl text-[#2f2f68]">Loading test data...</div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div>Error loading test data. Please try again.</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-[#f6effe]">
+        <div className="text-xl text-[#2f2f68]">Error loading test data. Please try again.</div>
+      </div>
+    );
+  }
+
+  if (!testData || !Array.isArray(testData) || testData.length === 0) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-[#f6effe]">
+        <div className="text-xl text-[#2f2f68]">No test data available.</div>
+      </div>
+    );
   }
 
   // Render test components once data is loaded
@@ -172,7 +234,7 @@ export default function TestPreview() {
           processTestResults={processTestResults}
         />
       ) : (
-        <TestResult results={testResults} setSubmitted={setSubmitted} />
+        <TestResult results={testResults} setSubmitted={setSubmitted} totaltTime={totalTime} />
       )}
     </>
   );

@@ -1,5 +1,6 @@
 import React from "react";
-import AboutIcon from "../assets/about.png";
+import Image from "next/image";
+import AboutIcon from "./assets/about.png";
 
 const About = () => {
   return (
@@ -7,7 +8,7 @@ const About = () => {
       <main className="px-6 md:px-20 py-16">
         {/* Top Section */}
         <div className="flex flex-col md:flex-row items-center gap-10 mb-20">
-          <img
+          <Image
             src={AboutIcon}
             alt="About Us"
             className="w-72 h-72 md:w-[720px] md:h-[720px]"
@@ -38,7 +39,7 @@ const About = () => {
             At Testwale.ai, we believe that every student learns differently.
             Our platform leverages the power of artificial intelligence to
             provide an adaptive learning experience that evolves based on a
-            student’s performance, learning style, and goals.
+            student's performance, learning style, and goals.
           </p>
           <p className="mb-6">Key features of Testwale.ai include:</p>
           <ul className="list-disc list-inside space-y-2 mb-6">

@@ -86,8 +86,8 @@ const MainContent = ({name,totalTestsTaken,AverageAccuracy,WeakTopics, Progress,
       <div className=" bg-[#f7ecff] rounded-[15px] p-4 md:p-6">
         <h2 className="text-2xl md:text-[32px] font-bold text-[#2f2f68] mb-2 md:mb-4 text-center">Resources</h2>
         {resources.map((resource) => (
-          <div key={resource.id} className="bg-white p-3 md:p-4 border border-solid border-[#2f2f68] mb-2 md:mb-4">
-            {/* Resource content goes here */}
+          <div key={resource.id} className="bg-white p-3 md:p-4 border border-solid text-gray-600 text-lg border-[#2f2f68] mb-2 md:mb-4">
+            {resource.description}
           </div>
         ))}
       </div>

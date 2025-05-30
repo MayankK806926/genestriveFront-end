@@ -3,9 +3,19 @@ import { ChevronLeftNormal } from "../icons/ChevronLeftNormal";
 import Navbar2 from "../components/Navbar2";
 
 export default function TestTaking({ setSubmitted, selectedAnswers, setSelectedAnswers, testData, processTestResults }) {
-
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  
+  // Only check if testData is valid, don't show loading state
+  if (!testData || !Array.isArray(testData) || testData.length === 0) {
+    return null;
+  }
+
   const currentQuestion = testData[currentQuestionIndex];
+
+  // Only check if currentQuestion exists, don't show loading state
+  if (!currentQuestion) {
+    return null;
+  }
 
   // Reset currentQuestionIndex when test is retried
   useEffect(() => {
@@ -74,13 +84,8 @@ export default function TestTaking({ setSubmitted, selectedAnswers, setSelectedA
                 let borderColor = 'border-[#d9d9d9]';
 
                 if (isSelected) {
-                  if (option.isCorrect) {
-                    bgColor = 'bg-[#05ff6f82]';
-                    borderColor = 'border-[#007e35]';
-                  } else {
-                    bgColor = 'bg-[#ec303094]';
-                    borderColor = 'border-[#850000]';
-                  }
+                  bgColor = 'bg-[#f7ecff]';
+                  borderColor = 'border-[#5e2f7c]';
                 }
 
                 return (

@@ -1,5 +1,5 @@
+"use client"
 import React, { useState } from "react";
-import { ChevronBottomNormal } from "../icons/ChevronBottomNormal";
 import Link from "next/link";
 import { auth } from '../authentication/firebase-config';
 import { destroyCookie } from "nookies";
