@@ -44,13 +44,27 @@ export default function TestPreview() {
     // Fetch test data when the component mounts
     const fetchTestData = async () => {
       try {
+        console.log('Fetching test data...');
         const response = await axios.get('/api/generate-test'); // Replace with your actual API endpoint
-        setTestData(response.data); // Assuming the response data is the test array
-        setSelectedAnswers(Array(response.data.length).fill(0)); // Initialize selected answers based on fetched data length
+        console.log('API Response:', response);
+        
+        if (response.data && Array.isArray(response.data)) {
+          console.log('Valid test data received:', response.data);
+          setTestData(response.data);
+          setSelectedAnswers(Array(response.data.length).fill(0));
+        } else {
+          console.error('Invalid test data format:', response.data);
+          setError(new Error('Invalid test data received'));
+        }
         setLoading(false);
       } catch (err) {
         console.error("Error fetching test data:", err);
-        setError(err); // Set error state
+        console.error("Error details:", {
+          message: err.message,
+          status: err.response?.status,
+          data: err.response?.data
+        });
+        setError(err);
         setLoading(false);
       }
     };
@@ -150,15 +164,27 @@ export default function TestPreview() {
 
   // Show loading or error state while fetching data
   if (loading) {
-    return <div>Loading test data...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-[#f6effe]">
+        <div className="text-xl text-[#2f2f68]">Loading test data...</div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div>Error loading test data. Please try again.</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-[#f6effe]">
+        <div className="text-xl text-[#2f2f68]">Error loading test data. Please try again.</div>
+      </div>
+    );
   }
 
-  if (!testData) {
-    return <div>No test data available.</div>;
+  if (!testData || !Array.isArray(testData) || testData.length === 0) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-[#f6effe]">
+        <div className="text-xl text-[#2f2f68]">No test data available.</div>
+      </div>
+    );
   }
 
   // Render test components once data is loaded

@@ -3,9 +3,19 @@ import { ChevronLeftNormal } from "../icons/ChevronLeftNormal";
 import Navbar2 from "../components/Navbar2";
 
 export default function TestTaking({ setSubmitted, selectedAnswers, setSelectedAnswers, testData, processTestResults }) {
-
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  
+  // Only check if testData is valid, don't show loading state
+  if (!testData || !Array.isArray(testData) || testData.length === 0) {
+    return null;
+  }
+
   const currentQuestion = testData[currentQuestionIndex];
+
+  // Only check if currentQuestion exists, don't show loading state
+  if (!currentQuestion) {
+    return null;
+  }
 
   // Reset currentQuestionIndex when test is retried
   useEffect(() => {
