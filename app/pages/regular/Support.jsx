@@ -1,8 +1,10 @@
 import React from 'react';
-import SupportIcon from '../assets/supp.png';
-import ContactIcon from '../assets/image.png'; 
+import { Image } from 'next/image';
+import SupportIcon from './assets/supp.png';
+import ContactIcon from './assets/image.png'; 
 import FAQAccordion from '../components/support/FAQItem';
 import CommunityCard from '../components/support/CommunityCard';
+import Image from 'next/image';
 
 const Support = () => {
   return (
@@ -22,7 +24,7 @@ const Support = () => {
             </p>
 
             <div className="flex items-start gap-4">
-              <img
+              <Image
                 src={ContactIcon}
                 alt="Contact Icon"
                 className="w-28 h-24 md:w-[120px] md:h-[100px]"
@@ -37,7 +39,7 @@ const Support = () => {
 
           {/* Right Icon */}
           <div className="flex-shrink-0">
-            <img
+            <Image
               src={SupportIcon}
               alt="Support Icon"
               className="w-72 h-72 md:w-[720px] md:h-[720px]"
