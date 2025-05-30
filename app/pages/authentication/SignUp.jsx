@@ -36,11 +36,19 @@ export default function SignUp() {
     setLoading(true);
 
     try {
+      //check if email already exists
+      const existingUser = await auth.fetchSignInMethodsForEmail(formData.email);
+      if (existingUser.length > 0) {
+        setError("Email already exists. Please use a different email.");
+        setLoading(false);
+        return;
+      }
       const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
       const user = userCredential.user;
       await sendEmailVerification(user);
       localStorage.setItem("signup_name", formData.name);
       localStorage.setItem("signup_phone", formData.phone);
+      localStorage.setItem("user_role", userType)
       console.log("oye")
       router.push("/verify-email");
       console.log("ha")

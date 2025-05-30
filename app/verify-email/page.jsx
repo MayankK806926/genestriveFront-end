@@ -45,9 +45,10 @@ export default function VerifyEmail() {
           // After successful signup and before router.push("/verify-email")
           const name = localStorage.getItem("signup_name") || "";
           const phone = localStorage.getItem("signup_phone") || "";
+          const userType = localStorage.getItem("user_role") || "";
           console.log("1")
           // Store user details in backend
-          await fetch("http://localhost:8000/register_user", {
+          const response = await fetch("http://localhost:8000/register_user", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -56,12 +57,16 @@ export default function VerifyEmail() {
               uid: user.uid,
               email: user.email,
               username: name,
-              phone: phone
+              phone: phone,
+              userRole: userType,
             }),
           });
+          console.log("Response:", response);
+
           console.log("2")
           localStorage.removeItem("signup_name");
           localStorage.removeItem("signup_phone");
+          localStorage.removeItem("user_role");
           router.push("/dashboard");
         }
       });

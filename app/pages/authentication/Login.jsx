@@ -28,7 +28,7 @@ export default function Login() {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, type = userType) => {
     if (e) e.preventDefault();
     setError("");
     setLoading(true);
@@ -39,20 +39,38 @@ export default function Login() {
         formData.email,
         formData.password
       );
-      console.log("User logged in successfully:", userCredential);
-      const token = await userCredential.user.getIdToken();
-      console.log("Token:", token);
 
-      nookies.set(null, "__session", token, {
-        path: "/", // required
-        maxAge: 60 * 60, // 1 hour
-        httpOnly: false, // true = inaccessible from JS (SSR only)
-        secure: process.env.NODE_ENV === "production", // true in production
-        sameSite: "lax",
-      });
-      console.log("Cookie set successfully");
-      router.push("/dashboard"); // Redirect to dashboard
-      router.refresh(); // Refresh the page to apply changes
+      console.log("User type:", type);
+      const response = await fetch("http://localhost:8000/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          phone: formData.phone,
+          role: type,
+        }),
+      }
+      )
+      if (response.status === 403) {
+        setError("User role mismatch. Please try again.");
+      } else {
+        console.log("User logged in successfully:", userCredential);
+        const token = await userCredential.user.getIdToken();
+        console.log("Token:", token);
+
+        nookies.set(null, "__session", token, {
+          path: "/", // required
+          maxAge: 60 * 60, // 1 hour
+          httpOnly: false, // true = inaccessible from JS (SSR only)
+          secure: process.env.NODE_ENV === "production", // true in production
+          sameSite: "lax",
+        });
+        console.log("Cookie set successfully");
+        router.push("/dashboard"); // Redirect to dashboard
+        router.refresh(); // Refresh the page to apply changes
+      }
       console.log("Redirecting to dashboard");
     } catch (error) {
       setError("An error occurred during registration");
@@ -165,12 +183,11 @@ export default function Login() {
                 <button
                   type="button"
                   className={`w-full cursor-pointer sm:w-[200px] h-[55px] rounded-[30px] border ${userType === "student"
-                      ? "bg-[#5e2f7c] text-white border-none"
-                      : "bg-white text-[#001e32] border-[#2f2f68] shadow-[0px_0px_4px_#00000040]"
+                    ? "bg-[#5e2f7c] text-white border-none"
+                    : "bg-white text-[#001e32] border-[#2f2f68] shadow-[0px_0px_4px_#00000040]"
                     }`}
                   onClick={(e) => {
-                    handleUserTypeChange("student");
-                    handleSubmit(e);
+                    handleSubmit(e, "student");
                   }}
                 >
                   <h2 className="font-semibold">Student</h2>
@@ -179,12 +196,12 @@ export default function Login() {
                 <button
                   type="button"
                   className={`w-full cursor-pointer sm:w-[200px] h-[55px] rounded-[30px] border ${userType === "mentor"
-                      ? "bg-[#5e2f7c] text-white border-none"
-                      : "bg-white text-[#001e32] border-[#2f2f68] shadow-[0px_0px_4px_#00000040]"
+                    ? "bg-[#5e2f7c] text-white border-none"
+                    : "bg-white text-[#001e32] border-[#2f2f68] shadow-[0px_0px_4px_#00000040]"
                     }`}
                   onClick={(e) => {
                     handleUserTypeChange("mentor");
-                    handleSubmit(e);
+                    handleSubmit(e, "mentor");
                   }}
                 >
                   <h2 className="font-semibold">Mentor</h2>
