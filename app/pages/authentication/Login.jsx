@@ -200,7 +200,6 @@ export default function Login() {
                     : "bg-white text-[#001e32] border-[#2f2f68] shadow-[0px_0px_4px_#00000040]"
                     }`}
                   onClick={(e) => {
-                    handleUserTypeChange("mentor");
                     handleSubmit(e, "mentor");
                   }}
                 >
