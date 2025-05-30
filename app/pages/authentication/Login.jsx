@@ -48,9 +48,9 @@ export default function Login() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: formData.email,
-          phone: formData.phone,
-          role: type,
+          EMAIL: formData.email,
+          Phone_number: formData.phone,
+          Role: type,
         }),
       }
       )
