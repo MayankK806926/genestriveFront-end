@@ -7,47 +7,46 @@ import axios from 'axios';
 export default function TestPreview() {
   // Initialize testData as null initially
           // Optional: Fallback to sample data on error
-        // const sampleData = [
-        //   {
-        //     question: "What is the value of pi ?",
-        //     topic: "Mathematics",
-        //     options: [
-        //       { text: "3.14", isCorrect: true },
-        //       { text: "3.14", isCorrect: false },
-        //       { text: "3.14", isCorrect: false },
-        //       { text: "3.14", isCorrect: false },
-        //     ],
-        //   },
-        //   {
-        //     question: "Another question?",
-        //     topic: "Science",
-        //     options: [
-        //       { text: "Option 1", isCorrect: false },
-        //       { text: "Option 2", isCorrect: true },
-        //       { text: "Option 3", isCorrect: false },
-        //       { text: "Option 4", isCorrect: false },
-        //     ],
-        //   },
-        // ];
-        // setTestData(sampleData);
-        // setSelectedAnswers(Array(sampleData.length).fill(null));
-  const [testData, setTestData] = useState(null);
-  const [loading, setLoading] = useState(true); // Add loading state
-  const [error, setError] = useState(null); // Add error state
 
-  const [submitted, setSubmitted] = useState(false);
-  const [selectedAnswers, setSelectedAnswers] = useState(Array(testData.length).fill(null));
-  const [testResults, setTestResults] = useState(null);
-  const [startTime, setStartTime] = useState(null);
+    const [testData, setTestData] = useState(null);
+    const [loading, setLoading] = useState(true); // Add loading state
+    const [error, setError] = useState(null); // Add error state 
+    const [submitted, setSubmitted] = useState(false);
+    const [testResults, setTestResults] = useState(null);
+    const [startTime, setStartTime] = useState(null);
+    // const sampleData = [
+    //   {
+    //     question: "What is the value of pi ?",
+    //     topic: "Mathematics",
+    //     options: [
+    //       { text: "3.14", isCorrect: true },
+    //       { text: "3.14", isCorrect: false },
+    //       { text: "3.14", isCorrect: false },
+    //       { text: "3.14", isCorrect: false },
+    //     ],
+    //   },
+    //   {
+    //     question: "Another question?",
+    //     topic: "Science",
+    //     options: [
+    //       { text: "Option 1", isCorrect: false },
+    //       { text: "Option 2", isCorrect: true },
+    //       { text: "Option 3", isCorrect: false },
+    //       { text: "Option 4", isCorrect: false },
+    //     ],
+    //   },
+    // ];
+    // setTestData(sampleData);
+    // setSelectedAnswers(Array(sampleData.length).fill(0));
 
-
+  //uncomment during API integration
   useEffect(() => {
     // Fetch test data when the component mounts
     const fetchTestData = async () => {
       try {
-        const response = await axios.get('https://api.example.com/generate-test'); // Replace with your actual API endpoint
+        const response = await axios.get('/api/generate-test'); // Replace with your actual API endpoint
         setTestData(response.data); // Assuming the response data is the test array
-        setSelectedAnswers(Array(response.data.length).fill(null)); // Initialize selected answers based on fetched data length
+        setSelectedAnswers(Array(response.data.length).fill(0)); // Initialize selected answers based on fetched data length
         setLoading(false);
       } catch (err) {
         console.error("Error fetching test data:", err);
@@ -58,21 +57,17 @@ export default function TestPreview() {
 
     fetchTestData();
   }, []); // Empty dependency array means this runs once on mount
+  
+  const [selectedAnswers, setSelectedAnswers] = useState([]);
 
   useEffect(() => {
     if (!submitted && testData) { // Also check if testData is available
-      setSelectedAnswers(Array(testData.length).fill(null))
-      setTestResults(null)
+      setSelectedAnswers(Array(testData.length).fill(0));
+      setTestResults(null);
       setStartTime(Date.now());
     } else {
       setStartTime(null);
     }
-    // Reset currentQuestionIndex when test is retried
-    // This part is handled in TestTaking.jsx via selectedAnswers change
-
-    return () => {
-      // Cleanup logic
-    };
   }, [submitted, testData]); // Add testData to dependency array
 
   // const processTestResults = () => {
@@ -132,9 +127,11 @@ export default function TestPreview() {
   //   });
   // };
 
+
+  //uncomment during API integration
   const processTestResults = async() => {
     try{
-    const res = await fetch('https://api.example.com/result', {
+    const res = await fetch('/api/result', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -158,6 +155,10 @@ export default function TestPreview() {
 
   if (error) {
     return <div>Error loading test data. Please try again.</div>;
+  }
+
+  if (!testData) {
+    return <div>No test data available.</div>;
   }
 
   // Render test components once data is loaded
