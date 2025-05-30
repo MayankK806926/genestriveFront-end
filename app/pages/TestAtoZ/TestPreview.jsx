@@ -37,7 +37,7 @@ export default function TestPreview() {
     //   },
     // ];
     // setTestData(sampleData);
-    // setSelectedAnswers(Array(sampleData.length).fill(0));
+    // setSelectedAnswers(Array(sampleData.length).fill(null));
 
   //uncomment during API integration
   useEffect(() => {
@@ -48,10 +48,10 @@ export default function TestPreview() {
         const response = await axios.get('/api/generate-test'); // Replace with your actual API endpoint
         console.log('API Response:', response);
         
-        if (response.data && Array.isArray(response.data)) {
-          console.log('Valid test data received:', response.data);
-          setTestData(response.data);
-          setSelectedAnswers(Array(response.data.length).fill(0));
+        if (response.data?.sampleData && Array.isArray(response.data.sampleData)) {
+          console.log('Valid test data received:', response.data.sampleData);
+          setTestData(response.data.sampleData);
+          setSelectedAnswers(Array(response.data.sampleData.length).fill(null));
         } else {
           console.error('Invalid test data format:', response.data);
           setError(new Error('Invalid test data received'));
@@ -76,7 +76,7 @@ export default function TestPreview() {
 
   useEffect(() => {
     if (!submitted && testData) { // Also check if testData is available
-      setSelectedAnswers(Array(testData.length).fill(0));
+      setSelectedAnswers(Array(testData.length).fill(null)); // Initialize with null
       setTestResults(null);
       setStartTime(Date.now());
     } else {
@@ -145,18 +145,40 @@ export default function TestPreview() {
   //uncomment during API integration
   const processTestResults = async() => {
     try{
+    console.log('Submitting test results...');
     const res = await fetch('/api/result', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({selectedAnswers,testData}),
-    })
+      body: JSON.stringify({selectedAnswers,testData,startTime}),
+    });
+
+    console.log('API Result Response object:', res);
+
+    if (!res.ok) {
+      console.error('API Error Response:', res);
+      const errorText = await res.text(); // Read as text in case it's not JSON
+      console.error("API Error Response Body:", errorText);
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+
     const resultsData = await res.json();
-    console.log("Test submission successful, results:", resultsData);
-    setTestResults(resultsData);
+    console.log("Test submission successful, results data:", resultsData);
+    
+    // Check if the expected data structure is present
+    if (resultsData?.testResults) {
+      setTestResults(resultsData.testResults); // Set the state with the nested results
+    } else {
+      console.error('API response did not contain testResults', resultsData);
+      // Handle this case, maybe set an error state or display a message
+      setError(new Error('Invalid results data from API'));
+    }
+
   }catch(err){
-    console.log(err)
+    console.error('Error processing test results:', err);
+    // Optionally, set an error state for the user
+    // setError(err);
   }
     };
     

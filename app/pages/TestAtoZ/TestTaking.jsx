@@ -84,13 +84,8 @@ export default function TestTaking({ setSubmitted, selectedAnswers, setSelectedA
                 let borderColor = 'border-[#d9d9d9]';
 
                 if (isSelected) {
-                  if (option.isCorrect) {
-                    bgColor = 'bg-[#05ff6f82]';
-                    borderColor = 'border-[#007e35]';
-                  } else {
-                    bgColor = 'bg-[#ec303094]';
-                    borderColor = 'border-[#850000]';
-                  }
+                  bgColor = 'bg-[#f7ecff]';
+                  borderColor = 'border-[#5e2f7c]';
                 }
 
                 return (
