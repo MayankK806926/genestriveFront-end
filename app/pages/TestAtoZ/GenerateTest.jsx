@@ -106,7 +106,7 @@ export default function GenerateTest(){
       // Consider using a state management library or other methods for larger data
 
       // Construct the URL string with query parameter
-      const testPreviewUrl = `/dashboard/test-preview?testData=${encodeURIComponent(JSON.stringify(data.sampleData))}`;
+      const testPreviewUrl = `/dashboard/test-preview?testData=${encodeURIComponent(JSON.stringify(data.sampleData))}&time=${time}`;
 
       router.push(testPreviewUrl); // Pass the URL string directly
 

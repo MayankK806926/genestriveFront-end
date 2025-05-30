@@ -3,9 +3,9 @@ import Navbar2 from '../components/Navbar2';
 import { CircularProgress,PerformanceCard, BarChart,TopicProgressBar } from './ResultUtils';
 import Link from 'next/link';
 
-export default function TestResult({ results,setSubmitted }){
+export default function TestResult({ results,setSubmitted,totalTime }){
   const { totalQuestions, attemptedQuestions, correctAnswers, overallAccuracy, timeTaken, topicResults } = results || {};
-
+  const ratioOfTime=timeTaken/totalTime
   const overallAccuracyPercentage = parseFloat(overallAccuracy);
   const attemptedQuestionsPercentage = totalQuestions > 0 ? (attemptedQuestions / totalQuestions) * 100 : 0;
 
@@ -56,7 +56,7 @@ export default function TestResult({ results,setSubmitted }){
           <CircularProgress 
             value={timeTaken || '-- min'}
             label="Time taken"
-            percentage={75}
+            percentage={ratioOfTime}
           />
         </div>
       </div>

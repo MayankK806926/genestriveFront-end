@@ -18,6 +18,7 @@ export default function TestPreview() {
     const [submitted, setSubmitted] = useState(false);
     const [testResults, setTestResults] = useState(null);
     const [startTime, setStartTime] = useState(null);
+    const [totalTime, setTotalTime] = useState(null);
     // const sampleData = [
     //   {
     //     question: "What is the value of pi ?",
@@ -47,6 +48,8 @@ export default function TestPreview() {
   useEffect(() => {
     // Read test data from URL search parameters
     const testDataString = searchParams.get('testData');
+    const itme= searchParams.get('time');
+    setTotalTime(itme)
 
     if (testDataString) {
       try {
@@ -231,7 +234,7 @@ export default function TestPreview() {
           processTestResults={processTestResults}
         />
       ) : (
-        <TestResult results={testResults} setSubmitted={setSubmitted} />
+        <TestResult results={testResults} setSubmitted={setSubmitted} totaltTime={totalTime} />
       )}
     </>
   );
