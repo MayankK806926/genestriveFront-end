@@ -3,9 +3,9 @@ import React from 'react';
 import TestIcon from '../assets/exam.png';
 import ResourcesIcon from '../assets/book.png';
 import ExamsIcon from '../assets/res.png';
-import '../index.css'; 
+import './index.css'; 
 
-const Home = () => {
+const GetStarted = () => {
   return (
     <div>
       <main className="px-4 md:px-10 py-12 w-full overflow-hidden">
@@ -70,4 +70,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default GetStarted;
