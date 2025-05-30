@@ -15,6 +15,7 @@ export default function Login() {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   const handleUserTypeChange = (type) => {
     setUserType(type);
@@ -60,13 +61,26 @@ export default function Login() {
         const token = await userCredential.user.getIdToken();
         console.log("Token:", token);
 
-        nookies.set(null, "__session", token, {
-          path: "/", // required
-          maxAge: 60 * 60, // 1 hour
-          httpOnly: false, // true = inaccessible from JS (SSR only)
-          secure: process.env.NODE_ENV === "production", // true in production
-          sameSite: "lax",
-        });
+        // ...existing code...
+        if (rememberMe) {
+          // 30 days
+          nookies.set(null, "__session", token, {
+            path: "/",
+            maxAge: 60 * 60 * 24 * 30, // 30 days
+            httpOnly: false,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+          });
+        } else {
+          // Session cookie (expires when browser closes)
+          nookies.set(null, "__session", token, {
+            path: "/",
+            maxAge: 60 * 60 * 1, // 1 hour
+            httpOnly: false,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+          });
+        }
         console.log("Cookie set successfully");
         router.push("/dashboard"); // Redirect to dashboard
         router.refresh(); // Refresh the page to apply changes
@@ -170,6 +184,8 @@ export default function Login() {
                   id="remember"
                   name="remember"
                   className="w-[25px] h-[25px] rounded accent-[#5e2f7c]"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
                 />
                 <label
                   htmlFor="remember"
