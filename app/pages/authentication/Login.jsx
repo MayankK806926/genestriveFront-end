@@ -41,57 +41,37 @@ export default function Login() {
         formData.password
       );
 
-      console.log("User type:", type);
+      const token = await userCredential.user.getIdToken(); // ✅ Get Firebase ID token
+
       const response = await fetch("http://localhost:8000/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // ✅ Send token in Authorization header
         },
         body: JSON.stringify({
           EMAIL: formData.email,
           Phone_number: formData.phone,
           Role: type,
         }),
-      }
-      )
+      });
+      console.log("token", token);
+
       if (response.status === 403) {
         setError("User role mismatch. Please try again.");
+      } else if (!response.ok) {
+        setError("Login failed. Please try again.");
       } else {
         console.log("User logged in successfully:", userCredential);
-        const token = await userCredential.user.getIdToken();
-        console.log("Token:", token);
-
-        // ...existing code...
-        if (rememberMe) {
-          // 30 days
-          nookies.set(null, "__session", token, {
-            path: "/",
-            maxAge: 60 * 60 * 24 * 30, // 30 days
-            httpOnly: false,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-          });
-        } else {
-          // Session cookie (expires when browser closes)
-          nookies.set(null, "__session", token, {
-            path: "/",
-            maxAge: 60 * 60 * 1, // 1 hour
-            httpOnly: false,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-          });
-        }
-        console.log("Cookie set successfully");
-        router.push("/dashboard"); // Redirect to dashboard
-        router.refresh(); // Refresh the page to apply changes
+        router.push("/dashboard");
+        router.refresh();
       }
-      console.log("Redirecting to dashboard");
+
     } catch (error) {
-      setError("An error occurred during registration");
+      setError("An error occurred during login");
       console.error("Login failed:", error);
     } finally {
       setLoading(false);
-      // Reset form data manually
       setFormData({
         email: "",
         password: "",
