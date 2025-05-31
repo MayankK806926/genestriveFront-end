@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const [userType, setUserType] = useState("student");
@@ -10,6 +11,7 @@ export default function Login() {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleUserTypeChange = (type) => {
     setUserType(type);
@@ -44,10 +46,10 @@ export default function Login() {
 
       if (data.success) {
         if (userType === "student") {
-          window.location.href = "/dashboard";
+          router.push('/dashboard');
         } else {
-        window.location.href = "/admin-panel";
-      }
+          router.push('/admin-panel');
+        }
       } else {
         setError(data.message || "Registration failed");
       }
@@ -168,6 +170,7 @@ export default function Login() {
                   }`}
                   onClick={() => {
                     handleUserTypeChange("student");
+                    router.push('/dashboard');
                   }}
                 >
                   <h2 className="font-semibold">Student</h2>
@@ -182,6 +185,7 @@ export default function Login() {
                   }`}
                   onClick={() => {
                     handleUserTypeChange("mentor");
+                    router.push('/admin-panel');
                   }}
                 >
                   <h2 className="font-semibold">Mentor</h2>
