@@ -42,7 +42,20 @@ export const CircularProgress = ({ value, label, subLabel, percentage = 75 }) =>
     );
   };
   
-  export const PerformanceCard = ({ rating }) => {
+  export const PerformanceCard = ({ overallAccuracy, attemptedQuestionsRatio, timeRatio }) => {
+    // Calculate average of all metrics
+    const average = (overallAccuracy + attemptedQuestionsRatio + timeRatio) / 3;
+    
+    // Determine rating based on average
+    let rating;
+    if (average > 60) {
+      rating = 'Excellent';
+    } else if (average > 40) {
+      rating = 'Really Good';
+    } else {
+      rating = 'Good';
+    }
+
     return (
       <div className="bg-white rounded-lg shadow-sm p-8">
         <h2 className="text-xl font-semibold text-gray-800 mb-6">Performance Rating</h2>
@@ -54,11 +67,11 @@ export const CircularProgress = ({ value, label, subLabel, percentage = 75 }) =>
             <div className="relative w-full h-2 bg-[#F3E8FF] rounded-full overflow-hidden">
               <div 
                 className="absolute left-0 top-0 h-full bg-[#5E2F7C] rounded-full"
-                style={{ width: '10%' }}
+                style={{ width: `${average}%` }}
               />
             </div>
             <div className="mt-2 text-right text-sm text-gray-500">
-              10% completed
+              {average.toFixed(1)}% completed
             </div>
           </div>
           <div className="ml-8">

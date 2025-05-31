@@ -3,11 +3,31 @@ import Navbar2 from '../components/Navbar2';
 import { CircularProgress,PerformanceCard, BarChart,TopicProgressBar } from './ResultUtils';
 import Link from 'next/link';
 
-export default function TestResult({ results,setSubmitted,totalTime }){
+export default function TestResult({ results,setSubmitted,totalTime, startTime }){
+  console.log('TestResult received startTime:', startTime);
   const { totalQuestions, attemptedQuestions, correctAnswers, overallAccuracy, timeTaken, topicResults } = results || {};
-  const ratioOfTime=timeTaken/totalTime
-  const overallAccuracyPercentage = parseFloat(overallAccuracy);
-  const attemptedQuestionsPercentage = totalQuestions > 0 ? (attemptedQuestions / totalQuestions) * 100 : 0;
+  console.log('TestResult received timeTaken:', timeTaken);
+  
+  // Safely calculate metrics, defaulting to 0 if data is unavailable or invalid
+  const overallAccuracyPercentage = parseFloat(overallAccuracy) || 0;
+  const attemptedQuestionsPercentage = (totalQuestions && attemptedQuestions !== undefined && totalQuestions > 0) ? (attemptedQuestions / totalQuestions) * 100 : 0;
+  const timeRatioPercentage = (timeTaken !== undefined && totalTime !== undefined && totalTime > 0) ? (timeTaken / totalTime) * 100 : 0;
+
+  // Calculate end time
+  let endTimeDisplay = '--:-- --'; // Default display
+  if (startTime && timeTaken) {
+    // timeTaken is a string like "X min Y sec", need to parse it to milliseconds
+    const parts = timeTaken.match(/(\d+) min(?: (\d+) sec)?/);
+    console.log('timeTaken regex parts:', parts);
+    if (parts) {
+      const minutes = parseInt(parts[1], 10) || 0;
+      const seconds = parseInt(parts[2], 10) || 0;
+      const durationInMillis = (minutes * 60 + seconds) * 1000;
+      const endTimeMillis = startTime + durationInMillis;
+      const endTime = new Date(endTimeMillis);
+      endTimeDisplay = endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+    }
+  }
 
   // Prepare data for BarChart and TopicProgressBar
   const barChartData = topicResults ? Object.keys(topicResults).map(topic => ({
@@ -33,7 +53,7 @@ export default function TestResult({ results,setSubmitted,totalTime }){
     <div className="mx-auto px-4 sm:px-6 lg:px-8">
       <div className="mb-8">
         <h1 className="text-[32px] font-bold text-[#1F2937]">Result</h1>
-        <p className="text-gray-500">Test completed at 14:15 pm</p>
+        <p className="text-gray-500">Test completed at 4:15pm</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -56,13 +76,17 @@ export default function TestResult({ results,setSubmitted,totalTime }){
           <CircularProgress 
             value={timeTaken || '-- min'}
             label="Time taken"
-            percentage={ratioOfTime}
+            percentage={timeRatioPercentage}
           />
         </div>
       </div>
 
       <div className="mt-6">
-        <PerformanceCard rating={'Good'} />
+        <PerformanceCard 
+          overallAccuracy={overallAccuracyPercentage} 
+          attemptedQuestionsRatio={attemptedQuestionsPercentage}
+          timeRatio={timeRatioPercentage}
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">

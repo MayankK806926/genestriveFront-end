@@ -8,11 +8,11 @@ export default function GenerateTest(){
   const router = useRouter();
   const searchParams = useSearchParams();
   // State variables for form data
-  const [subject, setSubject] = useState("");
+  const [subjects, setSubjects] = useState([]); // Changed from subject to subjects array
   const [selectedTopics, setSelectedTopics] = useState([]);
-  const [difficulty, setDifficulty] = useState(""); // State is still here but not directly controlled by these divs
+  const [difficulties, setDifficulties] = useState([]);
   const [numQuestions, setNumQuestions] = useState(20);
-  const [time, setTime] = useState(20); // Assuming time is a string input, could be number of minutes too
+  const [time, setTime] = useState(20);
   const [selectedQuestionTypes, setSelectedQuestionTypes] = useState([]);
 
   // State for grade and examtype from URL
@@ -35,8 +35,12 @@ export default function GenerateTest(){
   }, []);
 
   // Handlers for input changes
-  const handleSubjectChange = (event) => {
-    setSubject(event.target.value);
+  const handleSubjectChange = (subject) => {
+    setSubjects(prevSubjects =>
+      prevSubjects.includes(subject)
+        ? prevSubjects.filter(s => s !== subject)
+        : [...prevSubjects, subject]
+    );
   };
 
   const handleTopicChange = (topic) => {
@@ -48,7 +52,11 @@ export default function GenerateTest(){
   };
 
   const handleDifficultyChange = (value) => {
-    setDifficulty(value);
+    setDifficulties(prevDifficulties =>
+      prevDifficulties.includes(value)
+        ? prevDifficulties.filter(d => d !== value)
+        : [...prevDifficulties, value]
+    );
   };
 
   const handleNumQuestionsChange = (amount) => {
@@ -75,9 +83,9 @@ export default function GenerateTest(){
     
     // Prepare the request data
     const requestData = {
-      subject,
+      subjects, // Changed from subject to subjects
       selectedTopics,
-      difficulty,
+      difficulties,
       numQuestions,
       time,
       selectedQuestionTypes,
@@ -167,38 +175,50 @@ export default function GenerateTest(){
                   <div className="bg-white border border-solid border-[#d9d9d9] p-8 rounded-md">
                     <div className="grid gap-6">
                       <h3 className="font-medium text-[#000000c4] mb-1 text-xl">Subject</h3>
-                      <div className="mb-4 md:mb-6 relative">
-                        <select className="w-full p-2 md:p-3 text-[#2f2f68] rounded border border-gray-300 appearance-none bg-white" value={subject} onChange={handleSubjectChange}>
-                          <option value="">Select Subject</option>
-                          <option value="Mathematics">Mathematics</option>
-                          <option value="Science">Science</option>
-                          <option value="English">English</option>
-                        </select>
+                      <div className="space-y-4">
+                        {["Mathematics", "Science", "English"].map((subject, index) => (
+                          <div key={index} className="flex items-center">
+                            <input 
+                              type="checkbox" 
+                              id={`subject-${index}`} 
+                              className="w-5 h-5 mr-4" 
+                              checked={subjects.includes(subject)} 
+                              onChange={() => handleSubjectChange(subject)} 
+                            />
+                            <label htmlFor={`subject-${index}`} className="font-normal text-[#2f2f68] text-xl">{subject}</label>
+                          </div>
+                        ))}
                       </div>
 
                       <div className="font-medium text-[#2f2f68] text-2xl">Topics</div>
                       <div className="space-y-4">
-                        {["balah", "balah", "balah", "balah", "balah"].map((item, index) => (
+                        {["Algebra", "Geometry", "Calculus", "Statistics", "Trigonometry"].map((item, index) => (
                           <div key={index} className="flex items-center">
-                            <input type="checkbox" id={`topic-${index}`} className="w-5 h-5 mr-4" checked={selectedTopics.includes(item)} onChange={() => handleTopicChange(item)} />
+                            <input 
+                              type="checkbox" 
+                              id={`topic-${index}`} 
+                              className="w-5 h-5 mr-4" 
+                              checked={selectedTopics.includes(item)} 
+                              onChange={() => handleTopicChange(item)} 
+                            />
                             <label htmlFor={`topic-${index}`} className="font-normal text-[#2f2f68] text-xl">{item}</label>
                           </div>
                         ))}
                       </div>
 
                       <div className="font-medium text-[#2f2f68] text-2xl">Difficulty Level</div>
-                      <div className="flex justify-between mx-[150px] mt-8 space-y-4">
-                        <div className="flex items-center" onClick={() => handleDifficultyChange("easy")}>
-                          <div className={`w-5 h-5 bg-[#94e9b8] rounded-full mr-4 ${difficulty === 'easy' ? 'border-2 border-[#2f2f68]' : ''}`}></div>
+                      <div className="flex justify-between mx-[150px] mt-8">
+                        <div className="flex items-center cursor-pointer" onClick={() => handleDifficultyChange("easy")}>
+                          <div className={`w-5 h-5 bg-[#94e9b8] rounded-full mr-4 ${difficulties.includes('easy') ? 'border-2 border-[#2f2f68]' : ''}`}></div>
                           <span className="font-normal text-[#2f2f68] text-2xl">Easy</span>
                         </div>
-                        <div className="flex items-center" onClick={() => handleDifficultyChange("medium")}>
-                          <div className={`w-5 h-5 bg-[#ffdb56] rounded-full mr-4 ${difficulty === 'medium' ? 'border-2 border-[#2f2f68]' : ''}`}></div>
+                        <div className="flex items-center cursor-pointer" onClick={() => handleDifficultyChange("medium")}>
+                          <div className={`w-5 h-5 bg-[#ffdb56] rounded-full mr-4 ${difficulties.includes('medium') ? 'border-2 border-[#2f2f68]' : ''}`}></div>
                           <span className="font-normal text-[#2f2f68] text-2xl">Medium</span>
                         </div>
-                        <div className="flex items-center" onClick={() => handleDifficultyChange("difficult")}>
-                          <div className={`w-5 h-5 bg-[#ec3030] rounded-full mr-4 ${difficulty === 'difficult' ? 'border-2 border-[#2f2f68]' : ''}`}></div>
-                          <span className="font-normal text-[#2f2f68] text-2xl">Difficult</span>
+                        <div className="flex items-center cursor-pointer" onClick={() => handleDifficultyChange("hard")}>
+                          <div className={`w-5 h-5 bg-[#ec3030] rounded-full mr-4 ${difficulties.includes('hard') ? 'border-2 border-[#2f2f68]' : ''}`}></div>
+                          <span className="font-normal text-[#2f2f68] text-2xl">Hard</span>
                         </div>
                       </div>
 
@@ -217,7 +237,7 @@ export default function GenerateTest(){
 
                       <div className="font-medium text-[#2f2f68] text-2xl">Type of Questions</div>
                       <div className="mt-4 space-y-4">
-                        {["Multiple Choice Questions", "Single word", "Long answer"].map((item, index) => (
+                        {["Multiple Choice Questions", "Single word", "single correct","Integer Type","Fill in the blanks","Numerical answer type","short answer", "Long answer"].map((item, index) => (
                           <div key={index} className="flex items-center">
                             <input type="checkbox" id={`type-${index}`} className="w-5 h-5 mr-4" checked={selectedQuestionTypes.includes(item)} onChange={() => handleQuestionTypeChange(item)} />
                             <label htmlFor={`type-${index}`} className="font-normal text-[#2f2f68] text-xl">{item}</label>

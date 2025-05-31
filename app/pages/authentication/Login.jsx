@@ -29,7 +29,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const response = await fetch("/api/signup", {
+      const response = await fetch("/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -43,7 +43,11 @@ export default function Login() {
       const data = await response.json();
 
       if (data.success) {
-        window.location.href = "/dashboard";
+        if (userType === "student") {
+          window.location.href = "/dashboard";
+        } else {
+        window.location.href = "/admin-panel";
+      }
       } else {
         setError(data.message || "Registration failed");
       }
@@ -162,9 +166,8 @@ export default function Login() {
                       ? "bg-[#5e2f7c] text-white border-none"
                       : "bg-white text-[#001e32] border-[#2f2f68] shadow-[0px_0px_4px_#00000040]"
                   }`}
-                  onClick={(e) => {
+                  onClick={() => {
                     handleUserTypeChange("student");
-                    handleSubmit(e);
                   }}
                 >
                   <h2 className="font-semibold">Student</h2>
@@ -177,9 +180,8 @@ export default function Login() {
                       ? "bg-[#5e2f7c] text-white border-none"
                       : "bg-white text-[#001e32] border-[#2f2f68] shadow-[0px_0px_4px_#00000040]"
                   }`}
-                  onClick={(e) => {
+                  onClick={() => {
                     handleUserTypeChange("mentor");
-                    handleSubmit(e);
                   }}
                 >
                   <h2 className="font-semibold">Mentor</h2>
