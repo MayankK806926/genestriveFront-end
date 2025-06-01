@@ -234,7 +234,7 @@ export default function TestPreview() {
           processTestResults={processTestResults}
         />
       ) : (
-        <TestResult results={testResults} setSubmitted={setSubmitted} totaltTime={totalTime} />
+        <TestResult results={testResults} setSubmitted={setSubmitted} totaltTime={totalTime} startTime={startTime} />
       )}
     </>
   );

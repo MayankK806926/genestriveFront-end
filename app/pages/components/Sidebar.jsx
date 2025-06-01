@@ -12,17 +12,21 @@ const Sidebar = ({ grade, examtype, handleGradeChange, handleExamTypeChange }) =
       <div className="p-4 md:p-8 flex-grow">
         <h2 className="text-2xl pt-10 md:text-3xl font-bold mb-4 md:mb-8 text-center">GRADE</h2>
         <div className="mb-4 md:mb-8 relative">
-          <select className="w-full p-2 md:p-3 text-[#2f2f68] rounded appearance-none" value={grade} onChange={handleGradeChange}>
+          <select className="w-full bg-gray-100 p-2 md:p-3 text-[#2f2f68] rounded appearance-none" value={grade} onChange={handleGradeChange}>
             <option value="">Select grade</option>
-            <option value="6th-10th">6th-10th</option>
+            <option value="6th">6th</option>
+            <option value="7th">7th</option>
+            <option value="8th">8th</option>
+            <option value="9th">9th</option>
+            <option value="10th">10th</option>
             <option value="11th">11th</option>
             <option value="12th">12th</option>
           </select>
           <ChevronBottomNormal className="absolute right-3 top-1/2 transform -translate-y-1/2" />
         </div>
-        <h3 className="text-xl md:text-2xl font-bold mb-2 md:mb-4 text-center">Competitive exams</h3>
+        <h3 className="text-xl md:text-2xl  font-bold mb-2 md:mb-4 text-center">Competitive exams</h3>
         <div className="relative">
-          <select className="w-full p-2 md:p-3 text-[#2f2f68] rounded mb-4 appearance-none" value={examtype} onChange={handleExamTypeChange}>
+          <select className="w-full p-2 bg-gray-100 md:p-3 text-[#2f2f68] rounded mb-4 appearance-none" value={examtype} onChange={handleExamTypeChange}>
             <option value="">Exams</option>
             <option value="JEE mains">JEE mains</option>
             <option value="JEE advance">JEE advance</option>
@@ -31,7 +35,7 @@ const Sidebar = ({ grade, examtype, handleGradeChange, handleExamTypeChange }) =
             <option value="CUET">CUET</option>
             <option value="KCET">KCET</option>
           </select>
-          <ChevronBottomNormal className="absolute right-3 top-1/2 transform -translate-y-1/2" />
+          <ChevronBottomNormal className="absolute right-3 top-1/4 transform -translate-y-1" />
         </div>
       </div>
 
