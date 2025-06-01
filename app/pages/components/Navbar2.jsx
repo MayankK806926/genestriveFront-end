@@ -64,7 +64,6 @@ const Navbar2 = () => {
             onClick={async () => {
               try {
                 await auth.signOut(); // Firebase logout
-                destroyCookie(null, "__session", { path: "/" }); // Remove the cookie manually
                 window.location.href = "/login"; // Or router.push("/login")
               } catch (err) {
                 console.error("Logout error:", err);
