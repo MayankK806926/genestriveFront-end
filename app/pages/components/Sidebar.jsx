@@ -59,7 +59,17 @@ const Sidebar = ({  grade,  examtype,  handleGradeChange,  handleExamTypeChange 
           </button>
         </div>
         <div>
-          <button className="flex items-center justify-center gap-1 hover:text-gray-300 transition-colors w-full py-1">
+          <button className="flex items-center justify-center gap-1 hover:text-gray-300 transition-colors w-full py-1"
+            onClick={async () => {
+              try {
+                await auth.signOut(); // Firebase logout
+                
+                window.location.href = "/login"; // Or router.push("/login")
+              } catch (err) {
+                console.error("Logout error:", err);
+              }
+            }}
+          >
             <IoLogOutOutline className="text-sm md:text-base flex items-center" />
             <span className="flex items-center text-xs md:text-sm">Log Out</span>
           </button>
