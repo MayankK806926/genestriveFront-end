@@ -1,5 +1,8 @@
 import Link from "next/link";
 import React from "react";
+import Image from "next/image";
+import image5 from "./assets/image-5.png";
+import image6 from "./assets/image-6.png";
 
 const LaunchPage = () => {
   return (
@@ -15,27 +18,35 @@ const LaunchPage = () => {
 
         {/* Subtext */}
         <p className="mt-8 max-w-4xl text-lg md:text-xl font-medium text-[#2f2f68] leading-relaxed">
-          AI-powered exam generator tailored for students from Grade 1 to 12. 
+          AI-powered exam generator tailored for students from Grade 1 to 12.
           Practice tests customized to your learning needs and track your
           progress.
         </p>
 
         {/* Buttons */}
         <div className="mt-24 flex flex-col md:flex-row gap-14 justify-center items-center">
-          <Link href='/GetStarted' className="bg-[#5e2f7c] text-white text-2xl font-semibold px-12 py-4 rounded-full">
+          <Link
+            href="/GetStarted"
+            className="bg-[#5e2f7c] text-white text-2xl font-semibold px-12 py-4 rounded-full"
+          >
             Start Learning Today
           </Link>
-          <button className="bg-white border border-[#2f2f68] text-[#001e32] text-2xl font-semibold px-12 py-4 rounded-full shadow-md">
+          <Link
+            href="/login"
+            className="bg-white border border-[#2f2f68] text-[#001e32] text-2xl font-semibold px-12 py-4 rounded-full shadow-md"
+          >
             Competitive Exams
-          </button>
+          </Link>
         </div>
 
         {/* Images */}
         <div className="mt-30 md:mt-20 lg:mt-1 w-full flex flex-col md:flex-row items-center justify-around px-4 md:px-8 lg:px-16 gap-10">
           {/* Left Image */}
           <div className="w-full md:w-[60%]">
-            <img
-              src="/assets/image-5.png"
+            <Image
+              src={image5}
+              width={600} // Add this
+              height={400}
               alt="Left Illustration"
               className="w-full h-auto object-cover"
             />
@@ -43,8 +54,10 @@ const LaunchPage = () => {
 
           {/* Right Image - Hidden on mobile */}
           <div className="hidden md:block w-[35%] lg:w-[30%]">
-            <img
-              src="/assets/image-6.png"
+            <Image
+              src={image6}
+              width={600} // Add this
+              height={400}
               alt="Right Illustration"
               className="w-full h-auto rotate-[28deg] object-cover"
             />
@@ -55,4 +68,4 @@ const LaunchPage = () => {
   );
 };
 
-export default LaunchPage; 
+export default LaunchPage;

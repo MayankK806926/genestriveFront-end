@@ -45,11 +45,11 @@ const Legal = () => {
 
             <h2 className="text-2xl font-semibold text-[#2F2F68] mt-8">Sharing of Personal Information</h2>
             <p>
-              We may share personal information with:
+              We may share personal information with:</p>
               <ul className="list-disc ml-6">
                 <li>Third-party service providers for operating the Platform.</li>
                 <li>Legal or regulatory authorities when required.</li>
-              </ul>
+              </ul><p>
               We do not sell or rent your personal information to any third party for their marketing purposes.
             </p>
 

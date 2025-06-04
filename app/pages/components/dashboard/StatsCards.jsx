@@ -1,16 +1,19 @@
 import React from 'react'
 import { FiUsers, FiFileText, FiClock } from 'react-icons/fi'
+import { useDashboard } from '../../../context/DashboardContext'
 
 const StatsCards = () => {
+  const { viewType, selectedGrade, selectedExam } = useDashboard()
+
   const stats = [
     {
-      title: 'Daily Active Users',
+      title: 'Total Visitors',
       value: '75',
       icon: FiUsers,
       color: 'bg-blue-500'
     },
     {
-      title: 'Test Created Per Day',
+      title: 'Total Test Created',
       value: '110',
       icon: FiFileText,
       color: 'bg-green-500'
@@ -34,16 +37,12 @@ const StatsCards = () => {
       <div className="bg-white rounded-lg p-6 shadow-sm">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-800">Avg. Time Spent</h3>
-          <select className="px-3 py-1 border border-gray-300 rounded-lg text-sm">
-            <option>Select Grade</option>
-            <option>Grade 5</option>
-            <option>Grade 6</option>
-            <option>Grade 7</option>
-            <option>Grade 8</option>
-            <option>Grade 9</option>
-            <option>Grade 10</option>
-            <option>Grade 11</option>
-            <option>Grade 12</option>
+          <select 
+            className="px-3 py-1 border border-gray-300 rounded-lg text-sm bg-gray-50" 
+            value={viewType === 'grades' ? selectedGrade : selectedExam}
+            disabled
+          >
+            <option>{viewType === 'grades' ? selectedGrade : selectedExam}</option>
           </select>
         </div>
         <div className="flex items-center justify-center flex-col">

@@ -1,9 +1,8 @@
 import React from 'react';
-import { Image } from 'next/image';
 import SupportIcon from './assets/supp.png';
 import ContactIcon from './assets/image.png'; 
-import FAQAccordion from '../components/support/FAQItem';
-import CommunityCard from '../components/support/CommunityCard';
+import FAQAccordion from './assets/support/FAQItem';
+import CommunityCard from './assets/support/CommunityCard';
 import Image from 'next/image';
 
 const Support = () => {

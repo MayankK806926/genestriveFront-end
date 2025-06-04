@@ -16,8 +16,7 @@ export default function GenerateTest(){
   const [selectedQuestionTypes, setSelectedQuestionTypes] = useState([]);
 
   // State for grade and examtype from URL
-  const [grade, setGrade] = useState(null);
-  const [examtype, setExamtype] = useState(null);
+  const [category, setCategory] = useState(null);
 
   // Add loading and error states
   const [loading, setLoading] = useState(false);
@@ -25,11 +24,9 @@ export default function GenerateTest(){
 
   // Read grade and examtype from URL on component mount
   useEffect(() => {
-    const gradeFromUrl = searchParams.get('grade');
-    const examTypeFromUrl = searchParams.get('examtype');
+    const CategoryFromUrl = searchParams.get('category');
 
-    if (gradeFromUrl) setGrade(gradeFromUrl);
-    if (examTypeFromUrl) setExamtype(examTypeFromUrl);
+    if (CategoryFromUrl) setCategory(CategoryFromUrl);
 
     // useSearchParams is a static hook, no dependencies needed for initial read
   }, []);
@@ -98,7 +95,7 @@ export default function GenerateTest(){
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({requestData,grade,examtype}),
+        body: JSON.stringify({requestData,category}),
       });
 
       if (!res.ok) {
