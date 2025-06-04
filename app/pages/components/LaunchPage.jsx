@@ -1,6 +1,8 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import image5 from "./assets/image-5.png";
+import image6 from "./assets/image-6.png";
 
 const LaunchPage = () => {
   return (
@@ -42,7 +44,7 @@ const LaunchPage = () => {
           {/* Left Image */}
           <div className="w-full md:w-[60%]">
             <Image
-              src="/assets/image-5.png"
+              src={image5}
               width={600} // Add this
               height={400}
               alt="Left Illustration"
@@ -53,7 +55,7 @@ const LaunchPage = () => {
           {/* Right Image - Hidden on mobile */}
           <div className="hidden md:block w-[35%] lg:w-[30%]">
             <Image
-              src="/assets/image-6.png"
+              src={image6}
               width={600} // Add this
               height={400}
               alt="Right Illustration"
