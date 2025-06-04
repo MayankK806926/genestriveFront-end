@@ -2,8 +2,10 @@ import React from 'react';
 import { ChevronBottomNormal } from "../icons/ChevronBottomNormal";
 import { FaQuestionCircle } from 'react-icons/fa';
 import { IoLogOutOutline } from 'react-icons/io5';
+import { auth } from '../authentication/firebase-config';
+import { destroyCookie } from "nookies";
 
-const Sidebar = ({ grade, examtype, handleGradeChange, handleExamTypeChange }) => {
+const Sidebar = ({  grade,  examtype,  handleGradeChange,  handleExamTypeChange  }) => {
   return (
     <aside className="w-full md:w-[350px] bg-[#001e32] text-white flex flex-col">
       {/* Content with padding */}
@@ -57,7 +59,17 @@ const Sidebar = ({ grade, examtype, handleGradeChange, handleExamTypeChange }) =
           </button>
         </div>
         <div>
-          <button className="flex items-center justify-center gap-1 hover:text-gray-300 transition-colors w-full py-1">
+          <button className="flex items-center justify-center gap-1 hover:text-gray-300 transition-colors w-full py-1"
+            onClick={async () => {
+              try {
+                await auth.signOut(); // Firebase logout
+                
+                window.location.href = "/login"; // Or router.push("/login")
+              } catch (err) {
+                console.error("Logout error:", err);
+              }
+            }}
+          >
             <IoLogOutOutline className="text-sm md:text-base flex items-center" />
             <span className="flex items-center text-xs md:text-sm">Log Out</span>
           </button>

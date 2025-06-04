@@ -1,5 +1,5 @@
-import React from "react";
 import Link from "next/link";
+import React from "react";
 import Image from "next/image";
 import image5 from "./assets/image-5.png";
 import image6 from "./assets/image-6.png";

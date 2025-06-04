@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
+import { auth } from '../authentication/firebase-config';
+import { destroyCookie } from "nookies";
 
 const Navbar2 = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -55,7 +57,16 @@ const Navbar2 = () => {
             <Link href="/dashboard" className="text-[#2f2f68] font-semibold text-sm">Dashboard</Link>
             <Link href="/AboutUs" className="text-[#2f2f68] font-semibold text-sm">About Us</Link>
           </div>
-          <button className="w-4/5 bg-[#001e32] text-white py-1 rounded-full font-semibold text-xs">
+          <button className="w-4/5 bg-[#001e32] text-white py-1 rounded-full font-semibold text-xs"
+            onClick={async () => {
+              try {
+                await auth.signOut(); // Firebase logout
+                window.location.href = "/login"; // Or router.push("/login")
+              } catch (err) {
+                console.error("Logout error:", err);
+              }
+            }}
+          >
             Log Out
           </button>
           <button className="w-4/5 bg-[#001e32] text-white py-1 rounded-full font-semibold text-xs">

@@ -1,8 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import nookies from "nookies";
+import { auth } from "./firebase-config";
 
 export default function Login() {
+  const router = useRouter()
   const [userType, setUserType] = useState("student");
   const [formData, setFormData] = useState({
     email: "",
@@ -11,7 +15,7 @@ export default function Login() {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
+  const [rememberMe, setRememberMe] = useState(false);
 
   const handleUserTypeChange = (type) => {
     setUserType(type);
@@ -25,40 +29,49 @@ export default function Login() {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, type = userType) => {
     if (e) e.preventDefault();
     setError("");
     setLoading(true);
 
     try {
-      const response = await fetch("/api/login", {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+
+      const token = await userCredential.user.getIdToken(); // ✅ Get Firebase ID token
+
+      const response = await fetch("http://localhost:8000/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // ✅ Send token in Authorization header
         },
         body: JSON.stringify({
-          ...formData,
-          userType,
+          EMAIL: formData.email,
+          Phone_number: formData.phone,
+          Role: type,
         }),
       });
+      console.log("token", token);
 
-      const data = await response.json();
-
-      if (data.success) {
-        if (userType === "student") {
-          router.push('/dashboard');
-        } else {
-          router.push('/admin-panel');
-        }
+      if (response.status === 403) {
+        setError("User role mismatch. Please try again.");
+      } else if (!response.ok) {
+        setError("Login failed. Please try again.");
       } else {
-        setError(data.message || "Registration failed");
+        console.log("User logged in successfully:", userCredential);
+        router.push("/dashboard");
+        router.refresh();
       }
+
     } catch (error) {
-      setError("An error occurred during registration");
-      console.error("Signup failed:", error);
+      setError("An error occurred during login");
+      console.error("Login failed:", error);
     } finally {
       setLoading(false);
-      // Reset form data manually
       setFormData({
         email: "",
         password: "",
@@ -151,6 +164,8 @@ export default function Login() {
                   id="remember"
                   name="remember"
                   className="w-[25px] h-[25px] rounded accent-[#5e2f7c]"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
                 />
                 <label
                   htmlFor="remember"
@@ -163,14 +178,12 @@ export default function Login() {
               <div className="flex flex-col sm:flex-row gap-4 mt-4 justify-center w-full cursor">
                 <button
                   type="button"
-                  className={`w-full cursor-pointer sm:w-[200px] h-[55px] rounded-[30px] border ${
-                    userType === "student"
-                      ? "bg-[#5e2f7c] text-white border-none"
-                      : "bg-white text-[#001e32] border-[#2f2f68] shadow-[0px_0px_4px_#00000040]"
-                  }`}
-                  onClick={() => {
-                    handleUserTypeChange("student");
-                    router.push('/dashboard');
+                  className={`w-full cursor-pointer sm:w-[200px] h-[55px] rounded-[30px] border ${userType === "student"
+                    ? "bg-[#5e2f7c] text-white border-none"
+                    : "bg-white text-[#001e32] border-[#2f2f68] shadow-[0px_0px_4px_#00000040]"
+                    }`}
+                  onClick={(e) => {
+                    handleSubmit(e, "student");
                   }}
                 >
                   <h2 className="font-semibold">Student</h2>
@@ -178,14 +191,12 @@ export default function Login() {
 
                 <button
                   type="button"
-                  className={`w-full cursor-pointer sm:w-[200px] h-[55px] rounded-[30px] border ${
-                    userType === "mentor"
-                      ? "bg-[#5e2f7c] text-white border-none"
-                      : "bg-white text-[#001e32] border-[#2f2f68] shadow-[0px_0px_4px_#00000040]"
-                  }`}
-                  onClick={() => {
-                    handleUserTypeChange("mentor");
-                    router.push('/admin-panel');
+                  className={`w-full cursor-pointer sm:w-[200px] h-[55px] rounded-[30px] border ${userType === "mentor"
+                    ? "bg-[#5e2f7c] text-white border-none"
+                    : "bg-white text-[#001e32] border-[#2f2f68] shadow-[0px_0px_4px_#00000040]"
+                    }`}
+                  onClick={(e) => {
+                    handleSubmit(e, "mentor");
                   }}
                 >
                   <h2 className="font-semibold">Mentor</h2>

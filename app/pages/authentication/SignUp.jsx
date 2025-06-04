@@ -1,5 +1,9 @@
 "use client";
 import React, { useState } from "react";
+import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { auth } from "../authentication/firebase-config"; 
+import { useRouter } from "next/navigation";
+import nookies from "nookies";
 
 export default function SignUp() {
   const [userType, setUserType] = useState("student");
@@ -12,6 +16,7 @@ export default function SignUp() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [privacy, setprivacy] = useState(false);
+  const router = useRouter();
 
   const handleUserTypeChange = (type) => {
     setUserType(type);
@@ -25,33 +30,31 @@ export default function SignUp() {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, type= userType) => {
+    e.preventDefault();
     setError("");
     setLoading(true);
-    console.log("going on");
+    console.log("tyepe", type);
 
     try {
-      const response = await fetch("/api/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...formData,
-          userType,
-        }),
-      });
-
-      const data = await response.json();
-      console.log(data);
-
-      if (data.success) {
-        // Redirect to login page on success
-        window.location.href = "/two-factor-signup";
-      } else {
-        setError(data.message || "Registration failed");
-      }
+      localStorage.setItem("signup_name", formData.name);
+      localStorage.setItem("signup_phone", formData.phone);
+      localStorage.setItem("user_role", type)
+      console.log("local type", localStorage.getItem("user_role"));
+      const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+      const user = userCredential.user;
+      await sendEmailVerification(user);
+      console.log("oye")
+      router.push("/verify-email");
+      console.log("ha")
     } catch (error) {
+      if (auth.currentUser) {
+        try {
+          await auth.currentUser.delete();
+        } catch (e) {
+          console.error("Failed to delete Firebase user after error:", e);
+        }
+      }
       setError("An error occurred during registration");
       console.error("Signup failed:", error);
     } finally {
@@ -174,25 +177,29 @@ export default function SignUp() {
 
               <div className="flex flex-col sm:flex-row gap-4 mt-4 justify-center w-full cursor">
                 <button
-                  type="submit"
+                  type="button"
                   disabled={!privacy}
-                  className={`w-full cursor-pointer sm:w-[200px] h-[55px] rounded-[30px] border ${
-                    userType === "student"
-                      ? "bg-[#5e2f7c] text-white border-none"
-                      : "bg-white text-[#001e32] border-[#2f2f68] shadow-[0px_0px_4px_#00000040]"
-                  }`}
+                  className={`w-full cursor-pointer sm:w-[200px] h-[55px] rounded-[30px] border ${userType === "student"
+                    ? "bg-[#5e2f7c] text-white border-none"
+                    : "bg-white text-[#001e32] border-[#2f2f68] shadow-[0px_0px_4px_#00000040]"
+                    }`}
+                  onClick={(e) => {
+                    handleSubmit(e, "student");
+                  }}
                 >
                   <h2 className="font-semibold">Student</h2>
                 </button>
 
                 <button
-                  type="submit"
+                  type="button"
                   disabled={!privacy}
-                  className={`w-full cursor-pointer sm:w-[200px] h-[55px] rounded-[30px] border ${
-                    userType === "mentor"
-                      ? "bg-[#5e2f7c] text-white border-none"
-                      : "bg-white text-[#001e32] border-[#2f2f68] shadow-[0px_0px_4px_#00000040]"
-                  }`}
+                  className={`w-full cursor-pointer sm:w-[200px] h-[55px] rounded-[30px] border ${userType === "mentor"
+                    ? "bg-[#5e2f7c] text-white border-none"
+                    : "bg-white text-[#001e32] border-[#2f2f68] shadow-[0px_0px_4px_#00000040]"
+                    }`}
+                    onClick={(e) => {
+                    handleSubmit(e, "mentor");
+                  }}
                 >
                   <h2 className="font-semibold">Mentor</h2>
                 </button>
