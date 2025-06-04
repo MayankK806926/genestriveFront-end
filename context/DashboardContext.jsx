@@ -7,7 +7,7 @@ export const DashboardProvider = ({ children }) => {
   const [viewType, setViewType] = useState('grades');
   
   // Selected grade or exam
-  const [selectedGrade, setSelectedGrade] = useState('All Grades');
+  const [selectedGrade, setSelectedGrade] = useState('');
   const [selectedExam, setSelectedExam] = useState('');
   
   // Date filter

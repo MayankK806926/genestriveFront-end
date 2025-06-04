@@ -110,7 +110,7 @@ function Dashboard(){
         <MainContent totalTestsTaken={totalTestsTaken} AverageAccuracy={AverageAccuracy} WeakTopics={WeakTopics} name={name} Progress={Progress} recentActivities={recentActivities} topicsToFocus={topicsToFocus} resources={resources} />
       </div>
       <button
-        onClick={() => router.push(`/dashboard/generate-test?grade=${encodeURIComponent(grade)}&examtype=${encodeURIComponent(examtype)}`)}
+        onClick={() => router.push(`/dashboard/generate-test?category=${encodeURIComponent(category)}}`)}
         className="bg-blue-500 text-white p-2 m-4 rounded"
       >
         Go to Generate Test
