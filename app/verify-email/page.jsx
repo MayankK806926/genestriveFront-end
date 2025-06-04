@@ -48,7 +48,7 @@ export default function VerifyEmail() {
           const userType = localStorage.getItem("user_role") || "";
           console.log("1")
           // Store user details in backend
-          const response = await fetch("http://localhost:8000/register_user", {
+          const response = await fetch("http://localhost:8000/auth/register_user", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
