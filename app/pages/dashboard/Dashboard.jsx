@@ -7,10 +7,11 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
 function Dashboard(){
-  const router = useRouter();
-  const [name, setName] = useState("John Doe"); // Initialize with default name
-  const [grade, setGrade] = useState("John Doe"); // Initialize with default name
-  const [examtype, setExamType] = useState("John Doe"); // Initialize with default name
+  const router = useRouter(); // Initialize with default name
+  const [name, setName] = useState("John Doe"); // Initialize with default name // Initialize with default name
+  const [grade, setGrade] = useState("");
+  const [examtype, setExamType] = useState("");
+  const [category, setCategory] = useState(""); // Initialize with default name
 
   // Define state variables for dashboard data
   const [totalTestsTaken, settotalTestsTaken] = useState(0); // Add state for total tests taken
@@ -23,19 +24,22 @@ function Dashboard(){
   const [error, setError] = useState(null); // Add error state
 
   const handleGradeChange = (event) => {
-    setGrade(event.target.value);
+    setCategory(event.target.value);
+    setGrade(event.target.value)
+    setExamType("")
   };
 
   const handleExamTypeChange = (event) => {
-    setExamType(event.target.value);
+    setCategory(event.target.value);
+    setExamType(event.target.value)
+    setGrade("")
   };
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         const res = await axios.post('/api/dashboard-data', {
-          grade: grade,
-          examtype: examtype
+          category:category
         });
         
         if (res.data) {
@@ -58,7 +62,7 @@ function Dashboard(){
     };
     
     fetchDashboardData();
-  }, [grade, examtype]);
+  }, [category]);
 
   const resources = [
     {
