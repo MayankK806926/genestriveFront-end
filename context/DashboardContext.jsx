@@ -55,5 +55,13 @@ export const useDashboard = () => {
   if (!context) {
     throw new Error('useDashboard must be used within a DashboardProvider');
   }
-  return context;
-}; 
+  return {
+    ...context,
+    setViewType: context.setViewType,
+    setSelectedGrade: context.setSelectedGrade,
+    setSelectedExam: context.setSelectedExam,
+    setStartDate: context.setStartDate,
+    setEndDate: context.setEndDate,
+    setChartPeriod: context.setChartPeriod,
+  };
+};

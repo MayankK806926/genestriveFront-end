@@ -9,6 +9,7 @@ export default function GenerateTest(){
   const searchParams = useSearchParams();
   // State variables for form data
   const [subjects, setSubjects] = useState([]); // Changed from subject to subjects array
+  const [topics, setTopics] = useState([]);
   const [selectedTopics, setSelectedTopics] = useState([]);
   const [difficulties, setDifficulties] = useState([]);
   const [numQuestions, setNumQuestions] = useState(20);
@@ -32,13 +33,33 @@ export default function GenerateTest(){
   }, []);
 
   // Handlers for input changes
-  const handleSubjectChange = (subject) => {
+  const handleSubjectChange = async(subject) => {
     setSubjects(prevSubjects =>
       prevSubjects.includes(subject)
         ? prevSubjects.filter(s => s !== subject)
         : [...prevSubjects, subject]
     );
-  };
+    try{
+      const res = await fetch('/api/generate-test', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({subjects}),
+      });
+      if (!res.ok) {
+        const errorBody = await res.text(); // Read error body
+        throw new Error(`HTTP error! status: ${res.status}, body: ${errorBody}`);
+      }
+      console.log("Topics generated:",topics)
+      const {TopicsList} =await res.json()
+      setTopics(TopicsList)
+    }catch(err){
+      console.error('Error generating test:', err);
+      setError(err.message || 'An error occurred during test generation.'); // Set error state
+    } finally {
+      setLoading(false);
+  };}
 
   const handleTopicChange = (topic) => {
     setSelectedTopics(prevSelectedTopics =>
@@ -189,7 +210,8 @@ export default function GenerateTest(){
 
                       <div className="font-medium text-[#2f2f68] text-2xl">Topics</div>
                       <div className="space-y-4">
-                        {["Algebra", "Geometry", "Calculus", "Statistics", "Trigonometry"].map((item, index) => (
+                        {
+                        topics.map((item, index) => (
                           <div key={index} className="flex items-center">
                             <input 
                               type="checkbox" 
