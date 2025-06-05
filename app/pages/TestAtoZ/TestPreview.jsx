@@ -16,6 +16,7 @@ export default function TestPreview() {
   const [loading, setLoading] = useState(true); // Add loading state
   const [error, setError] = useState(null); // Add error state
   const [submitted, setSubmitted] = useState(false);
+  const [category, setCategory] = useState("");
   const [testResults, setTestResults] = useState(null);
   const [startTime, setStartTime] = useState(null);
   const [totalTime, setTotalTime] = useState(null);
