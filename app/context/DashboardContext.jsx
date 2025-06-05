@@ -7,6 +7,19 @@ export function DashboardProvider({ children }) {
   const [viewType, setViewType] = useState('questions');
   const [selectedGrade, setSelectedGrade] = useState('');
   const [selectedExam, setSelectedExam] = useState('');
+  const [chartPeriod, setChartPeriod] = useState('weekly');
+
+  const handleGradeSelect = (grade) => {
+    setViewType('grades');
+    setSelectedGrade(grade);
+    setSelectedExam('');
+  };
+
+  const handleExamSelect = (exam) => {
+    setViewType('competitive');
+    setSelectedExam(exam);
+    setSelectedGrade('');
+  };
 
   const value = {
     viewType,
@@ -15,6 +28,10 @@ export function DashboardProvider({ children }) {
     setSelectedGrade,
     selectedExam,
     setSelectedExam,
+    chartPeriod,
+    setChartPeriod,
+    handleGradeSelect,
+    handleExamSelect
   };
 
   return (
