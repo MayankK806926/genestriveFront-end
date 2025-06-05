@@ -1,7 +1,27 @@
 import React from 'react'
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js'
 
-const DifficultyLevelChart = ({ period }) => {
-  // Sample data for different periods
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+)
+
+const DifficultyLevelChart = ({ period = 'daily' }) => {
+  // Initialize data with default values
   const data = {
     daily: {
       easy: 75,
@@ -20,7 +40,8 @@ const DifficultyLevelChart = ({ period }) => {
     }
   }
 
-  const currentData = data[period]
+  // Ensure we have valid data for the current period
+  const currentData = data[period] || data.daily
 
   // Single color for all charts
   const chartColor = '#5E2F7C'

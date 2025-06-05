@@ -1,6 +1,27 @@
 import React from 'react'
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js'
 
-const StudentParticipationChart = ({ period }) => {
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+)
+
+const StudentParticipationChart = ({ period = 'daily' }) => {
+  // Initialize data with default values
   const data = {
     daily: [65, 45, 70, 55, 80, 60, 75],
     weekly: [450, 320, 490, 385, 560, 420, 525],
@@ -13,8 +34,9 @@ const StudentParticipationChart = ({ period }) => {
     monthly: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']
   }
 
-  const currentData = data[period]
-  const currentLabels = labels[period]
+  // Ensure we have valid data for the current period
+  const currentData = data[period] || data.daily
+  const currentLabels = labels[period] || labels.daily
   const maxValue = Math.max(...currentData)
 
   // Generate y-axis values

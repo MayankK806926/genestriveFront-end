@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
 
-export async function POST() {
+export async function POST(request) {
   try {
 
     // TODO: Implement actual test generation logic here
     // Use requestData (e.g., requestData.subject, requestData.selectedTopics) to generate the test.
     // For now, returning the hardcoded sample data.
+    const {Category} = await request.json();
 
     const Progress = {
         "Mathematics": 75,
