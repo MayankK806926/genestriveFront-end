@@ -45,7 +45,6 @@ export default function GenerateTest(){
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({subjects}),
       });
       if (!res.ok) {
         const errorBody = await res.text(); // Read error body

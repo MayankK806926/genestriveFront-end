@@ -86,6 +86,7 @@ export default function TestPreview() {
   }, []); 
   
   const [selectedAnswers, setSelectedAnswers] = useState([]);
+  const [selectedAnswersbyid, setSelectedAnswersbyid] = useState([]);
 
   useEffect(() => {
     if (!submitted && testData) { // Also check if testData is available
@@ -230,6 +231,8 @@ export default function TestPreview() {
           setSubmitted={setSubmitted}
           selectedAnswers={selectedAnswers}
           setSelectedAnswers={setSelectedAnswers}
+          selectedAnswersbyid={selectedAnswersbyid}
+          setSelectedAnswersbyid={setSelectedAnswersbyid}
           testData={testData}
           processTestResults={processTestResults}
         />

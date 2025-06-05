@@ -12,6 +12,7 @@ export async function POST(request) {
 
     const sampleData = [
         {
+          id:6,
           question: "What is the value of pi ?",
           topic: "Mathematics",
           options: [
@@ -22,6 +23,7 @@ export async function POST(request) {
           ],
         },
         {
+          id:8,
           question: "Another question?",
           topic: "Science",
           options: [
@@ -43,11 +45,9 @@ export async function POST(request) {
     );
   }
 }
-export async function GET(request) {
+export async function GET() {
   try {
     // Read the request body to get parameters from the frontend
-    const {subjects} = await request.json();
-    console.log('Received topics generation request with data:',subjects);
     const TopicsList=["Algebra", "Geometry", "Calculus", "Statistics", "Trigonometry"]
     return NextResponse.json({TopicsList});
   }catch (error) {

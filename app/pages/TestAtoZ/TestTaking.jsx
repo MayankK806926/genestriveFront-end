@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ChevronLeftNormal } from "../icons/ChevronLeftNormal";
 import Navbar2 from "../components/Navbar2";
 
-export default function TestTaking({ setSubmitted, selectedAnswers, setSelectedAnswers, testData, processTestResults }) {
+export default function TestTaking({ setSubmitted, selectedAnswers, setSelectedAnswers,selectedAnswersbyid,setSelectedAnswersbyid, testData, processTestResults }) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   
   // Only check if testData is valid, don't show loading state
@@ -26,10 +26,13 @@ export default function TestTaking({ setSubmitted, selectedAnswers, setSelectedA
   }, [selectedAnswers]);
 
   // Handler for option selection
-  const handleOptionSelect = (optionIndex) => {
+  const handleOptionSelect = (optionIndex,id) => {
     const newSelectedAnswers = [...selectedAnswers];
     newSelectedAnswers[currentQuestionIndex] = optionIndex;
     setSelectedAnswers(newSelectedAnswers);
+    const newSelectedAnswersbyid = [...selectedAnswersbyid];
+    newSelectedAnswers[id] = optionIndex;
+    setSelectedAnswersbyid(newSelectedAnswersbyid);
   };
 
   // Handler for navigating to the next question
@@ -92,7 +95,7 @@ export default function TestTaking({ setSubmitted, selectedAnswers, setSelectedA
                   <div 
                     key={optionIndex} 
                     className={`w-full ${bgColor} border ${borderColor} p-4 rounded-md cursor-pointer`}
-                    onClick={() => handleOptionSelect(optionIndex)}
+                    onClick={() => handleOptionSelect(optionIndex,currentQuestion.id)}
                   >
                     <span className="font-medium text-[#2f2f68] text-[32px]">{option.text}</span>
                   </div>
