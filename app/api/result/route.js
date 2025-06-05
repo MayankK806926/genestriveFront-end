@@ -7,7 +7,7 @@ export async function POST(request) {
     const { selectedAnswersbyid, startTime } = await request.json();
 
     // Check if data is valid
-    if (!selectedAnswersbyid || !testData || !Array.isArray(selectedAnswersbyid)) {
+    if (!selectedAnswersbyid || !Array.isArray(selectedAnswersbyid)) {
         return NextResponse.json(
             { success: false, message: 'Invalid input data' },
             { status: 400 }
