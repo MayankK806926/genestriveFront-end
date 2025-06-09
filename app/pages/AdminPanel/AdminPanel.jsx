@@ -1,11 +1,10 @@
-import React from 'react'
-import Navbar2 from '../components/Navbar2'
-import Sidebar2 from '../components/Sidebar2'
-import MainContent2 from '../components/MainContent2'
-import Footer from '../components/Footer'
+import React from "react";
+import Navbar2 from "../components/Navbar2";
+import Sidebar2 from "../components/SideBar2";
+import MainContent2 from "../components/MainContent2";
+import Footer from "../components/Footer";
 
 const AdminPanel = () => {
-
   return (
     <div className="bg-white flex flex-col min-h-screen">
       <Navbar2 />
@@ -15,7 +14,7 @@ const AdminPanel = () => {
       </div>
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default AdminPanel
+export default AdminPanel;
