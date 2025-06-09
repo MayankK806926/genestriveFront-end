@@ -23,6 +23,7 @@ export default function TestPreview() {
   const [endTime, setEndTime] = useState(null);
   // const sampleData = [
   //   {
+  //     type:"Multiple Chioce Question",
   //     question: "What is the value of pi ?",
   //     topic: "Mathematics",
   //     options: [
@@ -33,6 +34,7 @@ export default function TestPreview() {
   //     ],
   //   },
   //   {
+  //     type:"Multiple Chioce Question",
   //     question: "Another question?",
   //     topic: "Science",
   //     options: [

@@ -1,10 +1,11 @@
+"use client"
 import { NextResponse } from 'next/server';
 
 // Change to POST handler
 export async function POST(request) {
   try {
     // Get data from request body
-    const { selectedAnswersbyid, startTime } = await request.json();
+    const { selectedAnswersbyid, endTime } = await request.json();
 
     // Check if data is valid
     if (!selectedAnswersbyid || !Array.isArray(selectedAnswersbyid)) {

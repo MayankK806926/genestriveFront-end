@@ -13,6 +13,7 @@ export async function POST(request) {
     const sampleData = [
         {
           id:6,
+          type:"Single Correct",
           question: "What is the value of pi ?",
           topic: "Mathematics",
           options: [
@@ -24,15 +25,15 @@ export async function POST(request) {
         },
         {
           id:8,
+          type:"Long Answer",
           question: "Another question?",
           topic: "Science",
-          options: [
-            { text: "Option 1", isCorrect: false },
-            { text: "Option 2", isCorrect: true },
-            { text: "Option 3", isCorrect: false },
-            { text: "Option 4", isCorrect: false },
-          ],
         },
+        {
+          id:9,
+          type:"Fill in blanks",
+          question: "Fill in the ______ question?",
+          topic: "History",}
       ];
 
     // Return the generated test data in the expected format

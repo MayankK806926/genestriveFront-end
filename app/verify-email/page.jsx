@@ -6,7 +6,6 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import nookies from "nookies";
 
-
 export default function VerifyEmail() {
   const router = useRouter();
   const timeoutRef = useRef(null);
@@ -46,24 +45,27 @@ export default function VerifyEmail() {
           const name = localStorage.getItem("signup_name") || "";
           const phone = localStorage.getItem("signup_phone") || "";
           const userType = localStorage.getItem("user_role") || "";
-          console.log("1")
+          console.log("1");
           // Store user details in backend
-          const response = await fetch("http://localhost:8000/auth/register_user", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              Password_hash: user.uid,
-              EMAIL: user.email,
-              User_name: name,
-              Phone_number: phone,
-              Role: userType,
-            }),
-          });
+          const response = await fetch(
+            "http://localhost:8000/auth/register_user",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                Password_hash: user.uid,
+                EMAIL: user.email,
+                User_name: name,
+                Phone_number: phone,
+                Role: userType,
+              }),
+            }
+          );
           console.log("Response:", response);
 
-          console.log("2")
+          console.log("2");
           localStorage.removeItem("signup_name");
           localStorage.removeItem("signup_phone");
           localStorage.removeItem("user_role");
@@ -98,8 +100,19 @@ export default function VerifyEmail() {
 
               <div className="mt-8 text-center">
                 <div className="flex justify-center mb-6">
-                  <svg className="w-16 h-16 text-[#15609e]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                  <svg
+                    className="w-16 h-16 text-[#15609e]"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                    ></path>
                   </svg>
                 </div>
                 <p className="text-gray-700 text-lg mb-4">
@@ -109,7 +122,7 @@ export default function VerifyEmail() {
                   This page will redirect after verification.
                 </p>
                 <p className="text-red-600 font-medium mt-4">
-                You have 30 seconds to verify your email.
+                  You have 30 seconds to verify your email.
                 </p>
               </div>
             </div>

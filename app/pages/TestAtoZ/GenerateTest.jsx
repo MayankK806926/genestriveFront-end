@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import { ChevronLeftNormal } from "../icons/ChevronLeftNormal";
 import Navbar2 from "../components/Navbar2";
@@ -350,7 +351,7 @@ export default function GenerateTest() {
                       </div>
                       <div className="mt-4 space-y-4">
                         {[
-                          "Multiple Choice Questions",
+                          "Multiple Correct",
                           "Single word",
                           "single correct",
                           "Integer Type",

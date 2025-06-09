@@ -1,10 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { ChevronLeftNormal } from "../icons/ChevronLeftNormal";
 import Navbar2 from "../components/Navbar2";
+import IntegerType from "./AnswerTypes/IntegerType";
+import DescriptType from "./AnswerTypes/DescriptType";
+import MCQs from "./AnswerTypes/MCQs";
+import MSelectQs from "./AnswerTypes/MSelectQs";
+import NumericalType from "./AnswerTypes/NumericalType";
 
-export default function TestTaking({ setSubmitted, selectedAnswers, setSelectedAnswers,selectedAnswersbyid,setSelectedAnswersbyid, testData, processTestResults }) {
+export default function TestTaking({
+  setSubmitted,
+  selectedAnswers,
+  setSelectedAnswers,
+  selectedAnswersbyid,
+  setSelectedAnswersbyid,
+  testData,
+  processTestResults,
+}) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  
+
   // Only check if testData is valid, don't show loading state
   if (!testData || !Array.isArray(testData) || testData.length === 0) {
     return null;
@@ -20,32 +33,32 @@ export default function TestTaking({ setSubmitted, selectedAnswers, setSelectedA
   // Reset currentQuestionIndex when test is retried
   useEffect(() => {
     // Only reset if all answers are null (indicating a test retry)
-    if (selectedAnswers.every(answer => answer === null)) {
+    if (selectedAnswers.every((answer) => answer === null)) {
       setCurrentQuestionIndex(0);
     }
   }, [selectedAnswers]);
 
   // Handler for option selection
-  const handleOptionSelect = (optionIndex,id) => {
+  const handleOptionSelect = (optionIndex, id) => {
     const newSelectedAnswers = [...selectedAnswers];
     newSelectedAnswers[currentQuestionIndex] = optionIndex;
     setSelectedAnswers(newSelectedAnswers);
     const newSelectedAnswersbyid = [...selectedAnswersbyid];
-    newSelectedAnswers[id] = optionIndex;
+    newSelectedAnswersbyid[id] = optionIndex;
     setSelectedAnswersbyid(newSelectedAnswersbyid);
   };
 
   // Handler for navigating to the next question
   const handleNextQuestion = () => {
     if (currentQuestionIndex < testData.length - 1) {
-      setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+      setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
     }
   };
 
   // Handler for navigating to the previous question
   const handlePreviousQuestion = () => {
     if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(prevIndex => prevIndex - 1);
+      setCurrentQuestionIndex((prevIndex) => prevIndex - 1);
     }
   };
 
@@ -56,7 +69,39 @@ export default function TestTaking({ setSubmitted, selectedAnswers, setSelectedA
   };
 
   // Calculate progress percentage
-  const progressPercentage = ((currentQuestionIndex + 1) / testData.length) * 100;
+  const progressPercentage =
+    ((currentQuestionIndex + 1) / testData.length) * 100;
+
+  // Dynamic answer type rendering
+  const input = {
+    currentQuestion,
+    currentQuestionIndex,
+    selectedAnswers,
+    setSelectedAnswers,
+    selectedAnswersbyid,
+    setSelectedAnswersbyid,
+  };
+
+  const renderAnswerType = () => {
+    switch (currentQuestion.type) {
+      case "Single Correct":
+        return <MCQs Input={input} />;
+      case "Long Answer":
+        return <DescriptType Input={input} />;
+      case "Short Answer":
+        return <DescriptType Input={input} />;
+      case "Fill in the Blanks":
+        return <DescriptType Input={input} />;
+      case "Multiple Correct":
+        return <MSelectQs Input={input} />;
+      case "Integer Type":
+        return <IntegerType Input={input} />;
+      case "Numerical Type":
+        return <NumericalType Input={input} />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-[#f6effe]">
@@ -68,47 +113,38 @@ export default function TestTaking({ setSubmitted, selectedAnswers, setSelectedA
         <div className="max-w-[1440px] mx-auto px-4">
           <div className="w-full mb-8">
             <div className="flex justify-between items-center mb-2">
-              <p className="font-medium text-[#2f2f68] text-xl">Question {currentQuestionIndex + 1} out of {testData.length}</p>
-              <p className="font-normal text-[#2f2f68] text-xl">{progressPercentage.toFixed(0)}% completed</p>
+              <p className="font-medium text-[#2f2f68] text-xl">
+                Question {currentQuestionIndex + 1} out of {testData.length}
+              </p>
+              <p className="font-normal text-[#2f2f68] text-xl">
+                {progressPercentage.toFixed(0)}% completed
+              </p>
             </div>
             <div className="w-full bg-[#d9d9d9] rounded-[15px] h-3.5">
-              <div className="bg-[#5e2f7c] rounded-[15px] h-3.5" style={{ width: `${progressPercentage}%` }}></div>
+              <div
+                className="bg-[#5e2f7c] rounded-[15px] h-3.5"
+                style={{ width: `${progressPercentage}%` }}
+              ></div>
             </div>
           </div>
 
           <div className="bg-white border border-solid border-[#d9d9d9] rounded-[20px] p-8">
-            <p className="font-medium text-[#2f2f68] text-[32px] mb-4">{currentQuestion.question}</p>
-            <div className="w-fit bg-[#f7ecff] px-3 py-1 rounded-md flex items-center justify-center mb-6 text-[#3e4954] text-xl">{currentQuestion.topic}</div>
-
-            <div className="space-y-4">
-              {currentQuestion.options.map((option, optionIndex) => {
-                const isSelected = selectedAnswers[currentQuestionIndex] === optionIndex;
-                let bgColor = 'bg-white';
-                let borderColor = 'border-[#d9d9d9]';
-
-                if (isSelected) {
-                  bgColor = 'bg-[#f7ecff]';
-                  borderColor = 'border-[#5e2f7c]';
-                }
-
-                return (
-                  <div 
-                    key={optionIndex} 
-                    className={`w-full ${bgColor} border ${borderColor} p-4 rounded-md cursor-pointer`}
-                    onClick={() => handleOptionSelect(optionIndex,currentQuestion.id)}
-                  >
-                    <span className="font-medium text-[#2f2f68] text-[32px]">{option.text}</span>
-                  </div>
-                );
-              })}
+            <p className="font-medium text-[#2f2f68] text-[32px] mb-4">
+              {currentQuestion.question}
+            </p>
+            <div className="w-fit bg-[#f7ecff] px-3 py-1 rounded-md flex items-center justify-center mb-6 text-[#3e4954] text-xl">
+              {currentQuestion.topic}
             </div>
+            {renderAnswerType()}
           </div>
         </div>
       </div>
 
       <div className="w-full max-w-[1440px] mx-auto px-4 mt-8 mb-8 flex justify-between items-center">
-        <button 
-          className={`flex items-center font-normal text-[#2f2f68] text-xl cursor-pointer ${currentQuestionIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+        <button
+          className={`flex items-center font-normal text-[#2f2f68] text-xl cursor-pointer ${
+            currentQuestionIndex === 0 ? "opacity-50 cursor-not-allowed" : ""
+          }`}
           onClick={handlePreviousQuestion}
           disabled={currentQuestionIndex === 0}
         >
@@ -116,14 +152,14 @@ export default function TestTaking({ setSubmitted, selectedAnswers, setSelectedA
           Previous
         </button>
         {currentQuestionIndex < testData.length - 1 ? (
-          <button 
+          <button
             className="bg-[#5e2f7c] text-white font-semibold text-xl py-2 px-6 rounded-md cursor-pointer"
             onClick={handleNextQuestion}
           >
             Next
           </button>
         ) : (
-          <button 
+          <button
             className="bg-[#001e32] text-white font-semibold text-xl py-2 px-6 rounded-md cursor-pointer"
             onClick={handleSubmitTest}
           >
