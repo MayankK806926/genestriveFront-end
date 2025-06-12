@@ -1,5 +1,6 @@
-import Link from 'next/link';
-import React from 'react';
+import Link from "next/link";
+import React from "react";
+import { useRouter } from "next/navigation";
 
 const MainContent = ({
   name,
@@ -9,14 +10,17 @@ const MainContent = ({
   Progress,
   recentActivities,
   topicsToFocus,
-  resources
+  resources,
+  handleGenerateTest, // Make sure category is passed as a prop
 }) => {
   return (
     <section className="mt-4 flex-grow p-2 md:p-4 overflow-y-auto">
       <div className="bg-[#f7ecff] rounded-[10px] px-3 py-4 md:px-4 md:py-6 mb-3 md:mb-4 flex justify-between items-center">
         {/* Left Side: Greeting */}
         <div>
-          <h1 className="text-lg md:text-2xl font-bold text-[#2f2f68] mb-1 md:mb-2">Hi, {name}</h1>
+          <h1 className="text-lg md:text-2xl font-bold text-[#2f2f68] mb-1 md:mb-2">
+            Hi, {name}
+          </h1>
           <p className="text-xs md:text-base text-[#2f2f68]">
             Generate personalized tests and improve your weak points
           </p>
@@ -47,13 +51,16 @@ const MainContent = ({
       </div>
 
       <div className="flex justify-between bg-[#f7ecff] rounded-[10px] p-3 md:p-4 mb-3 md:mb-4">
-        <h2 className="text-lg md:text-2xl font-bold text-[#2f2f68] mb-1 md:mb-2">AI Test Generator</h2>
-        <Link
-          href="/dashboard/generate-test"
+        <h2 className="text-lg md:text-2xl font-bold text-[#2f2f68] mb-1 md:mb-2">
+          AI Test Generator
+        </h2>
+        <button
+          type="button"
+          onClick={handleGenerateTest}
           className="bg-[#001e32] text-white text-base md:text-xl px-3 md:px-4 py-1.5 md:py-2 rounded-[10px]"
         >
           Generate Test
-        </Link>
+        </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 mb-3 md:mb-4">
@@ -71,7 +78,9 @@ const MainContent = ({
                   <span className="bg-[#05ff6f82] text-[#2f2f68] text-xs px-2 py-0.5 rounded">
                     Score - {activity.score}
                   </span>
-                  <span className="text-[#2f2f68] text-xs">{activity.date}</span>
+                  <span className="text-[#2f2f68] text-xs">
+                    {activity.date}
+                  </span>
                 </div>
               </div>
             ))}
@@ -82,7 +91,7 @@ const MainContent = ({
             Your Progress
           </h2>
           {Progress &&
-            typeof Progress === 'object' &&
+            typeof Progress === "object" &&
             Object.keys(Progress).map((topic, index) => (
               <div key={index} className="mb-2">
                 <h3 className="font-semibold text-[#2f2f68] text-sm mb-1">

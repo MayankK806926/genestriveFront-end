@@ -27,7 +27,7 @@ export default function GenerateTest() {
   // Read grade and examtype from URL on component mount
   useEffect(() => {
     const CategoryFromUrl = searchParams.get("category");
-
+    console.log("Category from URL:", CategoryFromUrl);
     if (CategoryFromUrl) setCategory(CategoryFromUrl);
 
     // useSearchParams is a static hook, no dependencies needed for initial read
@@ -35,31 +35,38 @@ export default function GenerateTest() {
 
   // Handlers for input changes
   const handleSubjectChange = async (subject) => {
-    setSubjects((prevSubjects) =>
-      prevSubjects.includes(subject)
-        ? prevSubjects.filter((s) => s !== subject)
-        : [...prevSubjects, subject]
-    );
+    // Compute the next subjects array
+    const nextSubjects = subjects.includes(subject)
+      ? subjects.filter((s) => s !== subject)
+      : [...subjects, subject];
+
+    setSubjects(nextSubjects);
+
     try {
       const res = await fetch("/api/generate-test/topics", {
         method: "POST",
-        body: JSON.stringify({ subjects, category }),
+        body: JSON.stringify({ subjects: nextSubjects, category }),
         headers: {
           "Content-Type": "application/json",
         },
       });
+      console.log(
+        "Fetching topics for subjects:",
+        nextSubjects,
+        "category:",
+        category
+      );
       if (!res.ok) {
-        const errorBody = await res.text(); // Read error body
+        const errorBody = await res.text();
         throw new Error(
           `HTTP error! status: ${res.status}, body: ${errorBody}`
         );
       }
-      console.log("Topics generated:", topics);
       const { TopicsList } = await res.json();
       setTopics(TopicsList);
     } catch (err) {
       console.error("Error generating test:", err);
-      setError(err.message || "An error occurred during test generation."); // Set error state
+      setError(err.message || "An error occurred during test generation.");
     } finally {
       setLoading(false);
     }
@@ -120,7 +127,7 @@ export default function GenerateTest() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ requestData }),
+        body: JSON.stringify({ requestData, category }),
       });
 
       if (!res.ok) {

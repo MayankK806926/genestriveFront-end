@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import Footer from '../components/Footer';
-import Navbar2 from '../components/Navbar2';
-import Sidebar from '../components/Sidebar';
-import MainContent from '../components/MainContent';
-import axios from 'axios';
-import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from "react";
+import Footer from "../components/Footer";
+import Navbar2 from "../components/Navbar2";
+import Sidebar from "../components/Sidebar";
+import MainContent from "../components/MainContent";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
-function Dashboard(){
+function Dashboard() {
   const router = useRouter(); // Initialize with default name
   const [name, setName] = useState("John Doe"); // Initialize with default name // Initialize with default name
   const [grade, setGrade] = useState("");
@@ -25,26 +25,32 @@ function Dashboard(){
 
   const handleGradeChange = (event) => {
     setCategory(event.target.value);
-    setGrade(event.target.value)
-    setExamType("")
+    setGrade(event.target.value);
+    setExamType("");
   };
 
   const handleExamTypeChange = (event) => {
     setCategory(event.target.value);
-    setExamType(event.target.value)
-    setGrade("")
+    setExamType(event.target.value);
+    setGrade("");
   };
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const res = await axios.post('/api/dashboard-data', {
-          category:category
+        const res = await axios.post("/api/dashboard-data", {
+          category: category,
         });
-        
+
         if (res.data) {
-          const { totalTestsTaken, AverageAccuracy, Progress, recentActivities, topicsToFocus } = res.data;
-          
+          const {
+            totalTestsTaken,
+            AverageAccuracy,
+            Progress,
+            recentActivities,
+            topicsToFocus,
+          } = res.data;
+
           // Update state with fetched data
           settotalTestsTaken(totalTestsTaken || 0);
           setAverageAccuracy(AverageAccuracy || 0);
@@ -55,12 +61,12 @@ function Dashboard(){
         }
         setLoading(false);
       } catch (err) {
-        console.error('Error fetching dashboard data:', err);
+        console.error("Error fetching dashboard data:", err);
         setError(err);
         setLoading(false);
       }
     };
-    
+
     fetchDashboardData();
   }, [category]);
 
@@ -70,54 +76,69 @@ function Dashboard(){
       title: "Mathematics Formula Sheet",
       description: "Comprehensive collection of important formulas",
       type: "PDF",
-      subject: "Mathematics"
+      subject: "Mathematics",
     },
     {
       id: 2,
       title: "Science Lab Manual",
       description: "Step-by-step guide for common experiments",
       type: "PDF",
-      subject: "Science"
+      subject: "Science",
     },
     {
       id: 3,
       title: "History Timeline",
       description: "Chronological overview of important events",
       type: "PDF",
-      subject: "History"
+      subject: "History",
     },
     {
       id: 4,
       title: "Geography Maps",
       description: "Collection of important geographical maps",
       type: "PDF",
-      subject: "Geography"
-    }
+      subject: "Geography",
+    },
   ];
+  const handleGenerateTest = () => {
+    if (category) {
+      router.push(
+        `/dashboard/generate-test?category=${encodeURIComponent(category)}`
+      );
+    } else {
+      router.push("/dashboard/generate-test");
+    }
+  };
 
-
-  if(loading){
-  return(
-    <div>Loading...</div>
-  )}
-
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="bg-white flex flex-col min-h-screen">
       <Navbar2 />
       <div className="flex flex-col md:flex-row flex-grow">
-        <Sidebar grade={grade} examtype={examtype} handleGradeChange={handleGradeChange} handleExamTypeChange={handleExamTypeChange} />
-        <MainContent totalTestsTaken={totalTestsTaken} AverageAccuracy={AverageAccuracy} WeakTopics={WeakTopics} name={name} Progress={Progress} recentActivities={recentActivities} topicsToFocus={topicsToFocus} resources={resources} />
+        <Sidebar
+          grade={grade}
+          examtype={examtype}
+          handleGradeChange={handleGradeChange}
+          handleExamTypeChange={handleExamTypeChange}
+        />
+        <MainContent
+          totalTestsTaken={totalTestsTaken}
+          AverageAccuracy={AverageAccuracy}
+          WeakTopics={WeakTopics}
+          name={name}
+          Progress={Progress}
+          recentActivities={recentActivities}
+          topicsToFocus={topicsToFocus}
+          resources={resources}
+          handleGenerateTest={handleGenerateTest}
+        />
       </div>
-      <button
-        onClick={() => router.push(`/dashboard/generate-test?category=${encodeURIComponent(category)}}`)}
-        className="bg-blue-500 text-white p-2 m-4 rounded"
-      >
-        Go to Generate Test
-      </button>
       <Footer />
     </div>
   );
-};
+}
 
 export default Dashboard;
