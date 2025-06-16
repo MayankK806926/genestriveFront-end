@@ -6,6 +6,20 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 //<div className="flex justify-between mx-[150px] mt-8 space-y-4">
 export default function GenerateTest() {
+  const subjects_list = {
+    "7th": ["Mathematics", "Science", "English"],
+    "8th": ["Mathematics", "Science", "English"],
+    "9th": ["Mathematics", "Science", "English"],
+    "10th": ["Mathematics", "Science", "English"],
+    "11th": ["Mathematics", "Science", "English"],
+    "12th": ["Mathematics", "Science", "English"],
+    "JEE mains": ["Mathematics", "Physics", "Chemistry"],
+    "JEE advance": ["Mathematics", "Physics", "Chemistry"],
+    BITSAT: ["Mathematics", "Physics", "Chemistry"],
+    CUET: ["Mathematics", "Physics", "Chemistry"],
+    KCET: ["Mathematics", "Physics", "Chemistry"],
+    NEET: ["Biology", "Physics", "Chemistry"],
+  };
   const router = useRouter();
   const searchParams = useSearchParams();
   // State variables for form data
@@ -26,10 +40,11 @@ export default function GenerateTest() {
 
   // Read grade and examtype from URL on component mount
   useEffect(() => {
+    setLoading(true);
     const CategoryFromUrl = searchParams.get("category");
     console.log("Category from URL:", CategoryFromUrl);
     if (CategoryFromUrl) setCategory(CategoryFromUrl);
-
+    setLoading(false); // Set loading state while fetching topics
     // useSearchParams is a static hook, no dependencies needed for initial read
   }, []);
 
@@ -216,25 +231,29 @@ export default function GenerateTest() {
                         Subject
                       </h3>
                       <div className="space-y-4">
-                        {["Mathematics", "Science", "English"].map(
-                          (subject, index) => (
-                            <div key={index} className="flex items-center">
-                              <input
-                                type="checkbox"
-                                id={`subject-${index}`}
-                                className="w-5 h-5 mr-4"
-                                checked={subjects.includes(subject)}
-                                onChange={() => handleSubjectChange(subject)}
-                              />
-                              <label
-                                htmlFor={`subject-${index}`}
-                                className="font-normal text-[#2f2f68] text-xl"
-                              >
-                                {subject}
-                              </label>
-                            </div>
-                          )
+                        {console.log(
+                          "Subjects list for category:",
+                          subjects_list[category],
+                          "category:",
+                          category
                         )}
+                        {subjects_list[category].map((subject, index) => (
+                          <div key={index} className="flex items-center">
+                            <input
+                              type="checkbox"
+                              id={`subject-${index}`}
+                              className="w-5 h-5 mr-4"
+                              checked={subjects.includes(subject)}
+                              onChange={() => handleSubjectChange(subject)}
+                            />
+                            <label
+                              htmlFor={`subject-${index}`}
+                              className="font-normal text-[#2f2f68] text-xl"
+                            >
+                              {subject}
+                            </label>
+                          </div>
+                        ))}
                       </div>
 
                       <div className="font-medium text-[#2f2f68] text-2xl">
