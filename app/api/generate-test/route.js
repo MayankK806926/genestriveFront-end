@@ -3,8 +3,8 @@ import { NextResponse } from 'next/server';
 export async function POST(request) {
   try {
     // Read the request body to get parameters from the frontend
-    const {requestData,Category} = await request.json();
-    console.log('Received test generation request with data:', requestData,Category);
+    const {requestData,Category,startTime} = await request.json();
+    console.log('Received test generation request with data:', requestData,Category,startTime);
 
     // TODO: Implement actual test generation logic here
     // Use requestData (e.g., requestData.subject, requestData.selectedTopics) to generate the test.

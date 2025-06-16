@@ -84,15 +84,15 @@ export default function TestTaking({
 
   const renderAnswerType = () => {
     switch (currentQuestion.type) {
-      case "Single Correct":
+      case "mcq":
         return <MCQs Input={input} />;
-      case "Long Answer":
+      case "long answer":
         return <DescriptType Input={input} />;
-      case "Short Answer":
+      case "short answer":
         return <DescriptType Input={input} />;
-      case "Fill in the Blanks":
+      case "fill in the blanks":
         return <DescriptType Input={input} />;
-      case "Multiple Correct":
+      case "multiple correct":
         return <MSelectQs Input={input} />;
       case "Integer Type":
         return <IntegerType Input={input} />;

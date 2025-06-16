@@ -142,7 +142,11 @@ export default function GenerateTest() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ requestData, category }),
+        body: JSON.stringify({
+          requestData,
+          category,
+          startTime: new Date().toISOString,
+        }),
       });
 
       if (!res.ok) {
@@ -237,23 +241,25 @@ export default function GenerateTest() {
                           "category:",
                           category
                         )}
-                        {subjects_list[category].map((subject, index) => (
-                          <div key={index} className="flex items-center">
-                            <input
-                              type="checkbox"
-                              id={`subject-${index}`}
-                              className="w-5 h-5 mr-4"
-                              checked={subjects.includes(subject)}
-                              onChange={() => handleSubjectChange(subject)}
-                            />
-                            <label
-                              htmlFor={`subject-${index}`}
-                              className="font-normal text-[#2f2f68] text-xl"
-                            >
-                              {subject}
-                            </label>
-                          </div>
-                        ))}
+                        {category &&
+                          subjects_list[category] &&
+                          subjects_list[category].map((subject, index) => (
+                            <div key={index} className="flex items-center">
+                              <input
+                                type="checkbox"
+                                id={`subject-${index}`}
+                                className="w-5 h-5 mr-4"
+                                checked={subjects.includes(subject)}
+                                onChange={() => handleSubjectChange(subject)}
+                              />
+                              <label
+                                htmlFor={`subject-${index}`}
+                                className="font-normal text-[#2f2f68] text-xl"
+                              >
+                                {subject}
+                              </label>
+                            </div>
+                          ))}
                       </div>
 
                       <div className="font-medium text-[#2f2f68] text-2xl">
@@ -377,14 +383,14 @@ export default function GenerateTest() {
                       </div>
                       <div className="mt-4 space-y-4">
                         {[
-                          "Multiple Correct",
+                          "mcq",
                           "Single word",
-                          "single correct",
+                          "multiple correct",
                           "Integer Type",
-                          "Fill in the blanks",
-                          "Numerical answer type",
+                          "fill in the blanks",
+                          "Numerical Type",
                           "short answer",
-                          "Long answer",
+                          "long answer",
                         ].map((item, index) => (
                           <div key={index} className="flex items-center">
                             <input
