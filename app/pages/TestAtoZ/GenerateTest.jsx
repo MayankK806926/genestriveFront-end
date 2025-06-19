@@ -2,10 +2,9 @@
 import React, { useEffect, useState } from "react";
 import { ChevronLeftNormal } from "../icons/ChevronLeftNormal";
 import Navbar2 from "../components/Navbar2";
-import { useRouter, useSearchParams } from "next/navigation";
 
 //<div className="flex justify-between mx-[150px] mt-8 space-y-4">
-export default function GenerateTest() {
+export default function GenerateTest({handleSubmit,setStatus}) {
   const subjects_list = {
     "7th": ["Mathematics", "Science", "English"],
     "8th": ["Mathematics", "Science", "English"],
@@ -20,8 +19,6 @@ export default function GenerateTest() {
     KCET: ["Mathematics", "Physics", "Chemistry"],
     NEET: ["Biology", "Physics", "Chemistry"],
   };
-  const router = useRouter();
-  const searchParams = useSearchParams();
   // State variables for form data
   const [subjects, setSubjects] = useState([]); // Changed from subject to subjects array
   const [topics, setTopics] = useState([]);
@@ -39,14 +36,7 @@ export default function GenerateTest() {
   const [error, setError] = useState(null);
 
   // Read grade and examtype from URL on component mount
-  useEffect(() => {
-    setLoading(true);
-    const CategoryFromUrl = searchParams.get("category");
-    console.log("Category from URL:", CategoryFromUrl);
-    if (CategoryFromUrl) setCategory(CategoryFromUrl);
-    setLoading(false); // Set loading state while fetching topics
-    // useSearchParams is a static hook, no dependencies needed for initial read
-  }, []);
+
 
   // Handlers for input changes
   const handleSubjectChange = async (subject) => {
@@ -119,62 +109,17 @@ export default function GenerateTest() {
     );
   };
 
-  // Handle form submission
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setError(null); // Clear previous errors
-    setLoading(true); // Set loading state
-
-    // Prepare the request data
-    const requestData = {
-      subjects, // Changed from subject to subjects
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    const data = {
+      subjects,
       selectedTopics,
       difficulties,
       numQuestions,
-      time,
-      selectedQuestionTypes,
+      time
     };
-
-    try {
-      console.log("Generating test with data:", requestData);
-      const res = await fetch("/api/generate-test", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          requestData,
-          category,
-          startTime: new Date().toISOString,
-        }),
-      });
-
-      if (!res.ok) {
-        const errorBody = await res.text(); // Read error body
-        throw new Error(
-          `HTTP error! status: ${res.status}, body: ${errorBody}`
-        );
-      }
-
-      const data = await res.json(); // Use await here
-      console.log("Test generated successfully:", data);
-
-      // Handle successful response, navigate to test preview page
-      // Pass data via query parameter (simple, but has limitations for large data)
-      // Consider using a state management library or other methods for larger data
-
-      // Construct the URL string with query parameter
-      const testPreviewUrl = `/dashboard/test-preview?testData=${encodeURIComponent(
-        JSON.stringify(data.sampleData)
-      )}&time=${time}`;
-
-      router.push(testPreviewUrl); // Pass the URL string directly
-    } catch (err) {
-      console.error("Error generating test:", err);
-      setError(err.message || "An error occurred during test generation."); // Set error state
-    } finally {
-      setLoading(false); // Clear loading state
-    }
+    handleSubmit(data); // pass data directly
+    setStatus("taking");
   };
 
   return (
@@ -228,7 +173,7 @@ export default function GenerateTest() {
                 </p>
 
                 {/* Form for test generation inputs */}
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleFormSubmit}>
                   <div className="bg-white border border-solid border-[#d9d9d9] p-8 rounded-md">
                     <div className="grid gap-6">
                       <h3 className="font-medium text-[#000000c4] mb-1 text-xl">

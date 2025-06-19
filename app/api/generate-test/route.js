@@ -13,7 +13,7 @@ export async function POST(request) {
     const sampleData = [
         {
           id:6,
-          type:"Single Correct",
+          type:"mcq",
           question: "What is the value of pi ?",
           topic: "Mathematics",
           options: [
@@ -25,13 +25,13 @@ export async function POST(request) {
         },
         {
           id:8,
-          type:"Long Answer",
+          type:"long answer",
           question: "Another question?",
           topic: "Science",
         },
         {
           id:9,
-          type:"Fill in blanks",
+          type:"fill in the blanks",
           question: "Fill in the ______ question?",
           topic: "History",}
       ];

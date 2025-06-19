@@ -103,10 +103,10 @@ function Dashboard() {
   const handleGenerateTest = () => {
     if (category) {
       router.push(
-        `/dashboard/generate-test?category=${encodeURIComponent(category)}`
+        `/dashboard/test-preview?category=${encodeURIComponent(category)}`
       );
     } else {
-      router.push("/dashboard/generate-test");
+      router.push("/dashboard/test-preview");
     }
   };
 

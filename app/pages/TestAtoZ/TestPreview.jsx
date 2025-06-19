@@ -2,104 +2,79 @@
 import React, { useState, useEffect } from "react";
 import TestTaking from "./TestTaking";
 import TestResult from "./TestResult";
+import { useSearchParams } from "next/navigation";
+import GenerateTest from "./GenerateTest";
 // import axios from 'axios'; // axios is no longer used for initial fetch
-// import { useRouter } from 'next/navigation'; // useRouter is no longer needed for query params
-import { useSearchParams } from "next/navigation"; // Import useSearchParams
+// import { useRouter } from 'next/navigation'; // useRouter is no longer needed for query params// Import useSearchParams
 
 export default function TestPreview() {
-  // const router = useRouter(); // useRouter is no longer needed for query params
-  const searchParams = useSearchParams(); // Initialize useSearchParams
+  // const router = useRouter(); // useRouter is no longer needed for query params // Initialize useSearchParams
   // Initialize testData as null initially
   // Optional: Fallback to sample data on error
-
+  const [requestData, setRequestData] = useState(null);
   const [testData, setTestData] = useState(null);
   const [loading, setLoading] = useState(true); // Add loading state
   const [error, setError] = useState(null); // Add error state
-  const [submitted, setSubmitted] = useState(false);
-  const [category, setCategory] = useState("");
+  const [status, setStatus] = useState("generate");
+  const [category, setCategory] = useState(null);
   const [testResults, setTestResults] = useState(null);
-  const [startTime, setStartTime] = useState(null);
+  const [startTime, setStartTime] = useState("");
   const [totalTime, setTotalTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
-  // const sampleData = [
-  //   {
-  //     type:"Multiple Chioce Question",
-  //     question: "What is the value of pi ?",
-  //     topic: "Mathematics",
-  //     options: [
-  //       { text: "3.14", isCorrect: true },
-  //       { text: "3.14", isCorrect: false },
-  //       { text: "3.14", isCorrect: false },
-  //       { text: "3.14", isCorrect: false },
-  //     ],
-  //   },
-  //   {
-  //     type:"Multiple Chioce Question",
-  //     question: "Another question?",
-  //     topic: "Science",
-  //     options: [
-  //       { text: "Option 1", isCorrect: false },
-  //       { text: "Option 2", isCorrect: true },
-  //       { text: "Option 3", isCorrect: false },
-  //       { text: "Option 4", isCorrect: false },
-  //     ],
-  //   },
-  // ];
-  // setTestData(sampleData);
-  // setSelectedAnswers(Array(sampleData.length).fill(null));
+  const searchParams = useSearchParams();
+useEffect(() => {
+  setLoading(true);
+  const CategoryFromUrl = searchParams.get("category");
+  console.log("Category from URL:", CategoryFromUrl);
+  if (CategoryFromUrl) setCategory(CategoryFromUrl);
+  setLoading(false); // Set loading state while fetching topics
+  // useSearchParams is a static hook, no dependencies needed for initial read
+}, []);
 
-  //uncomment during API integration
-  useEffect(() => {
-    // Read test data from URL search parameters
-    const testDataString = searchParams.get("testData");
-    const itme = searchParams.get("time");
-    setTotalTime(itme);
+  const handleSubmit = async (data) => {
+    setError(null); // Clear previous errors
+    setLoading(true);
+    console.log("data",data);
+    setRequestData(data);
+    setStartTime(new Date());
+    setTotalTime(data.time);
+    try {
+      console.log("Generating test with data:", requestData);
+      const res = await fetch("/api/generate-test", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          requestData,
+          category,
+          startTime
+        }),
+      });
 
-    if (testDataString) {
-      try {
-        const dataFromQuery = JSON.parse(testDataString);
-        if (dataFromQuery && Array.isArray(dataFromQuery)) {
-          console.log(
-            "Valid test data received from URL search params:",
-            dataFromQuery
-          );
-          setTestData(dataFromQuery);
-          setSelectedAnswers(Array(dataFromQuery.length).fill(null));
-          console.log("Setting loading to false after receiving valid data.");
-          setLoading(false);
-        } else {
-          console.error(
-            "Invalid test data format from URL search params:",
-            dataFromQuery
-          );
-          console.log("Setting loading to false after invalid data format.");
-          setError(new Error("Invalid test data received from generator."));
-          setLoading(false);
-        }
-      } catch (err) {
-        console.error("Error parsing test data from URL search params:", err);
-        console.log("Setting loading to false after parsing error.");
-        setError(new Error("Failed to load test data."));
-        setLoading(false);
+      if (!res.ok) {
+        const errorBody = await res.text(); // Read error body
+        throw new Error(
+          `HTTP error! status: ${res.status}, body: ${errorBody}`
+        );
       }
-    } else {
-      // Handle case where no testData is in query (e.g., direct access or generation failed)
-      console.warn("No test data found in URL search params.");
-      console.log("Setting loading to false - no test data in query.");
-      setError(new Error("No test data provided or generation failed."));
-      setLoading(false);
-      // Optionally, redirect to generate page (requires useRouter)
-      // const router = useRouter();
-      // router.push('/dashboard/generate-test');
+
+      const data = await res.json(); // Use await here
+      setTestData(data.sampleData);
+      console.log("Test generated successfully:", data); // Pass the URL string directly
+    } catch (err) {
+      console.error("Error generating test:", err);
+      setError(err.message || "An error occurred during test generation."); // Set error state
+    } finally {
+      setLoading(false); // Clear loading state
     }
-    // useSearchParams is a static hook, no dependencies needed for initial read
-  }, []);
+  };
 
   const [selectedAnswers, setSelectedAnswers] = useState([]);
   const [selectedAnswersbyid, setSelectedAnswersbyid] = useState([]);
 
   useEffect(() => {
-    if (!submitted && testData) {
+    if (status==="taking" && testData) {
       // Also check if testData is available
       setSelectedAnswers(Array(testData.length).fill(null)); // Initialize with null
       setTestResults(null);
@@ -107,67 +82,11 @@ export default function TestPreview() {
     } else {
       setStartTime(null);
     }
-  }, [submitted, testData]); // Add testData to dependency array
-
-  // const processTestResults = () => {
-  //   const endTime = Date.now();
-  //   const duration = startTime ? endTime - startTime : 0;
-
-  //   const totalQuestions = testData.length;
-  //   let attemptedQuestions = 0;
-  //   let correctAnswers = 0;
-
-  //   // Calculate overall stats
-  //   selectedAnswers.forEach((selectedOptionIndex, questionIndex) => {
-  //     if (selectedOptionIndex !== null) { // Check if question was attempted
-  //       attemptedQuestions++;
-  //       const question = testData[questionIndex];
-  //       if (question.options[selectedOptionIndex]?.isCorrect) {
-  //         correctAnswers++;
-  //       }
-  //     }
-  //   });
-
-  //   const overallAccuracy = attemptedQuestions > 0 ? (correctAnswers / attemptedQuestions) * 100 : 0;
-
-  //   // Calculate topic-wise stats
-  //   const topicResults = {};
-  //   testData.forEach((question, questionIndex) => {
-  //     const topic = question.topic;
-  //     if (!topicResults[topic]) {
-  //       topicResults[topic] = {
-  //         totalQuestions: 0,
-  //         attemptedQuestions: 0,
-  //         correctAnswers: 0,
-  //       };
-  //     }
-  //     topicResults[topic].totalQuestions++;
-
-  //     const selectedOptionIndex = selectedAnswers[questionIndex];
-  //     if (selectedOptionIndex !== null) { // Check if question was attempted
-  //       topicResults[topic].attemptedQuestions++;
-  //       if (question.options[selectedOptionIndex]?.isCorrect) {
-  //         topicResults[topic].correctAnswers++;
-  //       }
-  //     }
-  //   });
-
-  //   const minutes = Math.floor(duration / 60000);
-  //   const seconds = Math.floor((duration % 60000) / 1000);
-  //   const timeTaken = `${minutes} min ${seconds} sec`;
-
-  //   setTestResults({
-  //     totalQuestions,
-  //     attemptedQuestions,
-  //     correctAnswers,
-  //     overallAccuracy: overallAccuracy.toFixed(2),
-  //     timeTaken: timeTaken,
-  //     topicResults: topicResults, // Include topic-wise results
-  //   });
-  // };
+  }, [status, testData]); // Add testData to dependency array
 
   //uncomment during API integration
   const processTestResults = async () => {
+    setStatus("result");
     const endTime = Date.now();
     setEndTime(endTime);
     try {
@@ -226,20 +145,18 @@ export default function TestPreview() {
     );
   }
 
-  if (!testData || !Array.isArray(testData) || testData.length === 0) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-[#f6effe]">
-        <div className="text-xl text-[#2f2f68]">No test data available.</div>
-      </div>
-    );
-  }
 
   // Render test components once data is loaded
   return (
     <>
-      {!submitted ? (
+      {status==="generate" ?(
+        <GenerateTest
+          handleSubmit={handleSubmit}
+          setStatus={setStatus}
+        />
+      ) : status==="taking" ?(
         <TestTaking
-          setSubmitted={setSubmitted}
+          setStatus={setStatus}
           selectedAnswers={selectedAnswers}
           setSelectedAnswers={setSelectedAnswers}
           selectedAnswersbyid={selectedAnswersbyid}
@@ -250,8 +167,8 @@ export default function TestPreview() {
       ) : (
         <TestResult
           results={testResults}
-          setSubmitted={setSubmitted}
-          totaltTime={totalTime}
+          setStatus={setStatus}
+          totalTime={totalTime}
           startTime={startTime}
           endTime={endTime}
         />

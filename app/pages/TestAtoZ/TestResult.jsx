@@ -11,7 +11,7 @@ import Link from "next/link";
 
 export default function TestResult({
   results,
-  setSubmitted,
+  setStatus,
   totalTime,
   startTime,
   endTime,
@@ -25,7 +25,7 @@ export default function TestResult({
     timeTaken,
     topicResults,
   } = results || {};
-  console.log("TestResult received timeTaken:", timeTaken);
+  console.log("TestResult received timeTaken:", totalTime);
 
   // Safely calculate metrics, defaulting to 0 if data is unavailable or invalid
   const overallAccuracyPercentage = parseFloat(overallAccuracy) || 0;
@@ -158,7 +158,7 @@ export default function TestResult({
             <div className="space-y-4">
               <button
                 className="w-full bg-[#001529] text-white py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors"
-                onClick={() => setSubmitted(false)}
+                onClick={() => setStatus("taking")}
               >
                 Retry Test
               </button>

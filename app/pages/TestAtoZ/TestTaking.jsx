@@ -8,7 +8,7 @@ import MSelectQs from "./AnswerTypes/MSelectQs";
 import NumericalType from "./AnswerTypes/NumericalType";
 
 export default function TestTaking({
-  setSubmitted,
+  setStatus,
   selectedAnswers,
   setSelectedAnswers,
   selectedAnswersbyid,
@@ -19,6 +19,7 @@ export default function TestTaking({
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   // Only check if testData is valid, don't show loading state
+  console.log("testData===",testData);
   if (!testData || !Array.isArray(testData) || testData.length === 0) {
     return null;
   }
@@ -65,7 +66,7 @@ export default function TestTaking({
   // Handler for submitting the test
   const handleSubmitTest = () => {
     processTestResults();
-    setSubmitted(true);
+    setStatus("result");
   };
 
   // Calculate progress percentage
