@@ -1,7 +1,11 @@
 import React from 'react';
+import Navbar2 from "../components/Navbar2";
+import Footer from "../components/Footer";
 
 const Legal = () => {
   return (
+    <>
+    <Navbar2/>
     <div className="bg-[#F4F8FB] min-h-screen">
       <main className="px-6 md:px-20 py-12 text-gray-800">
         
@@ -171,6 +175,8 @@ const Legal = () => {
         </section>
       </main>
     </div>
+    <Footer/>
+    </>
   );
 };
 

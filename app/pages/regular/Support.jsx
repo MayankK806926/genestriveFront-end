@@ -4,9 +4,13 @@ import ContactIcon from './assets/image.png';
 import FAQAccordion from './assets/support/FAQItem';
 import CommunityCard from './assets/support/CommunityCard';
 import Image from 'next/image';
+import Navbar2 from "../components/Navbar2";
+import Footer from "../components/Footer";
 
 const Support = () => {
   return (
+    <>
+    <Navbar2/>
     <div className="bg-[#001E32] text-white min-h-screen">
       <main className="px-6 md:px-20 pt-6 md:pt-8 pb-12">
 
@@ -67,6 +71,8 @@ const Support = () => {
         </div>
       </main>
     </div>
+    <Footer/>
+    </>
   );
 };
 

@@ -1,6 +1,10 @@
 import Link from "next/link";
 import React from "react";
 import { useRouter } from "next/navigation";
+import Doubt  from "./assets/doubtask.png";
+import Input from "./assets/input.png"
+import Ppt from "./assets/pptask.png"
+
 
 const MainContent = ({
   name,
@@ -62,6 +66,80 @@ const MainContent = ({
           Generate Test
         </button>
       </div>
+     <div className="grid grid-cols-1 gap-2 md:gap-4 mb-3 md:mb-4">
+
+  
+  
+  <div className="bg-[#001E32] rounded-[10px] px-4 py-6 text-white text-center">
+  <h2 className="text-lg md:text-4xl font-bold mb-4">Got Doubts</h2>
+
+  <div className="flex flex-col md:flex-row justify-center items-center gap-6">
+    {/* Left Side - Image */}
+    <img src={Doubt} alt="IMG" className="w-[180px]" />
+
+    {/* Right Side - Upload Box */}
+    <Link href="/doubtup">
+  <div className="rounded-lg p-4 border flex flex-col border-white items-center justify-center w-[150px] h-[150px] cursor-pointer transition hover:scale-105">
+    <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center justify-center">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-8 w-8 text-white mb-2"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={2}
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12V4m0 0l-4 4m4-4l4 4"
+        />
+      </svg>
+      <p className="text-xs text-center">Upload your Doubt Here</p>
+    </label>
+  </div>
+</Link>
+  </div>
+</div>
+
+
+  {/* Summarize PPT */}
+   <div className="bg-[#001E32] rounded-[10px] px-4 py-6 text-white text-center">
+  <h2 className="text-lg md:text-4xl font-bold mb-4">Summarize your PPT</h2>
+
+  <div className="flex flex-col md:flex-row justify-center items-center gap-6">
+    {/* Left Side - Image */}
+    <img src={Ppt} alt="IMG" className="w-[180px]" />
+
+   {/* Right Side - Upload Box */}
+<Link href="/pptup">
+  <div className="rounded-lg p-4 border flex flex-col border-white items-center justify-center w-[150px] h-[150px] cursor-pointer transition hover:scale-105">
+    <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center justify-center">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-8 w-8 text-white mb-2"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={2}
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12V4m0 0l-4 4m4-4l4 4"
+        />
+      </svg>
+      <p className="text-xs text-center">Upload your PPT Here</p>
+    </label>
+  </div>
+</Link>
+
+    
+  </div>
+</div>
+</div>
+
+
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 mb-3 md:mb-4">
         <div className="bg-[#f7ecff] rounded-[10px] p-3 md:p-4">

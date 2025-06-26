@@ -1,9 +1,13 @@
 import React from "react";
 import Image from "next/image";
 import AboutIcon from "./assets/about.png";
+import Navbar2 from "../components/Navbar2";
+import Footer from "../components/Footer";
 
 const About = () => {
   return (
+    <>
+    <Navbar2/>
     <div className="bg-[#F4F8FB]">
       <main className="px-6 md:px-20 py-16">
         {/* Top Section */}
@@ -76,6 +80,8 @@ const About = () => {
         </div>
       </main>
     </div>
+    <Footer/>
+    </>
   );
 };
 
