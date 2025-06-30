@@ -6,18 +6,19 @@ import Navbar2 from "../components/Navbar2";
 //<div className="flex justify-between mx-[150px] mt-8 space-y-4">
 export default function GenerateTest({handleSubmit,setStatus}) {
   const subjects_list = {
-    "7th": ["Mathematics", "Science", "English"],
-    "8th": ["Mathematics", "Science", "English"],
-    "9th": ["Mathematics", "Science", "English"],
-    "10th": ["Mathematics", "Science", "English"],
-    "11th": ["Mathematics", "Science", "English"],
-    "12th": ["Mathematics", "Science", "English"],
+    "6th":["Mathematics", "Physics","Chemistry","Biology", "English"],
+    "7th": ["Mathematics", "Physics","Chemistry","Biology", "English"],
+    "8th": ["Mathematics", "Physics","Chemistry","Biology", "English"],
+    "9th": ["Mathematics", "Physics","Chemistry","Biology", "English"],
+    "10th": ["Mathematics", "Physics","Chemistry","Biology", "English"],
+    "11th": ["Mathematics", "Physics","Chemistry","Biology", "English"],
+    "12th": ["Mathematics", "Physics","Chemistry","Biology", "English"],
     "JEE mains": ["Mathematics", "Physics", "Chemistry"],
     "JEE advance": ["Mathematics", "Physics", "Chemistry"],
-    BITSAT: ["Mathematics", "Physics", "Chemistry"],
-    CUET: ["Mathematics", "Physics", "Chemistry"],
-    KCET: ["Mathematics", "Physics", "Chemistry"],
-    NEET: ["Biology", "Physics", "Chemistry"],
+    "BITSAT": ["Mathematics", "Physics", "Chemistry","English","Logical reasoning"],
+    "CUET": ["Mathematics", "Physics", "Chemistry"],
+    "KCET": ["Mathematics", "Physics", "Chemistry"],
+    "NEET": ["Biology", "Physics", "Chemistry"],
   };
   // State variables for form data
   const [subjects, setSubjects] = useState([]); // Changed from subject to subjects array
@@ -36,7 +37,11 @@ export default function GenerateTest({handleSubmit,setStatus}) {
   const [error, setError] = useState(null);
 
   // Read grade and examtype from URL on component mount
-
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const cat = params.get("category");
+    if (cat) setCategory(cat);
+  }, []);
 
   // Handlers for input changes
   const handleSubjectChange = async (subject) => {
@@ -48,11 +53,17 @@ export default function GenerateTest({handleSubmit,setStatus}) {
     setSubjects(nextSubjects);
 
     try {
-      const res = await fetch("/api/generate-test/topics", {
+      const auth = getAuth();
+      const currentUser = auth.currentUser;
+
+      if (!currentUser) throw new Error("User not authenticated");
+      const token = await currentUser.getIdToken();
+      const res = await fetch(`/api/proxy/api/generate-test/topics`, {
         method: "POST",
         body: JSON.stringify({ subjects: nextSubjects, category }),
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       });
       console.log(
@@ -116,7 +127,8 @@ export default function GenerateTest({handleSubmit,setStatus}) {
       selectedTopics,
       difficulties,
       numQuestions,
-      time
+      time,
+      selectedQuestionTypes
     };
     handleSubmit(data); // pass data directly
     setStatus("taking");
@@ -211,23 +223,25 @@ export default function GenerateTest({handleSubmit,setStatus}) {
                         Topics
                       </div>
                       <div className="space-y-4">
-                        {topics.map((item, index) => (
-                          <div key={index} className="flex items-center">
-                            <input
-                              type="checkbox"
-                              id={`topic-${index}`}
-                              className="w-5 h-5 mr-4"
-                              checked={selectedTopics.includes(item)}
-                              onChange={() => handleTopicChange(item)}
-                            />
-                            <label
-                              htmlFor={`topic-${index}`}
-                              className="font-normal text-[#2f2f68] text-xl"
-                            >
-                              {item}
-                            </label>
-                          </div>
-                        ))}
+                        {Array.isArray(topics) &&
+                          topics.map((item, index) => (
+                            <div key={index} className="flex items-center">
+                              <input
+                                type="checkbox"
+                                id={`topic-${index}`}
+                                className="w-5 h-5 mr-4"
+                                checked={selectedTopics.includes(item)}
+                                onChange={() => handleTopicChange(item)}
+                              />
+                              <label
+                                htmlFor={`topic-${index}`}
+                                className="font-normal text-[#2f2f68] text-xl"
+                              >
+                                {item}
+                              </label>
+                            </div>
+                          ))}
+
                       </div>
 
                       <div className="font-medium text-[#2f2f68] text-2xl">
