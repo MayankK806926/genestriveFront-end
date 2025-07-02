@@ -18,6 +18,8 @@ export default function TestResult({
   endTime,
 }) {
   console.log("TestResult received startTime:", startTime);
+  console.log("TestResult received results:", results, typeof results);
+
   const {
     totalQuestions,
     attemptedQuestions,
