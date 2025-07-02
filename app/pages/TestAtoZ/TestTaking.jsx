@@ -14,8 +14,7 @@ export default function TestTaking({
   selectedAnswersbyid,
   setSelectedAnswersbyid,
   testData,
-  processTestResults,
-  totalTime, // in minutes or seconds
+  totalTime // in minutes or seconds
 }) {
   // Timer logic
   const [timeLeft, setTimeLeft] = useState(totalTime ? totalTime * 60 : 0); // seconds
@@ -97,7 +96,6 @@ export default function TestTaking({
 
   // Handler for submitting the test
   const handleSubmitTest = () => {
-    processTestResults();
     setStatus("result");
   };
 

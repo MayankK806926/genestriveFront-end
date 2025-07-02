@@ -79,43 +79,44 @@ useEffect(() => {
       setSelectedAnswers(Array(testData.length).fill(null)); // Initialize with null
       setTestResults(null);
       setStartTime(Date.now());
-    } else {
-      setStartTime(null);
-    }
-  }, [status, testData]); // Add testData to dependency array
+    } else if(status==="result") {
+
+ // Add testData to dependency array
 
   //uncomment during API integration
+
   const processTestResults = async () => {
-    setStatus("result");
     const endTime = Date.now();
     setEndTime(endTime);
     try {
-      console.log("Submitting test results...");
+
       const res = await fetch("/api/result", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ selectedAnswersbyid, endTime }),
       });
-
-      console.log("API Result Response object:", res);
-
-      if (!res.ok) {
-        console.error("API Error Response:", res);
-        const errorText = await res.text(); // Read as text in case it's not JSON
-        console.error("API Error Response Body:", errorText);
-        throw new Error(`HTTP error! status: ${res.status}`);
+      let Data;
+      console.log("res",res);
+      try {
+        Data = await res.json(); // Only call this ONCE
+      } catch (e) {
+        Data = null;
       }
-
-      const resultsData = await res.json();
-      console.log("Test submission successful, results data:", resultsData);
+      
+      if (!res.ok) {
+        // Now resultsData contains the error object from your API
+        console.error("API Error Response:", Data);
+        setError(Data?.message || "An error occurred.");
+        return;
+      }
+      // const Data = await res.json();
+      console.log("Test submission successful, results data:", Data);
 
       // Check if the expected data structure is present
-      if (resultsData?.testResults) {
-        setTestResults(resultsData.testResults); // Set the state with the nested results
+      if (Data?.testResults) {
+        setTestResults(Data.testResults); // Set the state with the nested results
       } else {
-        console.error("API response did not contain testResults", resultsData);
+        console.error("API response did not contain testResults", Data);
         // Handle this case, maybe set an error state or display a message
         setError(new Error("Invalid results data from API"));
       }
@@ -125,6 +126,8 @@ useEffect(() => {
       // setError(err);
     }
   };
+  processTestResults();}
+  }, [status, testData]); 
 
   // Show loading or error state while fetching data
   if (loading) {
@@ -162,8 +165,8 @@ useEffect(() => {
           selectedAnswersbyid={selectedAnswersbyid}
           setSelectedAnswersbyid={setSelectedAnswersbyid}
           testData={testData}
-          processTestResults={processTestResults}
           totalTime={totalTime}
+
         />
       ) : (
         <TestResult

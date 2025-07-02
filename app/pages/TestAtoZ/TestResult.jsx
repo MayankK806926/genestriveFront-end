@@ -6,6 +6,7 @@ import {
   PerformanceCard,
   BarChart,
   TopicProgressBar,
+  OverallStats,
 } from "./ResultUtils";
 import Link from "next/link";
 
@@ -24,6 +25,8 @@ export default function TestResult({
     overallAccuracy,
     timeTaken,
     topicResults,
+    totalMarks,
+    acquiredMarks,
   } = results || {};
   console.log("TestResult received timeTaken:", totalTime);
 
@@ -47,6 +50,8 @@ export default function TestResult({
     minute: "2-digit",
     hour12: true,
   });
+
+  
 
   // Prepare data for BarChart and TopicProgressBar
   const barChartData = topicResults
@@ -122,6 +127,14 @@ export default function TestResult({
             timeRatio={timeRatioPercentage}
           />
         </div>
+        <OverallStats
+          attempted={Number(attemptedQuestions) || 0}
+          correct={Number(correctAnswers) || 0}
+          unattempted={Number(totalQuestions || 0) - Number(attemptedQuestions || 0)}
+          incorrect={Number(totalQuestions || 0) - Number(correctAnswers || 0)}
+          acquiredMarks={Number(acquiredMarks) || 0}
+          totalMarks={Number(totalMarks) || 0}
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
           <div className="bg-white rounded-lg shadow-sm p-8">
