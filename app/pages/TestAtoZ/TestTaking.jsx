@@ -13,8 +13,7 @@ export default function TestTaking({
   setSelectedAnswers,
   selectedAnswersbyid,
   setSelectedAnswersbyid,
-  testData,
-  processTestResults,
+  testData
 }) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
@@ -65,7 +64,6 @@ export default function TestTaking({
 
   // Handler for submitting the test
   const handleSubmitTest = () => {
-    processTestResults();
     setStatus("result");
   };
 

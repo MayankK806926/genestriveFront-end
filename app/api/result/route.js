@@ -1,4 +1,3 @@
-"use client"
 import { NextResponse } from 'next/server';
 
 // Change to POST handler
@@ -8,7 +7,7 @@ export async function POST(request) {
     const { selectedAnswersbyid, endTime } = await request.json();
 
     // Check if data is valid
-    if (!selectedAnswersbyid || !Array.isArray(selectedAnswersbyid)) {
+    if (!Array.isArray(selectedAnswersbyid)) {
         return NextResponse.json(
             { success: false, message: 'Invalid input data' },
             { status: 400 }
@@ -21,6 +20,8 @@ export async function POST(request) {
     const attemptedQuestions=10
     const overallAccuracy=70
     const correctAnswers=7
+    const totalMarks=20
+    const acquiredMarks=10
     const topicResults={Mathematics:{
         totalQuestions: 3,
         attemptedQuestions: 3,
@@ -39,6 +40,8 @@ export async function POST(request) {
       overallAccuracy: overallAccuracy.toFixed(2),
       timeTaken: timeTaken,
       topicResults: topicResults,
+      totalMarks:totalMarks,
+      acquiredMarks:acquiredMarks,
     };
 
     return NextResponse.json({ testResults: calculatedResults });

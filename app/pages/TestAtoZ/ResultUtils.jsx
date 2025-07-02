@@ -121,4 +121,64 @@ export const CircularProgress = ({ value, label, subLabel, percentage = 75 }) =>
       </div>
     </div>
   );
+
+  export const OverallStats = ({ attempted, correct, unattempted, incorrect, acquiredMarks, totalMarks }) => {
+    const attemptedTotal = (Number(attempted) || 0) + (Number(unattempted) || 0);
+    const attemptedPercent = attemptedTotal > 0 ? (Number(attempted) / attemptedTotal) * 100 : 0;
+    const unattemptedPercent = attemptedTotal > 0 ? (Number(unattempted) / attemptedTotal) * 100 : 0;
+  
+    const correctTotal = (Number(correct) || 0) + (Number(incorrect) || 0);
+    const correctPercent = correctTotal > 0 ? (Number(correct) / correctTotal) * 100 : 0;
+    const incorrectPercent = correctTotal > 0 ? (Number(incorrect) / correctTotal) * 100 : 0;
+  
+    return (
+      <div className="flex bg-white rounded-lg shadow-sm p-8 mt-4 gap-6">
+        <div className="flex flex-col gap-4 flex-grow w-full md:w-3/4">
+          {/* Attempted vs Unattempted */}
+          <div>
+            <div className="flex h-6 w-full rounded-full overflow-hidden">
+              <div className="bg-purple-200 flex items-center justify-center text-xs text-black font-medium px-2" style={{ width: `${attemptedPercent}%` }}>
+                {attempted}
+              </div>
+              <div className="bg-gray-200 flex items-center justify-center text-xs text-black font-medium px-2" style={{ width: `${unattemptedPercent}%` }}>
+                {unattempted}
+              </div>
+            </div>
+            <div className="flex justify-between text-xs mt-1 text-gray-400 font-semibold px-1">
+              <span>Attempted Questions</span>
+              <span>Unattempted</span>
+            </div>
+          </div>
+  
+          {/* Incorrect vs Correct */}
+          <div>
+            <div className="flex h-6 w-full rounded-full overflow-hidden">
+              <div className="bg-red-500 flex items-center justify-center text-xs text-white font-semibold px-2" style={{ width: `${incorrectPercent}%` }}>
+                {incorrect}
+              </div>
+              <div className="bg-green-500 flex items-center justify-center text-xs text-white font-semibold px-2" style={{ width: `${correctPercent}%` }}>
+                {correct}
+              </div>
+            </div>
+            <div className="flex justify-between text-xs mt-1 text-gray-400 font-semibold px-1">
+              <span>Incorrect</span>
+              <span>Correct</span>
+            </div>
+          </div>
+        </div>
+  
+        {/* Acquired Marks Pill */}
+        <div className="flex flex-col items-center justify-center w-full md:w-auto">
+          <div className="flex items-center justify-center w-20 h-20 rounded-full border-4 border-purple-700">
+            <div className="text-center text-purple-700 font-bold">
+              <p className="text-[10px] font-medium">Acquired Marks</p>
+              <p className="text-md">{acquiredMarks}/{totalMarks}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+  
+  
   
