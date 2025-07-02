@@ -165,6 +165,8 @@ useEffect(() => {
           selectedAnswersbyid={selectedAnswersbyid}
           setSelectedAnswersbyid={setSelectedAnswersbyid}
           testData={testData}
+          totalTime={totalTime}
+
         />
       ) : (
         <TestResult

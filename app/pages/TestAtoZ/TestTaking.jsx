@@ -13,8 +13,40 @@ export default function TestTaking({
   setSelectedAnswers,
   selectedAnswersbyid,
   setSelectedAnswersbyid,
-  testData
+  testData,
+  totalTime // in minutes or seconds
 }) {
+  // Timer logic
+  const [timeLeft, setTimeLeft] = useState(totalTime ? totalTime * 60 : 0); // seconds
+  // Calculate the max timer string for box sizing (e.g., 99:59 for up to 99 min)
+  const maxTimerString = totalTime ? `${String(Math.floor(totalTime)).padStart(2, '0')}:00` : '00:00';
+
+  useEffect(() => {
+    if (!totalTime) return;
+    setTimeLeft(totalTime * 60);
+  }, [totalTime]);
+
+  useEffect(() => {
+    if (!timeLeft || timeLeft <= 0) {
+      if (timeLeft === 0) {
+        // Auto-submit when timer runs out
+        processTestResults();
+        setStatus("result");
+      }
+      return;
+    }
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [timeLeft, processTestResults, setStatus]);
+
+  // Format timer as mm:ss
+  const formatTime = (seconds) => {
+    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const s = (seconds % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+  };
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   // Only check if testData is valid, don't show loading state
@@ -115,9 +147,34 @@ export default function TestTaking({
               <p className="font-medium text-[#2f2f68] text-xl">
                 Question {currentQuestionIndex + 1} out of {testData.length}
               </p>
-              <p className="font-normal text-[#2f2f68] text-xl">
-                {progressPercentage.toFixed(0)}% completed
-              </p>
+              <div className="flex items-center gap-4">
+                <p className="font-normal text-[#2f2f68] text-xl">
+                  {progressPercentage.toFixed(0)}% completed
+                </p>
+                {/* Timer */}
+                <div
+                  className="flex items-center justify-center text-white px-6 py-2 rounded-xl shadow-lg text-xl font-bold border-2 border-[#e0cfff] transition-all duration-300"
+                  style={{
+                    minWidth: `calc(1.4em * ${maxTimerString.length} + 48px)`,
+                    boxShadow: '0 4px 16px 0 #e0cfff55',
+                    background: (() => {
+                      // Gradient: #F0DDFF (completed) to #5F307D (left)
+                      const percent = totalTime && timeLeft >= 0 ? timeLeft / (totalTime * 60) : 1;
+                      const leftColor = '#5F307D';
+                      const doneColor = '#D9D9D9';
+                      // The gradient starts with doneColor (completed) and ends with leftColor (remaining)
+                      // percent*100% is the stop for completed, rest is left
+                      return `linear-gradient(90deg, ${doneColor} 0%, ${doneColor} ${(1 - percent) * 100}%, ${leftColor} ${(1 - percent) * 100}%, ${leftColor} 100%)`;
+                    })()
+                  }}
+                >
+                  <svg className="w-6 h-6 mr-3 drop-shadow" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" stroke="#f7ecff" strokeWidth="2.5" fill="none"/>
+                    <path d="M12 7v5l3 2" stroke="#f7ecff" strokeWidth="2.5" strokeLinecap="round"/>
+                  </svg>
+                  <span style={{ display: 'inline-block', minWidth: `${maxTimerString.length}ch`, textAlign: 'center', width: '100%', letterSpacing: '0.05em', textShadow: '0 1px 8px #2f2f6840' }}>{formatTime(timeLeft)}</span>
+                </div>
+              </div>
             </div>
             <div className="w-full bg-[#d9d9d9] rounded-[15px] h-3.5">
               <div
