@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ChevronLeftNormal } from "../icons/ChevronLeftNormal";
 import Navbar2 from "../components/Navbar2";
+import QuestionRenderer from "../components/QuestionRenderer";
 import IntegerType from "./AnswerTypes/IntegerType";
 import DescriptType from "./AnswerTypes/DescriptType";
 import MCQs from "./AnswerTypes/MCQs";
@@ -26,21 +27,37 @@ export default function TestTaking({
     setTimeLeft(totalTime * 60);
   }, [totalTime]);
 
-  useEffect(() => {
-    if (!timeLeft || timeLeft <= 0) {
-      if (timeLeft === 0) {
-        console.log("Time Left == 0, auto-submitting test");
-        if (typeof processTestResults === "function") {
-          processTestResults(selectedAnswersbyid);
-        }
-        setStatus("result");
+useEffect(() => {
+  if (!timeLeft || timeLeft <= 0) {
+    if (timeLeft === 0) {
+      // Auto-submit when timer runs out
+      console.log("Time Left == 0, auto-submitting test");
+      if (typeof processTestResults === "function") {
+        processTestResults(selectedAnswersbyid);
       }
-      return;
+      setStatus("result");
     }
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
-    }, 1000);
-    return () => clearInterval(timer);
+    return;
+  }
+  const timer = setInterval(() => {
+    setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+  }, 1000);
+  return () => clearInterval(timer);
+}, [timeLeft, setStatus]);
+
+  // Format timer as mm:ss
+  const formatTime = (seconds) => {
+    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const s = (seconds % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+  };
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+
+  // Only check if testData is valid, don't show loading state
+  console.log("testData===",testData);
+  if (!testData || !Array.isArray(testData) || testData.length === 0) {
+    return null;
+  }
   }, [timeLeft]);
 
   if (!testData || !Array.isArray(testData) || testData.length === 0) return null;
@@ -165,9 +182,9 @@ export default function TestTaking({
           </div>
 
           <div className="bg-white border border-solid border-[#d9d9d9] rounded-[20px] p-8">
-            <p className="font-medium text-[#2f2f68] text-[32px] mb-4">
-              {currentQuestion.question}
-            </p>
+            <div className="font-medium text-[#2f2f68] text-[32px] mb-4">
+              <QuestionRenderer content={currentQuestion.question} />
+            </div>
             <div className="w-fit bg-[#f7ecff] px-3 py-1 rounded-md flex items-center justify-center mb-6 text-[#3e4954] text-xl">
               {currentQuestion.topic}
             </div>

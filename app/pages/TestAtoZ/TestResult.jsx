@@ -9,6 +9,7 @@ import {
   OverallStats,
 } from "./ResultUtils";
 import Link from "next/link";
+import QuestionRenderer from "../components/QuestionRenderer";
 
 export default function TestResult({
   results,
