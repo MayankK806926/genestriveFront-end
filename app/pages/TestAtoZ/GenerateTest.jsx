@@ -4,7 +4,7 @@ import { ChevronLeftNormal } from "../icons/ChevronLeftNormal";
 import Navbar2 from "../components/Navbar2";
 
 //<div className="flex justify-between mx-[150px] mt-8 space-y-4">
-export default function GenerateTest({handleSubmit,setStatus}) {
+export default function GenerateTest({handleSubmit}) {
   const subjects_list = {
     "6th":["Mathematics", "Physics","Chemistry","Biology", "English"],
     "7th": ["Mathematics", "Physics","Chemistry","Biology", "English"],
@@ -129,9 +129,8 @@ export default function GenerateTest({handleSubmit,setStatus}) {
       numQuestions,
       time,
       selectedQuestionTypes
-    };
-    handleSubmit(data); // pass data directly
-    setStatus("taking");
+    }; // pass data directly
+    handleSubmit(data)
   };
 
   return (
