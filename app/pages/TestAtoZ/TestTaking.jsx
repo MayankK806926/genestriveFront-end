@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ChevronLeftNormal } from "../icons/ChevronLeftNormal";
 import Navbar2 from "../components/Navbar2";
+import QuestionRenderer from "../components/QuestionRenderer";
 import IntegerType from "./AnswerTypes/IntegerType";
 import DescriptType from "./AnswerTypes/DescriptType";
 import MCQs from "./AnswerTypes/MCQs";
@@ -30,7 +31,6 @@ export default function TestTaking({
     if (!timeLeft || timeLeft <= 0) {
       if (timeLeft === 0) {
         // Auto-submit when timer runs out
-        processTestResults();
         setStatus("result");
       }
       return;
@@ -39,7 +39,7 @@ export default function TestTaking({
       setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
     return () => clearInterval(timer);
-  }, [timeLeft, processTestResults, setStatus]);
+  }, [timeLeft, setStatus]);
 
   // Format timer as mm:ss
   const formatTime = (seconds) => {
@@ -185,9 +185,9 @@ export default function TestTaking({
           </div>
 
           <div className="bg-white border border-solid border-[#d9d9d9] rounded-[20px] p-8">
-            <p className="font-medium text-[#2f2f68] text-[32px] mb-4">
-              {currentQuestion.question}
-            </p>
+            <div className="font-medium text-[#2f2f68] text-[32px] mb-4">
+              <QuestionRenderer content={currentQuestion.question} />
+            </div>
             <div className="w-fit bg-[#f7ecff] px-3 py-1 rounded-md flex items-center justify-center mb-6 text-[#3e4954] text-xl">
               {currentQuestion.topic}
             </div>
