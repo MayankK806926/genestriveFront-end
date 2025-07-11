@@ -27,23 +27,19 @@ export default function TestTaking({
     setTimeLeft(totalTime * 60);
   }, [totalTime]);
 
-useEffect(() => {
-  if (!timeLeft || timeLeft <= 0) {
-    if (timeLeft === 0) {
-      // Auto-submit when timer runs out
-      console.log("Time Left == 0, auto-submitting test");
-      if (typeof processTestResults === "function") {
-        processTestResults(selectedAnswersbyid);
+  useEffect(() => {
+    if (!timeLeft || timeLeft <= 0) {
+      if (timeLeft === 0) {
+        // Auto-submit when timer runs out
+        setStatus("result");
       }
-      setStatus("result");
+      return;
     }
-    return;
-  }
-  const timer = setInterval(() => {
-    setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
-  }, 1000);
-  return () => clearInterval(timer);
-}, [timeLeft, setStatus]);
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [timeLeft, setStatus]);
 
   // Format timer as mm:ss
   const formatTime = (seconds) => {
