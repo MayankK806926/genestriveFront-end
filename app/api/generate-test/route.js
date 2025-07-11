@@ -26,7 +26,7 @@ export async function POST(request) {
         {
           id:8,
           type:"long answer",
-          question: "Another question?",
+          question: "The quadratic formula is given by \( x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} \).",
           topic: "Science",
         },
         {

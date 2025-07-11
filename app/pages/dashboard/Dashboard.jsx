@@ -107,7 +107,7 @@ function Dashboard() {
         `/dashboard/test-preview?category=${encodeURIComponent(category)}`
       );
     } else {
-      router.push("/dashboard/test-preview");
+      return alert("Please select a category to generate a test.");
     }
   };
 

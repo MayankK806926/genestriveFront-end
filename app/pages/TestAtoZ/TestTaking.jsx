@@ -16,10 +16,12 @@ export default function TestTaking({
   setSelectedAnswersbyid,
   testData,
   totalTime,
-  processTestResults
+  processTestResults,
 }) {
   const [timeLeft, setTimeLeft] = useState(totalTime ? totalTime * 60 : 0);
-  const maxTimerString = totalTime ? `${String(Math.floor(totalTime)).padStart(2, '0')}:00` : '00:00';
+  const maxTimerString = totalTime
+    ? `${String(Math.floor(totalTime)).padStart(2, "0")}:00`
+    : "00:00";
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   useEffect(() => {
@@ -41,22 +43,16 @@ export default function TestTaking({
     return () => clearInterval(timer);
   }, [timeLeft, setStatus]);
 
-  // Format timer as mm:ss
-  const formatTime = (seconds) => {
-    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
-    const s = (seconds % 60).toString().padStart(2, '0');
-    return `${m}:${s}`;
-  };
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-
-  // Only check if testData is valid, don't show loading state
-  console.log("testData===",testData);
-  if (!testData || !Array.isArray(testData) || testData.length === 0) {
-    return null;
-  }
+  useEffect(() => {
+    // Only check if testData is valid, don't show loading state
+    console.log("testData===", testData);
+    if (!testData || !Array.isArray(testData) || testData.length === 0) {
+      return null;
+    }
   }, [timeLeft]);
 
-  if (!testData || !Array.isArray(testData) || testData.length === 0) return null;
+  if (!testData || !Array.isArray(testData) || testData.length === 0)
+    return null;
   const currentQuestion = testData[currentQuestionIndex];
   if (!currentQuestion) return null;
 
@@ -96,12 +92,15 @@ export default function TestTaking({
   };
 
   const formatTime = (seconds) => {
-    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
-    const s = (seconds % 60).toString().padStart(2, '0');
+    const m = Math.floor(seconds / 60)
+      .toString()
+      .padStart(2, "0");
+    const s = (seconds % 60).toString().padStart(2, "0");
     return `${m}:${s}`;
   };
 
-  const progressPercentage = ((currentQuestionIndex + 1) / testData.length) * 100;
+  const progressPercentage =
+    ((currentQuestionIndex + 1) / testData.length) * 100;
 
   const input = {
     currentQuestion,
@@ -152,20 +151,56 @@ export default function TestTaking({
                   className="flex items-center justify-center text-white px-6 py-2 rounded-xl shadow-lg text-xl font-bold border-2 border-[#e0cfff] transition-all duration-300"
                   style={{
                     minWidth: `calc(1.4em * ${maxTimerString.length} + 48px)`,
-                    boxShadow: '0 4px 16px 0 #e0cfff55',
+                    boxShadow: "0 4px 16px 0 #e0cfff55",
                     background: (() => {
-                      const percent = totalTime && timeLeft >= 0 ? timeLeft / (totalTime * 60) : 1;
-                      const leftColor = '#5F307D';
-                      const doneColor = '#D9D9D9';
-                      return `linear-gradient(90deg, ${doneColor} 0%, ${doneColor} ${(1 - percent) * 100}%, ${leftColor} ${(1 - percent) * 100}%, ${leftColor} 100%)`;
-                    })()
+                      const percent =
+                        totalTime && timeLeft >= 0
+                          ? timeLeft / (totalTime * 60)
+                          : 1;
+                      const leftColor = "#5F307D";
+                      const doneColor = "#D9D9D9";
+                      return `linear-gradient(90deg, ${doneColor} 0%, ${doneColor} ${
+                        (1 - percent) * 100
+                      }%, ${leftColor} ${
+                        (1 - percent) * 100
+                      }%, ${leftColor} 100%)`;
+                    })(),
                   }}
                 >
-                  <svg className="w-6 h-6 mr-3 drop-shadow" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10" stroke="#f7ecff" strokeWidth="2.5" fill="none"/>
-                    <path d="M12 7v5l3 2" stroke="#f7ecff" strokeWidth="2.5" strokeLinecap="round"/>
+                  <svg
+                    className="w-6 h-6 mr-3 drop-shadow"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="#f7ecff"
+                      strokeWidth="2.5"
+                      fill="none"
+                    />
+                    <path
+                      d="M12 7v5l3 2"
+                      stroke="#f7ecff"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                    />
                   </svg>
-                  <span style={{ display: 'inline-block', minWidth: `${maxTimerString.length}ch`, textAlign: 'center', width: '100%', letterSpacing: '0.05em', textShadow: '0 1px 8px #2f2f6840' }}>{formatTime(timeLeft)}</span>
+                  <span
+                    style={{
+                      display: "inline-block",
+                      minWidth: `${maxTimerString.length}ch`,
+                      textAlign: "center",
+                      width: "100%",
+                      letterSpacing: "0.05em",
+                      textShadow: "0 1px 8px #2f2f6840",
+                    }}
+                  >
+                    {formatTime(timeLeft)}
+                  </span>
                 </div>
               </div>
             </div>
@@ -191,7 +226,9 @@ export default function TestTaking({
 
       <div className="w-full max-w-[1440px] mx-auto px-4 mt-8 mb-8 flex justify-between items-center">
         <button
-          className={`flex items-center font-normal text-[#2f2f68] text-xl cursor-pointer ${currentQuestionIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+          className={`flex items-center font-normal text-[#2f2f68] text-xl cursor-pointer ${
+            currentQuestionIndex === 0 ? "opacity-50 cursor-not-allowed" : ""
+          }`}
           onClick={handlePreviousQuestion}
           disabled={currentQuestionIndex === 0}
         >
