@@ -15,12 +15,12 @@ export default function TestTaking({
   selectedAnswersbyid,
   setSelectedAnswersbyid,
   testData,
-  totalTime // in minutes or seconds
+  totalTime,
+  processTestResults
 }) {
-  // Timer logic
-  const [timeLeft, setTimeLeft] = useState(totalTime ? totalTime * 60 : 0); // seconds
-  // Calculate the max timer string for box sizing (e.g., 99:59 for up to 99 min)
+  const [timeLeft, setTimeLeft] = useState(totalTime ? totalTime * 60 : 0);
   const maxTimerString = totalTime ? `${String(Math.floor(totalTime)).padStart(2, '0')}:00` : '00:00';
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   useEffect(() => {
     if (!totalTime) return;
@@ -54,23 +54,18 @@ export default function TestTaking({
   if (!testData || !Array.isArray(testData) || testData.length === 0) {
     return null;
   }
+  }, [timeLeft]);
 
+  if (!testData || !Array.isArray(testData) || testData.length === 0) return null;
   const currentQuestion = testData[currentQuestionIndex];
+  if (!currentQuestion) return null;
 
-  // Only check if currentQuestion exists, don't show loading state
-  if (!currentQuestion) {
-    return null;
-  }
-
-  // Reset currentQuestionIndex when test is retried
   useEffect(() => {
-    // Only reset if all answers are null (indicating a test retry)
     if (selectedAnswers.every((answer) => answer === null)) {
       setCurrentQuestionIndex(0);
     }
   }, [selectedAnswers]);
 
-  // Handler for option selection
   const handleOptionSelect = (optionIndex, id) => {
     const newSelectedAnswers = [...selectedAnswers];
     newSelectedAnswers[currentQuestionIndex] = optionIndex;
@@ -80,30 +75,34 @@ export default function TestTaking({
     setSelectedAnswersbyid(newSelectedAnswersbyid);
   };
 
-  // Handler for navigating to the next question
   const handleNextQuestion = () => {
     if (currentQuestionIndex < testData.length - 1) {
       setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
     }
   };
 
-  // Handler for navigating to the previous question
   const handlePreviousQuestion = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex((prevIndex) => prevIndex - 1);
     }
   };
 
-  // Handler for submitting the test
   const handleSubmitTest = () => {
+    console.log("Submit Test button clicked");
+    if (typeof processTestResults === "function") {
+      processTestResults(selectedAnswersbyid);
+    }
     setStatus("result");
   };
 
-  // Calculate progress percentage
-  const progressPercentage =
-    ((currentQuestionIndex + 1) / testData.length) * 100;
+  const formatTime = (seconds) => {
+    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const s = (seconds % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+  };
 
-  // Dynamic answer type rendering
+  const progressPercentage = ((currentQuestionIndex + 1) / testData.length) * 100;
+
   const input = {
     currentQuestion,
     currentQuestionIndex,
@@ -118,9 +117,7 @@ export default function TestTaking({
       case "mcq":
         return <MCQs Input={input} />;
       case "long answer":
-        return <DescriptType Input={input} />;
       case "short answer":
-        return <DescriptType Input={input} />;
       case "fill in the blanks":
         return <DescriptType Input={input} />;
       case "multiple correct":
@@ -151,19 +148,15 @@ export default function TestTaking({
                 <p className="font-normal text-[#2f2f68] text-xl">
                   {progressPercentage.toFixed(0)}% completed
                 </p>
-                {/* Timer */}
                 <div
                   className="flex items-center justify-center text-white px-6 py-2 rounded-xl shadow-lg text-xl font-bold border-2 border-[#e0cfff] transition-all duration-300"
                   style={{
                     minWidth: `calc(1.4em * ${maxTimerString.length} + 48px)`,
                     boxShadow: '0 4px 16px 0 #e0cfff55',
                     background: (() => {
-                      // Gradient: #F0DDFF (completed) to #5F307D (left)
                       const percent = totalTime && timeLeft >= 0 ? timeLeft / (totalTime * 60) : 1;
                       const leftColor = '#5F307D';
                       const doneColor = '#D9D9D9';
-                      // The gradient starts with doneColor (completed) and ends with leftColor (remaining)
-                      // percent*100% is the stop for completed, rest is left
                       return `linear-gradient(90deg, ${doneColor} 0%, ${doneColor} ${(1 - percent) * 100}%, ${leftColor} ${(1 - percent) * 100}%, ${leftColor} 100%)`;
                     })()
                   }}
@@ -198,9 +191,7 @@ export default function TestTaking({
 
       <div className="w-full max-w-[1440px] mx-auto px-4 mt-8 mb-8 flex justify-between items-center">
         <button
-          className={`flex items-center font-normal text-[#2f2f68] text-xl cursor-pointer ${
-            currentQuestionIndex === 0 ? "opacity-50 cursor-not-allowed" : ""
-          }`}
+          className={`flex items-center font-normal text-[#2f2f68] text-xl cursor-pointer ${currentQuestionIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
           onClick={handlePreviousQuestion}
           disabled={currentQuestionIndex === 0}
         >
