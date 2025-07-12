@@ -31,8 +31,7 @@ export default function TestResult({
     totalMarks,
     acquiredMarks,
   } = results || {};
-  console.log("TestResult received timeTaken:", totalTime);
-
+  console.log("TestResult received timeTaken:", totalTime);   
   // Safely calculate metrics, defaulting to 0 if data is unavailable or invalid
   const overallAccuracyPercentage = parseFloat(overallAccuracy) || 0;
   const attemptedQuestionsPercentage =
@@ -172,6 +171,12 @@ export default function TestResult({
             </div>
 
             <div className="space-y-4">
+                       <button
+                   className="bg-[#5e2f7c] text-white font-semibold text-xl py-1 px-6 rounded-md mt-6"
+                     onClick={() => setStatus("analyze")}
+                           >
+                 View Detailed Analysis
+                    </button>
               <button
                 className="w-full bg-[#001529] text-white py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors"
                 onClick={() => setStatus("taking")}

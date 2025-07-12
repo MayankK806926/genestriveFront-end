@@ -4,7 +4,7 @@ import TestTaking from "./TestTaking";
 import TestResult from "./TestResult";
 import { useSearchParams } from "next/navigation";
 import GenerateTest from "./GenerateTest";
-
+import TestAnalyze from "./TestAnalyze";
 export default function TestPreview() {
   const [requestData, setRequestData] = useState(null);
   const [testData, setTestData] = useState(null);
@@ -136,6 +136,16 @@ export default function TestPreview() {
           endTime={endTime}
         />
       )}
+      {status === "analyze" && (
+     <TestAnalyze
+       setStatus={setStatus}
+         
+          
+          testData={testData}
+         
+  />
+)}
+
     </>
   );
 }

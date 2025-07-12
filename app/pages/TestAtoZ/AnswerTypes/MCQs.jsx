@@ -25,7 +25,7 @@ function MCQs({ Input }) {
           selectedAnswers[currentQuestionIndex] === optionIndex;
         let bgColor = "bg-white";
         let borderColor = "border-[#d9d9d9]";
-
+         
         if (isSelected) {
           bgColor = "bg-[#f7ecff]";
           borderColor = "border-[#5e2f7c]";
@@ -46,5 +46,6 @@ function MCQs({ Input }) {
     </div>
   );
 }
+
 
 export default MCQs;
