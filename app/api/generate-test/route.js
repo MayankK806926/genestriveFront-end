@@ -14,19 +14,19 @@ export async function POST(request) {
         {
           id:6,
           type:"mcq",
-          question: "What is the value of pi ?",
+          question: "The quadratic formula is given by:\n\n$$x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$$",
           topic: "Mathematics",
           options: [
-            { text: "3.14", isCorrect: true },
-            { text: "3.14", isCorrect: false },
-            { text: "3.14", isCorrect: false },
-            { text: "3.14", isCorrect: false },
+            { text: "Option 1", isCorrect: false },
+            { text: "Option 2", isCorrect: true },
+            { text: "Option 3", isCorrect: false },
+            { text: "Option 4", isCorrect: false },
           ],
         },
         {
           id:8,
           type:"long answer",
-          question: "The quadratic formula is given by \( x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} \).",
+          question: "Another question?",
           topic: "Science",
         },
         {
