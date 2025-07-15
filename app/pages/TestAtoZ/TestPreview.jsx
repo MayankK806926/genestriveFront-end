@@ -79,14 +79,17 @@ export default function TestPreview() {
   const [visitedQuestions, setVisitedQuestions] = useState(new Set());
 
   useEffect(() => {
-    if (status === "taking" && testData) {
-      // Also check if testData is available
+    if (status === "taking" && testData && selectedAnswers.length === 0) {
       setSelectedAnswers(Array(testData.length).fill(null)); // Initialize with null
       setReviewedQuestions(new Set());
-      setVisitedQuestions(new Set());
+      setVisitedQuestions(new Set([0]));
       setTestResults(null);
       setStartTime(Date.now());
-    } else if (status === "result") {
+    }
+  }, [status, testData]);
+
+  useEffect(() => {
+    if (status === "result") {
       // Add testData to dependency array
 
       //uncomment during API integration
