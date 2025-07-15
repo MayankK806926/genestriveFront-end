@@ -9,37 +9,38 @@ export async function POST(request) {
   try {
     // Read the request body to get parameters from the frontend
     const { question } = await request.json();
+    const solution="This is a placeholder solution for the question: " + question;
 
     // Call Gemini API to generate a solution for the question
-    const geminiResponse = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              {
-                text: `Solve the following question and explain the solution step by step:\n\n${question}`,
-              },
-            ],
-          },
-        ],
-      }),
-    });
+    // const geminiResponse = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({
+    //     contents: [
+    //       {
+    //         parts: [
+    //           {
+    //             text: `Solve the following question and explain the solution step by step:\n\n${question}`,
+    //           },
+    //         ],
+    //       },
+    //     ],
+    //   }),
+    // });
 
-    if (!geminiResponse.ok) {
-      const errorText = await geminiResponse.text();
-      console.error('Gemini API error:', errorText);
-      throw new Error('Failed to get solution from Gemini API');
-    }
+    // if (!geminiResponse.ok) {
+    //   const errorText = await geminiResponse.text();
+    //   console.error('Gemini API error:', errorText);
+    //   throw new Error('Failed to get solution from Gemini API');
+    // }
 
-    const geminiData = await geminiResponse.json();
-    // Extract the generated solution text from the Gemini API response
-    const solution =
-      geminiData?.candidates?.[0]?.content?.parts?.[0]?.text ||
-      'Encountered an error while generating the solution.';
+    // const geminiData = await geminiResponse.json();
+    // // Extract the generated solution text from the Gemini API response
+    // const solution =
+    //   geminiData?.candidates?.[0]?.content?.parts?.[0]?.text ||
+    //   'Encountered an error while generating the solution.';
 
     // Return the generated solution in the expected format
     return NextResponse.json({ solution });
