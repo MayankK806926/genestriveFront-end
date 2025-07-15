@@ -63,6 +63,7 @@ useEffect(() => {
       const data = await res.json(); // Use await here
       setTestData(data.sampleData);
       console.log("Test generated successfully:", data); // Pass the URL string directly
+      setStatus('taking'); // Immediately go to test taking page
     } catch (err) {
       console.error("Error generating test:", err);
       setError(err.message || "An error occurred during test generation."); // Set error state
@@ -76,15 +77,23 @@ useEffect(() => {
   const [reviewedQuestions, setReviewedQuestions] = useState(new Set());
   const [visitedQuestions, setVisitedQuestions] = useState(new Set());
 
+  // Only initialize answers/reviewed/visited on first test load
   useEffect(() => {
-    if (status==="taking" && testData) {
-      // Also check if testData is available
-      setSelectedAnswers(Array(testData.length).fill(null)); // Initialize with null
+    if (
+      status === "taking" &&
+      testData &&
+      selectedAnswers.length === 0
+    ) {
+      setSelectedAnswers(Array(testData.length).fill(null));
       setReviewedQuestions(new Set());
-      setVisitedQuestions(new Set());
+      setVisitedQuestions(new Set([0])); // mark first as visited
       setTestResults(null);
       setStartTime(Date.now());
-    } else if(status==="result") {
+    }
+  }, [status, testData]);
+
+  useEffect(() => {
+    if(status==="result") {
 
  // Add testData to dependency array
 
@@ -157,12 +166,12 @@ useEffect(() => {
   // Render test components once data is loaded
   return (
     <>
-      {status==="generate" ?(
+      {status === "generate" ? (
         <GenerateTest
           handleSubmit={handleSubmit}
           setStatus={setStatus}
         />
-      ) : status==="taking" ?(
+      ) : status === "taking" ? (
         <TestTaking
           setStatus={setStatus}
           selectedAnswers={selectedAnswers}
@@ -176,15 +185,13 @@ useEffect(() => {
           visitedQuestions={visitedQuestions}
           setVisitedQuestions={setVisitedQuestions}
         />
-      ) : status==="review" ? (
+      ) : status === "review" ? (
         <TestReview
           testData={testData}
           selectedAnswers={selectedAnswers}
           reviewedQuestions={reviewedQuestions}
           visitedQuestions={visitedQuestions}
           onConfirmSubmit={(feedbackData) => {
-            // Here you can send feedback data to your API if needed
-            console.log("Feedback data:", feedbackData);
             setStatus("result");
           }}
           onGoBack={() => setStatus("taking")}
