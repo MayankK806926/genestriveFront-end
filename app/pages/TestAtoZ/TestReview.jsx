@@ -14,12 +14,19 @@ export default function TestReview({
 
   // Calculate statistics
   const totalQuestions = testData.length;
-  const notVisitedQuestions = totalQuestions - visitedQuestions.size;
-  const answeredQuestions = selectedAnswers.filter(answer => answer !== null).length;
-  const notAnsweredQuestions = totalQuestions - answeredQuestions;
-  const markedForReview = reviewedQuestions.size;
-  const answeredAndMarkedForReview = Array.from(reviewedQuestions).filter(index => selectedAnswers[index] !== null).length;
-  const onlyMarkedForReview = markedForReview - answeredAndMarkedForReview;
+  // Build a per-question status array
+  const statusArr = testData.map((_, idx) => {
+    const visited = visitedQuestions.has(idx);
+    const answered = selectedAnswers[idx] !== null && selectedAnswers[idx] !== undefined && selectedAnswers[idx] !== '';
+    const reviewed = reviewedQuestions.has(idx);
+    return { visited, answered, reviewed };
+  });
+
+  const notVisitedQuestions = statusArr.filter(q => !q.visited).length;
+  const answeredAndMarkedForReview = statusArr.filter(q => q.answered && q.reviewed).length;
+  const onlyMarkedForReview = statusArr.filter(q => !q.answered && q.reviewed).length;
+  const answeredQuestions = statusArr.filter(q => q.answered && !q.reviewed).length;
+  const notAnsweredQuestions = statusArr.filter(q => q.visited && !q.answered && !q.reviewed).length;
 
   const handleSubmit = () => {
     onConfirmSubmit({
@@ -66,57 +73,57 @@ export default function TestReview({
                 <div className="text-[#5e2f7c] text-3xl font-bold mb-2">
                   {totalQuestions}
                 </div>
-                <div className="text-[#2f2f68] text-lg font-medium">
+                <div className="text-[#2f2f7c] text-lg font-medium">
                   Total Questions
                 </div>
               </div>
 
               {/* Not Visited Questions */}
               <div className="bg-[#f5f5f5] rounded-lg p-4 text-center border-2 border-gray-300">
-                <div className="text-[#2f2f68] text-3xl font-bold mb-2">
+                <div className="text-[#2f2f7c] text-3xl font-bold mb-2">
                   {notVisitedQuestions}
                 </div>
-                <div className="text-[#2f2f68] text-lg font-medium">
+                <div className="text-[#2f2f7c] text-lg font-medium">
                   Not Visited
                 </div>
               </div>
 
               {/* Answered Questions */}
               <div className="bg-[#f0fff0] rounded-lg p-4 text-center border-2 border-[#90EE90]">
-                <div className="text-[#2f2f68] text-3xl font-bold mb-2">
+                <div className="text-[#2f2f7c] text-3xl font-bold mb-2">
                   {answeredQuestions}
                 </div>
-                <div className="text-[#2f2f68] text-lg font-medium">
+                <div className="text-[#2f2f7c] text-lg font-medium">
                   Answered
                 </div>
               </div>
 
               {/* Not Answered Questions */}
               <div className="bg-[#fff0f0] rounded-lg p-4 text-center border-2 border-red-400">
-                <div className="text-[#2f2f68] text-3xl font-bold mb-2">
+                <div className="text-[#2f2f7c] text-3xl font-bold mb-2">
                   {notAnsweredQuestions}
                 </div>
-                <div className="text-[#2f2f68] text-lg font-medium">
+                <div className="text-[#2f2f7c] text-lg font-medium">
                   Not Answered
                 </div>
               </div>
 
               {/* Marked For Review */}
               <div className="bg-[#fff8e1] rounded-lg p-4 text-center border-2 border-[#ffb347]">
-                <div className="text-[#2f2f68] text-3xl font-bold mb-2">
+                <div className="text-[#2f2f7c] text-3xl font-bold mb-2">
                   {onlyMarkedForReview}
                 </div>
-                <div className="text-[#2f2f68] text-lg font-medium">
+                <div className="text-[#2f2f7c] text-lg font-medium">
                   Marked For Review
                 </div>
               </div>
 
               {/* Answered & Marked For Review */}
               <div className="bg-[#fffde7] rounded-lg p-4 text-center border-2 border-[#ffd700]">
-                <div className="text-[#2f2f68] text-3xl font-bold mb-2">
+                <div className="text-[#2f2f7c] text-3xl font-bold mb-2">
                   {answeredAndMarkedForReview}
                 </div>
-                <div className="text-[#2f2f68] text-lg font-medium">
+                <div className="text-[#2f2f7c] text-lg font-medium">
                   Answered & Marked For Review
                 </div>
               </div>
