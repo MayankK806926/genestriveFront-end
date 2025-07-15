@@ -155,6 +155,11 @@ export default function TestTaking({
     }
   };
 
+  useEffect(() => {
+    // Mark the current question as visited whenever it changes
+    setVisitedQuestions(prev => new Set([...prev, currentQuestionIndex]));
+  }, [currentQuestionIndex]);
+
   return (
     <div className="flex flex-col items-center min-h-screen bg-[#f6effe]">
       <div className="w-full mt-[-20px] h-[40px] mb-[100px] bg-white shadow-sm">
