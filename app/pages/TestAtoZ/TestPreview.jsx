@@ -5,6 +5,7 @@ import TestResult from "./TestResult";
 import TestReview from "./TestReview";
 import { useSearchParams } from "next/navigation";
 import GenerateTest from "./GenerateTest";
+import TestAnalyze from "./TestAnalyze";
 // import axios from 'axios'; // axios is no longer used for initial fetch
 // import { useRouter } from 'next/navigation'; // useRouter is no longer needed for query params// Import useSearchParams
 
@@ -23,19 +24,19 @@ export default function TestPreview() {
   const [totalTime, setTotalTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
   const searchParams = useSearchParams();
-useEffect(() => {
-  setLoading(true);
-  const CategoryFromUrl = searchParams.get("category");
-  console.log("Category from URL:", CategoryFromUrl);
-  if (CategoryFromUrl) setCategory(CategoryFromUrl);
-  setLoading(false); // Set loading state while fetching topics
-  // useSearchParams is a static hook, no dependencies needed for initial read
-}, []);
+  useEffect(() => {
+    setLoading(true);
+    const CategoryFromUrl = searchParams.get("category");
+    console.log("Category from URL:", CategoryFromUrl);
+    if (CategoryFromUrl) setCategory(CategoryFromUrl);
+    setLoading(false); // Set loading state while fetching topics
+    // useSearchParams is a static hook, no dependencies needed for initial read
+  }, []);
 
   const handleSubmit = async (data) => {
     setError(null); // Clear previous errors
     setLoading(true);
-    console.log("data",data);
+    console.log("data", data);
     setRequestData(data);
     setStartTime(new Date());
     setTotalTime(data.time);
@@ -49,7 +50,7 @@ useEffect(() => {
         body: JSON.stringify({
           requestData,
           category,
-          startTime
+          startTime,
         }),
       });
 
@@ -62,6 +63,7 @@ useEffect(() => {
 
       const data = await res.json(); // Use await here
       setTestData(data.sampleData);
+      setStatus("taking");
       console.log("Test generated successfully:", data); // Pass the URL string directly
     } catch (err) {
       console.error("Error generating test:", err);
@@ -77,62 +79,61 @@ useEffect(() => {
   const [visitedQuestions, setVisitedQuestions] = useState(new Set());
 
   useEffect(() => {
-    if (status==="taking" && testData) {
+    if (status === "taking" && testData) {
       // Also check if testData is available
       setSelectedAnswers(Array(testData.length).fill(null)); // Initialize with null
       setReviewedQuestions(new Set());
       setVisitedQuestions(new Set());
       setTestResults(null);
       setStartTime(Date.now());
-    } else if(status==="result") {
+    } else if (status === "result") {
+      // Add testData to dependency array
 
- // Add testData to dependency array
+      //uncomment during API integration
 
-  //uncomment during API integration
+      const processTestResults = async () => {
+        const endTime = Date.now();
+        setEndTime(endTime);
+        try {
+          const res = await fetch("/api/result", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ selectedAnswersbyid, endTime }),
+          });
+          let Data;
+          console.log("res", res);
+          try {
+            Data = await res.json(); // Only call this ONCE
+          } catch (e) {
+            Data = null;
+          }
 
-  const processTestResults = async () => {
-    const endTime = Date.now();
-    setEndTime(endTime);
-    try {
+          if (!res.ok) {
+            // Now resultsData contains the error object from your API
+            console.error("API Error Response:", Data);
+            setError(Data?.message || "An error occurred.");
+            return;
+          }
+          // const Data = await res.json();
+          console.log("Test submission successful, results data:", Data);
 
-      const res = await fetch("/api/result", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ selectedAnswersbyid, endTime }),
-      });
-      let Data;
-      console.log("res",res);
-      try {
-        Data = await res.json(); // Only call this ONCE
-      } catch (e) {
-        Data = null;
-      }
-      
-      if (!res.ok) {
-        // Now resultsData contains the error object from your API
-        console.error("API Error Response:", Data);
-        setError(Data?.message || "An error occurred.");
-        return;
-      }
-      // const Data = await res.json();
-      console.log("Test submission successful, results data:", Data);
-
-      // Check if the expected data structure is present
-      if (Data?.testResults) {
-        setTestResults(Data.testResults); // Set the state with the nested results
-      } else {
-        console.error("API response did not contain testResults", Data);
-        // Handle this case, maybe set an error state or display a message
-        setError(new Error("Invalid results data from API"));
-      }
-    } catch (err) {
-      console.error("Error processing test results:", err);
-      // Optionally, set an error state for the user
-      // setError(err);
+          // Check if the expected data structure is present
+          if (Data?.testResults) {
+            setTestResults(Data.testResults); // Set the state with the nested results
+          } else {
+            console.error("API response did not contain testResults", Data);
+            // Handle this case, maybe set an error state or display a message
+            setError(new Error("Invalid results data from API"));
+          }
+        } catch (err) {
+          console.error("Error processing test results:", err);
+          // Optionally, set an error state for the user
+          // setError(err);
+        }
+      };
+      processTestResults();
     }
-  };
-  processTestResults();}
-  }, [status, testData]); 
+  }, [status, testData]);
 
   // Show loading or error state while fetching data
   if (loading) {
@@ -153,18 +154,15 @@ useEffect(() => {
     );
   }
 
-
   // Render test components once data is loaded
   return (
     <>
-      {status==="generate" ?(
-        <GenerateTest
-          handleSubmit={handleSubmit}
-          setStatus={setStatus}
-        />
-      ) : status==="taking" ?(
+      {status === "generate" ? (
+        <GenerateTest handleSubmit={handleSubmit} setStatus={setStatus} />
+      ) : status === "taking" ? (
         <TestTaking
           setStatus={setStatus}
+          handleSubmit={handleSubmit}
           selectedAnswers={selectedAnswers}
           setSelectedAnswers={setSelectedAnswers}
           selectedAnswersbyid={selectedAnswersbyid}
@@ -176,7 +174,7 @@ useEffect(() => {
           visitedQuestions={visitedQuestions}
           setVisitedQuestions={setVisitedQuestions}
         />
-      ) : status==="review" ? (
+      ) : status === "review" ? (
         <TestReview
           testData={testData}
           selectedAnswers={selectedAnswers}
@@ -189,7 +187,7 @@ useEffect(() => {
           }}
           onGoBack={() => setStatus("taking")}
         />
-      ) : (
+      ) : status === "result" ? (
         <TestResult
           results={testResults}
           setStatus={setStatus}
@@ -197,6 +195,8 @@ useEffect(() => {
           startTime={startTime}
           endTime={endTime}
         />
+      ) : (
+        <TestAnalyze testData={testData} />
       )}
     </>
   );
