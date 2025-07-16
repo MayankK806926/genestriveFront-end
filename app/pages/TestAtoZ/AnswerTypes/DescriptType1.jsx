@@ -5,42 +5,7 @@ function DescriptType({ Input }) {
 
   const yourAnswer = selectedAnswers?.[currentQuestionIndex] || "";
   const correctAnswer = currentQuestion.correctAnswer || "Not Provided";
-
-  const [solution, setSolution] = useState("Loading solution...");
-
-  useEffect(() => {
-    async function fetchSolution() {
-      try {
-        const res = await fetch("/api/solution", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ question: currentQuestion.question }),
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          console.error("API error:", data.error); // This will show in the browser console
-          setSolution("Failed to load solution.");
-          return;
-        }
-        if (data?.solution) {
-          setSolution(data.solution);
-        } else {
-          setSolution("No explanation provided.");
-        }
-      } catch (error) {
-        console.error("Error fetching solution:", error);
-        setSolution("Failed to load solution.");
-      }
-    }
-
-    if (currentQuestion?.question) {
-      fetchSolution();
-    } else {
-      setSolution("No explanation provided.");
-    }
-  }, [currentQuestion?.question]);
+  const solution = currentQuestion.solution || "No solution provided.";
 
   return (
     <div className="space-y-6">

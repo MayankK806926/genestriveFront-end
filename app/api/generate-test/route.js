@@ -22,18 +22,21 @@ export async function POST(request) {
             { text: "Option 3", isCorrect: false },
             { text: "Option 4", isCorrect: false },
           ],
+          solution: "This is a placeholder solution for the question: Another question?",
         },
         {
           id:8,
           type:"long answer",
           question: "Another question?",
           topic: "Science",
+          solution: "This is a placeholder solution for the question: Another question?",
         },
         {
           id:9,
           type:"fill in the blanks",
           question: "Fill in the ______ question?",
-          topic: "History",}
+          topic: "History",
+        solution: "This is a placeholder solution for the question: Another question?",}
       ];
 
     // Return the generated test data in the expected format
