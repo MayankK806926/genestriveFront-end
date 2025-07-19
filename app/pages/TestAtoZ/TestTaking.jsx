@@ -120,13 +120,7 @@ export default function TestTaking({
 
   // Handler for submitting the test
   const handleSubmitTest = () => {
-    handleSubmit({
-      selectedAnswers,
-      selectedAnswersbyid,
-      reviewedQuestions: Array.from(reviewedQuestions),
-      visitedQuestions: Array.from(visitedQuestions),
-      totalTime: timeLeft,
-    });
+    setStatus("review");
   };
 
   // Calculate progress percentage
